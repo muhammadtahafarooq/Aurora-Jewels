@@ -1,0 +1,281 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Customer Account Profile | Aurora Jewels</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500&amp;family=Manrope:wght@400;500;600&amp;family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "on-secondary-fixed": "#271900",
+                "error": "#ba1a1a",
+                "on-tertiary-fixed-variant": "#623e34",
+                "primary-container": "#0d302b",
+                "on-tertiary-container": "#b5877b",
+                "primary-fixed": "#c6eae2",
+                "on-surface": "#1b1c19",
+                "surface-dim": "#dbdad5",
+                "on-error": "#ffffff",
+                "on-tertiary": "#ffffff",
+                "surface-container-low": "#f5f3ee",
+                "error-container": "#ffdad6",
+                "primary-fixed-dim": "#aacec6",
+                "inverse-primary": "#aacec6",
+                "on-primary-container": "#769992",
+                "secondary-fixed-dim": "#e5c284",
+                "surface-variant": "#e4e2dd",
+                "on-surface-variant": "#414846",
+                "on-tertiary-fixed": "#2f140c",
+                "on-primary": "#ffffff",
+                "outline": "#717976",
+                "on-error-container": "#93000a",
+                "on-primary-fixed-variant": "#2c4d47",
+                "surface": "#fbf9f4",
+                "secondary-container": "#ffdb9c",
+                "surface-bright": "#fbf9f4",
+                "outline-variant": "#c1c8c5",
+                "tertiary": "#290e08",
+                "on-primary-fixed": "#00201c",
+                "tertiary-container": "#41221a",
+                "secondary": "#755a27",
+                "surface-container-high": "#eae8e3",
+                "on-secondary": "#ffffff",
+                "surface-tint": "#43655e",
+                "tertiary-fixed-dim": "#eebbae",
+                "surface-container-lowest": "#ffffff",
+                "on-secondary-fixed-variant": "#5b4311",
+                "inverse-on-surface": "#f2f1ec",
+                "secondary-fixed": "#ffdea6",
+                "on-secondary-container": "#795e2b",
+                "background": "#fbf9f4",
+                "inverse-surface": "#30312e",
+                "on-background": "#1b1c19",
+                "surface-container": "#f0eee9",
+                "surface-container-highest": "#e4e2dd",
+                "primary": "#001a17",
+                "tertiary-fixed": "#ffdbd2"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+        },
+        "spacing": {
+                "container-max": "1440px",
+                "section-gap": "120px",
+                "margin-desktop": "64px",
+                "margin-mobile": "20px",
+                "unit": "4px",
+                "gutter": "24px"
+        },
+        "fontFamily": {
+                "editorial-italic": [
+                        "ebGaramond"
+                ],
+                "display-lg": [
+                        "ebGaramond"
+                ],
+                "body-lg": [
+                        "manrope"
+                ],
+                "display-lg-mobile": [
+                        "ebGaramond"
+                ],
+                "headline-md": [
+                        "ebGaramond"
+                ],
+                "body-md": [
+                        "manrope"
+                ],
+                "label-caps": [
+                        "manrope"
+                ],
+                "functional-sm": [
+                        "manrope"
+                ]
+        },
+        "fontSize": {
+                "editorial-italic": [
+                        "24px",
+                        {
+                                "lineHeight": "1.4",
+                                "fontWeight": "400"
+                        }
+                ],
+                "display-lg": [
+                        "64px",
+                        {
+                                "lineHeight": "1.1",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "400"
+                        }
+                ],
+                "body-lg": [
+                        "18px",
+                        {
+                                "lineHeight": "1.6",
+                                "fontWeight": "400"
+                        }
+                ],
+                "display-lg-mobile": [
+                        "40px",
+                        {
+                                "lineHeight": "1.2",
+                                "letterSpacing": "-0.01em",
+                                "fontWeight": "400"
+                        }
+                ],
+                "headline-md": [
+                        "32px",
+                        {
+                                "lineHeight": "1.3",
+                                "fontWeight": "400"
+                        }
+                ],
+                "body-md": [
+                        "16px",
+                        {
+                                "lineHeight": "1.6",
+                                "fontWeight": "400"
+                        }
+                ],
+                "label-caps": [
+                        "12px",
+                        {
+                                "lineHeight": "1.2",
+                                "letterSpacing": "0.1em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "functional-sm": [
+                        "14px",
+                        {
+                                "lineHeight": "1.4",
+                                "fontWeight": "500"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script>
+<style>
+    body {
+        background-color: #fbf9f4; /* Using the theme background color fallback if needed */
+    }
+</style>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased flex flex-col min-h-screen">
+<!-- 1. TopNavBar -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-margin-desktop py-6 bg-background/90 backdrop-blur-sm border-b border-outline-variant/10 transition-all duration-500 ease-in-out">
+<nav class="hidden md:flex space-x-8">
+<a class="text-on-surface-variant dark:text-on-surface-variant/70 hover:text-primary dark:hover:text-primary-fixed transition-colors duration-300 text-label-caps font-label-caps" href="#">Shop</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant/70 hover:text-primary dark:hover:text-primary-fixed transition-colors duration-300 text-label-caps font-label-caps" href="#">New Arrivals</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant/70 hover:text-primary dark:hover:text-primary-fixed transition-colors duration-300 text-label-caps font-label-caps" href="#">Collections</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant/70 hover:text-primary dark:hover:text-primary-fixed transition-colors duration-300 text-label-caps font-label-caps" href="#">About</a>
+</nav>
+<div class="text-headline-md font-headline-md tracking-widest text-primary dark:text-on-primary-container text-center flex-1 md:flex-none">
+            AURORA JEWELS
+        </div>
+<div class="flex items-center space-x-6 text-primary dark:text-on-primary-container">
+<button aria-label="search" class="hover:text-primary dark:hover:text-primary-fixed transition-colors duration-300">
+<span class="material-symbols-outlined">search</span>
+</button>
+<button aria-label="person" class="text-primary dark:text-on-primary-container border-b border-primary dark:border-on-primary-container pb-1">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+</button>
+<button aria-label="favorite" class="hover:text-primary dark:hover:text-primary-fixed transition-colors duration-300">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+<button aria-label="shopping_bag" class="hover:text-primary dark:hover:text-primary-fixed transition-colors duration-300">
+<span class="material-symbols-outlined">shopping_bag</span>
+</button>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-grow pt-[120px] pb-section-gap px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto w-full">
+<!-- 2. Account Header -->
+<div class="mb-12">
+<h1 class="text-display-lg-mobile md:text-display-lg font-display-lg-mobile md:font-display-lg text-primary text-center md:text-left" style="font-family: 'Cormorant Garamond', serif; font-weight: 500;">Your Account</h1>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- 3. Account Navigation -->
+<aside class="md:col-span-3 lg:col-span-2 mb-12 md:mb-0">
+<nav class="flex flex-row md:flex-col space-x-6 md:space-x-0 md:space-y-6 overflow-x-auto md:overflow-visible pb-4 md:pb-0 whitespace-nowrap md:whitespace-normal">
+<a class="text-body-md font-body-md text-primary border-b border-primary pb-1" href="#">Profile</a>
+<a class="text-body-md font-body-md text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">Order History</a>
+<a class="text-body-md font-body-md text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">Saved Addresses</a>
+<a class="text-body-md font-body-md text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">Wishlist</a>
+</nav>
+</aside>
+<!-- 4. Profile Information Form -->
+<div class="md:col-span-7 lg:col-span-6 md:col-start-5 lg:col-start-4">
+<form class="space-y-8">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="text-label-caps font-label-caps text-on-surface-variant block" for="firstName">First Name</label>
+<input class="w-full h-12 px-4 bg-transparent border-b border-[#101412]/15 rounded-none focus:outline-none focus:border-primary text-body-md font-body-md text-primary placeholder-outline-variant transition-colors" id="firstName" name="firstName" type="text" value="Eleanor">
+</div>
+<div class="space-y-2">
+<label class="text-label-caps font-label-caps text-on-surface-variant block" for="lastName">Last Name</label>
+<input class="w-full h-12 px-4 bg-transparent border-b border-[#101412]/15 rounded-none focus:outline-none focus:border-primary text-body-md font-body-md text-primary placeholder-outline-variant transition-colors" id="lastName" name="lastName" type="text" value="Vance">
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-label-caps font-label-caps text-on-surface-variant block" for="email">Email Address</label>
+<input class="w-full h-12 px-4 bg-transparent border-b border-[#101412]/15 rounded-none focus:outline-none focus:border-primary text-body-md font-body-md text-primary placeholder-outline-variant transition-colors" id="email" name="email" type="email" value="eleanor.vance@example.com">
+</div>
+<div class="space-y-2">
+<label class="text-label-caps font-label-caps text-on-surface-variant block" for="phone">Phone Number (Optional)</label>
+<input class="w-full h-12 px-4 bg-transparent border-b border-[#101412]/15 rounded-none focus:outline-none focus:border-primary text-body-md font-body-md text-primary placeholder-outline-variant transition-colors" id="phone" name="phone" placeholder="+1 (555) 000-0000" type="tel">
+</div>
+<!-- 5. Profile Actions -->
+<div class="pt-8 flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
+<button class="w-full md:w-auto bg-primary-container text-on-primary-container px-8 py-3 text-functional-sm font-functional-sm uppercase tracking-widest hover:bg-primary hover:text-on-primary transition-colors duration-300" type="submit">
+                            Save Changes
+                        </button>
+<a class="text-functional-sm font-functional-sm text-on-surface-variant hover:text-primary transition-colors duration-300 uppercase tracking-widest" href="#">
+                            Sign Out
+                        </a>
+</div>
+</form>
+</div>
+<!-- Optional Image Vacuum for asymmetrical tension -->
+<div class="hidden lg:block lg:col-span-3">
+<div class="bg-cover bg-center w-full h-full min-h-[400px] grayscale-[20%]" data-alt="A macro photography shot of an elegant diamond ring resting on a smooth, slightly reflective dark green marble surface. The lighting is soft and cinematic, creating high-contrast reflections and a quiet luxury aesthetic. The mood is timeless and architectural." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDkzBk4J8lR7P-4wAIwTA4GigRZqOindSb11XccnVarsTeVDM01egS0qdLta_520u3juzgaA_gJyrypycozl0LK64OPVEuPA4euInzSa1_KZ2xFl6Y_JERICIJykPGya-W4p7k6YPUkctzsD7iLKqNhWutYBDaLMlzn1LwJgXMDanKaYGJKAZ2G5HQvJY-tAJ_XZTCf-wpaeWgl_5tOxdA2DxX_o2JHPcksPVh--wvwmKYKnne-sSXqNQ')"></div>
+</div>
+</div>
+</main>
+<!-- 6. Footer -->
+<footer class="w-full px-margin-desktop py-section-gap grid grid-cols-1 md:grid-cols-12 gap-gutter bg-primary-container dark:bg-primary-container text-on-primary-container dark:text-on-primary-container mt-auto">
+<div class="col-span-1 md:col-span-12 mb-8 text-center md:text-left">
+<div class="text-headline-md font-headline-md text-on-primary-container">
+                AURORA JEWELS
+            </div>
+</div>
+<div class="col-span-1 md:col-span-8 flex flex-wrap gap-x-8 gap-y-4">
+<a class="text-label-caps font-label-caps text-on-primary-container/80 hover:text-on-primary-fixed transition-colors" href="#">Shop All Jewelry</a>
+<a class="text-label-caps font-label-caps text-on-primary-container/80 hover:text-on-primary-fixed transition-colors" href="#">New Arrivals</a>
+<a class="text-label-caps font-label-caps text-on-primary-container/80 hover:text-on-primary-fixed transition-colors" href="#">Our Story</a>
+<a class="text-label-caps font-label-caps text-on-primary-container/80 hover:text-on-primary-fixed transition-colors" href="#">Ethical Sourcing</a>
+<a class="text-label-caps font-label-caps text-on-primary-container/80 hover:text-on-primary-fixed transition-colors" href="#">Shipping &amp; Returns</a>
+<a class="text-label-caps font-label-caps text-on-primary-container/80 hover:text-on-primary-fixed transition-colors" href="#">Contact Us</a>
+<a class="text-label-caps font-label-caps text-on-primary-container/80 hover:text-on-primary-fixed transition-colors" href="#">Privacy Policy</a>
+</div>
+<div class="col-span-1 md:col-span-4 text-left md:text-right mt-8 md:mt-0">
+<p class="text-body-md font-body-md text-on-primary-container/80">
+                © 2024 AURORA JEWELS. ALL RIGHTS RESERVED.
+            </p>
+</div>
+</footer><section class="w-full overflow-hidden py-12 md:py-[72px]" style="background-color: rgb(248, 245, 237);"><style>@keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } } .animate-marquee { display: flex; width: max-content; animation: marquee 40s linear infinite; } @media (prefers-reduced-motion: reduce) { .animate-marquee { animation: none; overflow-x: auto; width: 100%; justify-content: center; } }</style><div class="flex whitespace-nowrap"><div class="animate-marquee flex items-center gap-x-8 md:gap-x-12"><span class="text-[32px] md:text-[48px] uppercase tracking-[0.2em]" style="color: #C6A56A; font-family: 'Cormorant Garamond', serif; font-weight: 500;">Aurora Jewels · Aurora Jewels · Aurora Jewels · Aurora Jewels · Aurora Jewels · Aurora Jewels · Aurora Jewels · Aurora Jewels ·</span><span class="text-[32px] md:text-[48px] uppercase tracking-[0.2em]" style="color: #C6A56A; font-family: 'Cormorant Garamond', serif; font-weight: 500;">Aurora Jewels · Aurora Jewels · Aurora Jewels · Aurora Jewels · Aurora Jewels · Aurora Jewels · Aurora Jewels · Aurora Jewels ·</span></div></div></section>
+
+
+</body></html>

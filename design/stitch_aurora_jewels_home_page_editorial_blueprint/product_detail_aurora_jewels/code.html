@@ -1,0 +1,307 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Aurora Jewels - Product Detail</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "error-container": "#ffdad6",
+                      "on-tertiary-fixed-variant": "#623e34",
+                      "on-error": "#ffffff",
+                      "on-primary-fixed": "#00201c",
+                      "surface-variant": "#e4e2dd",
+                      "error": "#ba1a1a",
+                      "on-surface": "#1b1c19",
+                      "primary-container": "#0d302b",
+                      "on-secondary": "#ffffff",
+                      "tertiary-fixed-dim": "#eebbae",
+                      "surface-tint": "#43655e",
+                      "on-primary-fixed-variant": "#2c4d47",
+                      "on-primary": "#ffffff",
+                      "surface-container-low": "#f5f3ee",
+                      "surface-dim": "#dbdad5",
+                      "inverse-on-surface": "#f2f1ec",
+                      "surface-bright": "#fbf9f4",
+                      "secondary-fixed": "#ffdea6",
+                      "secondary-container": "#ffdb9c",
+                      "on-primary-container": "#769992",
+                      "on-error-container": "#93000a",
+                      "inverse-surface": "#30312e",
+                      "secondary": "#755a27",
+                      "on-tertiary-container": "#b5877b",
+                      "on-background": "#1b1c19",
+                      "primary": "#001a17",
+                      "outline-variant": "#c1c8c5",
+                      "on-tertiary": "#ffffff",
+                      "inverse-primary": "#aacec6",
+                      "background": "#fbf9f4",
+                      "on-secondary-fixed-variant": "#5b4311",
+                      "outline": "#717976",
+                      "primary-fixed": "#c6eae2",
+                      "tertiary": "#290e08",
+                      "primary-fixed-dim": "#aacec6",
+                      "on-secondary-fixed": "#271900",
+                      "on-tertiary-fixed": "#2f140c",
+                      "on-secondary-container": "#795e2b",
+                      "surface-container-highest": "#e4e2dd",
+                      "surface-container-lowest": "#ffffff",
+                      "surface-container-high": "#eae8e3",
+                      "surface": "#fbf9f4",
+                      "on-surface-variant": "#414846",
+                      "tertiary-container": "#41221a",
+                      "secondary-fixed-dim": "#e5c284",
+                      "surface-container": "#f0eee9",
+                      "tertiary-fixed": "#ffdbd2"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "gutter": "24px",
+                      "margin-mobile": "20px",
+                      "section-gap": "120px",
+                      "container-max": "1440px",
+                      "margin-desktop": "64px",
+                      "unit": "4px"
+              },
+              "fontFamily": {
+                      "display-lg-mobile": [
+                              "ebGaramond"
+                      ],
+                      "headline-md": [
+                              "ebGaramond"
+                      ],
+                      "editorial-italic": [
+                              "ebGaramond"
+                      ],
+                      "display-lg": [
+                              "ebGaramond"
+                      ],
+                      "functional-sm": [
+                              "manrope"
+                      ],
+                      "body-lg": [
+                              "manrope"
+                      ],
+                      "label-caps": [
+                              "manrope"
+                      ],
+                      "body-md": [
+                              "manrope"
+                      ]
+              },
+              "fontSize": {
+                      "display-lg-mobile": [
+                              "40px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-md": [
+                              "32px",
+                              {
+                                      "lineHeight": "1.3",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "editorial-italic": [
+                              "24px",
+                              {
+                                      "lineHeight": "1.4",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "display-lg": [
+                              "64px",
+                              {
+                                      "lineHeight": "1.1",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "functional-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "1.4",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-caps": [
+                              "12px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "letterSpacing": "0.1em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+          .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+          }
+      </style>
+</head>
+<body class="bg-background text-on-surface antialiased selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-margin-desktop py-6 bg-background border-b border-outline-variant/10 transition-all duration-500 ease-in-out">
+<nav class="hidden md:flex gap-8">
+<a class="text-on-surface-variant dark:text-on-surface-variant/70 hover:text-primary dark:hover:text-primary-fixed transition-colors duration-300 text-label-caps font-label-caps" href="#">Shop</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant/70 hover:text-primary dark:hover:text-primary-fixed transition-colors duration-300 text-label-caps font-label-caps" href="#">New Arrivals</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant/70 hover:text-primary dark:hover:text-primary-fixed transition-colors duration-300 text-label-caps font-label-caps" href="#">Collections</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant/70 hover:text-primary dark:hover:text-primary-fixed transition-colors duration-300 text-label-caps font-label-caps" href="#">About</a>
+</nav>
+<div class="absolute left-1/2 -translate-x-1/2">
+<a class="text-headline-md font-headline-md tracking-widest text-primary dark:text-on-primary-container uppercase" href="#">AURORA JEWELS</a>
+</div>
+<div class="flex gap-6 items-center">
+<button aria-label="search" class="text-primary hover:text-secondary-fixed transition-colors"><span class="material-symbols-outlined text-[20px]">search</span></button>
+<button aria-label="person" class="text-primary hover:text-secondary-fixed transition-colors"><span class="material-symbols-outlined text-[20px]">person</span></button>
+<button aria-label="favorite" class="text-primary hover:text-secondary-fixed transition-colors"><span class="material-symbols-outlined text-[20px]">favorite</span></button>
+<button aria-label="shopping_bag" class="text-primary hover:text-secondary-fixed transition-colors"><span class="material-symbols-outlined text-[20px]">shopping_bag</span></button>
+</div>
+</header>
+<main class="pt-[104px]">
+<!-- Product Section -->
+<section class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-12 md:py-16">
+<div class="flex flex-col lg:flex-row gap-gutter">
+<!-- Product Gallery (60%) -->
+<div class="w-full lg:w-[60%] flex flex-col md:flex-row gap-4">
+<div class="hidden md:flex flex-col gap-4 w-[120px]">
+<img class="w-full aspect-[4/5] object-cover bg-surface-container-low cursor-pointer border border-transparent hover:border-outline-variant/30 transition-all" data-alt="A close-up, macro shot of a delicate gold ring with a sparkling emerald gemstone, resting on a textured ivory surface in natural, soft light. Minimalist architectural aesthetic, quiet luxury style, sharp focus on the gem." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCeKGQGmdAzmWX8ElrBTYBXh2qx8nOz--ZvGQOXQMeJwPhE92KazQpEN8M5vgJc-zjkr5VnwGvNrD55cEWCpf37AO7lLAlnsjzK8dfAw4ap_YsfFeT3hIV1kLAE8gqn3tZyF1wgUZvnNyf--66TW4NKaF2zNf6Ebn8mnW4T5dB5hikFONLV7FRth_NmNSwgAaWGDP5wcOy-MoxHMjQ3iAAmEGU56SkHUb5qEcPa8TB3fuFkR4idqWYrMQ">
+<img class="w-full aspect-[4/5] object-cover bg-surface-container-low cursor-pointer border border-transparent hover:border-outline-variant/30 transition-all opacity-70" data-alt="Another angle of the gold and emerald ring, showing the intricate band design. Natural side lighting casting long, subtle shadows on a pristine off-white background. High-end editorial jewelry photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAhyt1fVMJaPpBMI8gv4aZXVVXFYZWDLeCBbbXri3pAABesAKSyOf9co1j_RO0Xy5kqJ7KhRYYnDlAYnRbbNrMLVQPgrruH1bMgL7b6fwU8kqJRrw6Q7ch_Y2GDwoq9MiQWPmaekl5GytVlpa2h5j-kpuRdJKjq_IOeDb_-DsmBn8OkmVFggPmBJRA8xEMF--XXI8Th_sndn1d3WK6QvqkDXBZYAEYaYLLm5ZlQXCyxZ7VQSA2lEeOPpg">
+</div>
+<div class="flex-1">
+<img class="w-full aspect-[4/5] object-cover bg-surface-container-low" data-alt="A large, high-resolution product shot of the exquisite gold ring featuring a deep emerald cut stone. Positioned centrally against a minimalist, flat ivory background with soft, diffused daylight. Architectural perfection in jewelry design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBE7mwB_Xx_Ri5BL9mBGo9z5vxYDng_hUsTQJa_rWdAwY0fHxBJC-wOtBi1Le8tYQw_dc43okZzaoC8xuPmBL-RHM0wGfYRcIPWOIsegw3BI7J6AKtvujREDUQXJ4fwi64ArRACSBcdbuLaOlkieztoEPE7bWSJ9o_fAtrktuMMltfd1DICKpXUZO1giBk93WkWLoB69WiIUvk-yiS-lfoZSOt8P9Z4gVLuOgsF0sb8m3RAa44aVzF8yw">
+</div>
+</div>
+<!-- Product Information (40%) -->
+<div class="w-full lg:w-[40%] flex flex-col pt-8 lg:pt-0 lg:pl-12">
+<div class="mb-8">
+<span class="text-label-caps font-label-caps text-outline mb-4 block">Rings / Signature Collection</span>
+<h1 class="text-display-lg-mobile md:text-display-lg font-display-lg-mobile md:font-display-lg text-primary mb-4 leading-tight">The Veridian Solitaire</h1>
+<p class="text-editorial-italic font-editorial-italic text-on-surface-variant mb-6">$4,250.00</p>
+<p class="text-body-md font-body-md text-on-surface-variant mb-8 leading-relaxed max-w-md">An architectural marvel cast in 18k solid gold. The Veridian features an exceptional deep emerald, held in a tension-style setting that allows light to cascade through the stone from all angles. Unapologetically modern.</p>
+</div>
+<hr class="border-outline-variant/20 mb-8">
+<!-- Variant Selection -->
+<div class="mb-10">
+<div class="flex justify-between items-center mb-4">
+<span class="text-label-caps font-label-caps text-primary">Select Size</span>
+<a class="text-label-caps font-label-caps text-outline hover:text-primary transition-colors underline underline-offset-4" href="#">Size Guide</a>
+</div>
+<div class="grid grid-cols-4 gap-3">
+<button class="py-3 border border-outline-variant/30 text-functional-sm font-functional-sm text-on-surface hover:border-primary transition-colors bg-transparent">5</button>
+<button class="py-3 border border-primary bg-primary-container/5 text-functional-sm font-functional-sm text-primary transition-colors">6</button>
+<button class="py-3 border border-outline-variant/30 text-functional-sm font-functional-sm text-on-surface hover:border-primary transition-colors bg-transparent">7</button>
+<button class="py-3 border border-outline-variant/30 text-functional-sm font-functional-sm text-on-surface hover:border-primary transition-colors bg-transparent">8</button>
+</div>
+</div>
+<!-- Purchase Area -->
+<div class="mb-12">
+<button class="w-full bg-primary text-on-primary py-4 text-label-caps font-label-caps uppercase tracking-widest hover:bg-primary-container transition-colors duration-300 rounded-sm mb-4 h-[52px]">Add to Bag</button>
+<button class="w-full flex items-center justify-center gap-2 py-4 text-functional-sm font-functional-sm text-on-surface hover:text-secondary transition-colors group border border-transparent hover:border-outline-variant/20">
+<span class="material-symbols-outlined text-[18px] group-hover:fill-current">favorite</span>
+                            Save to Wishlist
+                        </button>
+</div>
+<!-- Accordions -->
+<div class="border-t border-outline-variant/20">
+<details class="group border-b border-outline-variant/20" open="">
+<summary class="flex justify-between items-center py-6 cursor-pointer list-none">
+<span class="text-body-lg font-body-lg text-primary">Materials &amp; Care</span>
+<span class="material-symbols-outlined text-outline group-open:rotate-45 transition-transform">add</span>
+</summary>
+<div class="pb-6 text-body-md font-body-md text-on-surface-variant pr-8">
+                                Crafted from 100% recycled 18k yellow gold. The center stone is an ethically sourced, conflict-free emerald. Avoid exposure to harsh chemicals and extreme temperature changes. Clean gently with a soft brush and warm water.
+                            </div>
+</details>
+<details class="group border-b border-outline-variant/20">
+<summary class="flex justify-between items-center py-6 cursor-pointer list-none">
+<span class="text-body-lg font-body-lg text-primary">Shipping &amp; Returns</span>
+<span class="material-symbols-outlined text-outline group-open:rotate-45 transition-transform">add</span>
+</summary>
+<div class="pb-6 text-body-md font-body-md text-on-surface-variant pr-8 hidden">
+                                Complimentary express shipping on all orders. Returns are accepted within 14 days of delivery for unworn items in their original packaging.
+                            </div>
+</details>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full px-margin-desktop py-section-gap grid grid-cols-12 gap-gutter bg-[#0D302B] text-[#F8F5ED]"><div class="col-span-12 md:col-span-4 flex flex-col gap-8"><h2 class="text-headline-md font-headline-md text-[#F8F5ED] tracking-widest uppercase">AURORA JEWELS</h2><p class="text-body-md font-body-md text-[#B9BDB8] max-w-sm">Quiet luxury, architectural precision, and timeless elegance.</p></div><div class="col-span-12 md:col-span-8 grid grid-cols-2 md:grid-cols-4 gap-8"><div class="flex flex-col gap-4"><h3 class="text-label-caps font-label-caps text-[#F8F5ED] mb-2">SHOP</h3><a class="text-[#B9BDB8] hover:text-[#F8F5ED] transition-colors text-label-caps font-label-caps" href="#">All Jewelry</a><a class="text-[#B9BDB8] hover:text-[#F8F5ED] transition-colors text-label-caps font-label-caps" href="#">New Arrivals</a><a class="text-[#B9BDB8] hover:text-[#F8F5ED] transition-colors text-label-caps font-label-caps" href="#">Collections</a></div><div class="flex flex-col gap-4"><h3 class="text-label-caps font-label-caps text-[#F8F5ED] mb-2">ABOUT</h3><a class="text-[#B9BDB8] hover:text-[#F8F5ED] transition-colors text-label-caps font-label-caps" href="#">Our Story</a><a class="text-[#B9BDB8] hover:text-[#F8F5ED] transition-colors text-label-caps font-label-caps" href="#">Ethical Sourcing</a><a class="text-[#B9BDB8] hover:text-[#F8F5ED] transition-colors text-label-caps font-label-caps" href="#">Sustainability</a></div><div class="flex flex-col gap-4"><h3 class="text-label-caps font-label-caps text-[#F8F5ED] mb-2">CUSTOMER CARE</h3><a class="text-[#B9BDB8] hover:text-[#F8F5ED] transition-colors text-label-caps font-label-caps" href="#">Shipping &amp; Returns</a><a class="text-[#B9BDB8] hover:text-[#F8F5ED] transition-colors text-label-caps font-label-caps" href="#">Contact Us</a><a class="text-[#B9BDB8] hover:text-[#F8F5ED] transition-colors text-label-caps font-label-caps" href="#">FAQs</a></div><div class="flex flex-col gap-4"><h3 class="text-label-caps font-label-caps text-[#F8F5ED] mb-2">SOCIAL</h3><a class="text-[#B9BDB8] hover:text-[#F8F5ED] transition-colors text-label-caps font-label-caps" href="#">Instagram</a></div></div><div class="col-span-12 mt-16 pt-8 border-t border-[#B9BDB8]/10 flex flex-col md:flex-row justify-between items-center gap-4 text-label-caps font-label-caps text-[#B9BDB8]"><span class="">© 2024 AURORA JEWELS. ALL RIGHTS RESERVED.</span><div class="flex gap-6"><a class="hover:text-[#F8F5ED] transition-colors" href="#">Privacy Policy</a><a class="hover:text-[#F8F5ED] transition-colors" href="#">Terms of Service</a></div></div></footer><div class="w-full bg-[#F8F5ED] py-12 md:py-[72px] overflow-hidden border-none">
+  <style>
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .animate-marquee {
+      display: flex;
+      white-space: nowrap;
+      animation: marquee 40s linear infinite;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .animate-marquee {
+        animation: none;
+        overflow-x: auto;
+      }
+    }
+  </style>
+  <div class="animate-marquee flex items-center">
+    <span class="text-[#C6A56A] font-headline-md uppercase tracking-[0.2em] text-[32px] md:text-[48px] px-4">
+      AURORA JEWELS &nbsp;·&nbsp; AURORA JEWELS &nbsp;·&nbsp; AURORA JEWELS &nbsp;·&nbsp; AURORA JEWELS &nbsp;·&nbsp; AURORA JEWELS &nbsp;·&nbsp; AURORA JEWELS &nbsp;·&nbsp; AURORA JEWELS &nbsp;·&nbsp; AURORA JEWELS &nbsp;·&nbsp;
+    </span>
+    <span class="text-[#C6A56A] font-headline-md uppercase tracking-[0.2em] text-[32px] md:text-[48px] px-4">
+      AURORA JEWELS &nbsp;·&nbsp; AURORA JEWELS &nbsp;·&nbsp; AURORA JEWELS &nbsp;·&nbsp; AURORA JEWELS &nbsp;·&nbsp; AURORA JEWELS &nbsp;·&nbsp; AURORA JEWELS &nbsp;·&nbsp; AURORA JEWELS &nbsp;·&nbsp; AURORA JEWELS &nbsp;·&nbsp;
+    </span>
+  </div>
+</div>
+<script>
+        // Simple accordion fix for <details> to ensure only one is open (optional, standard HTML handles toggle but not exclusive accordion)
+        const details = document.querySelectorAll("details");
+        details.forEach((targetDetail) => {
+            targetDetail.addEventListener("click", () => {
+                details.forEach((detail) => {
+                    if (detail !== targetDetail) {
+                        detail.removeAttribute("open");
+                    }
+                });
+            });
+        });
+    </script>
+
+
+
+
+</body></html>

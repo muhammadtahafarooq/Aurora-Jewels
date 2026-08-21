@@ -1,0 +1,279 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Collections - Aurora Jewels</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&amp;family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed-dim": "#aacec6",
+                        "outline-variant": "#c1c8c5",
+                        "surface-container-highest": "#e4e2dd",
+                        "inverse-surface": "#30312e",
+                        "on-primary-fixed": "#00201c",
+                        "secondary-fixed": "#ffdea6",
+                        "surface-container-low": "#f5f3ee",
+                        "primary-container": "#0d302b",
+                        "surface": "#fbf9f4",
+                        "on-error": "#ffffff",
+                        "surface-variant": "#e4e2dd",
+                        "primary": "#001a17",
+                        "inverse-on-surface": "#f2f1ec",
+                        "inverse-primary": "#aacec6",
+                        "on-tertiary-container": "#b5877b",
+                        "tertiary-container": "#41221a",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed": "#2f140c",
+                        "on-primary-container": "#769992",
+                        "error-container": "#ffdad6",
+                        "on-primary": "#ffffff",
+                        "tertiary-fixed-dim": "#eebbae",
+                        "primary-fixed": "#c6eae2",
+                        "on-surface": "#1b1c19",
+                        "surface-dim": "#dbdad5",
+                        "secondary-fixed-dim": "#e5c284",
+                        "surface-container-high": "#eae8e3",
+                        "surface-container": "#f0eee9",
+                        "on-secondary": "#ffffff",
+                        "outline": "#717976",
+                        "on-primary-fixed-variant": "#2c4d47",
+                        "background": "#fbf9f4",
+                        "secondary-container": "#ffdb9c",
+                        "on-background": "#1b1c19",
+                        "secondary": "#755a27",
+                        "on-secondary-container": "#795e2b",
+                        "surface-tint": "#43655e",
+                        "on-secondary-fixed-variant": "#5b4311",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "surface-bright": "#fbf9f4",
+                        "on-tertiary-fixed-variant": "#623e34",
+                        "on-error-container": "#93000a",
+                        "tertiary": "#290e08",
+                        "on-secondary-fixed": "#271900",
+                        "tertiary-fixed": "#ffdbd2",
+                        "on-surface-variant": "#414846"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-desktop": "64px",
+                        "section-gap": "120px",
+                        "container-max": "1440px",
+                        "margin-mobile": "20px",
+                        "unit": "4px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "editorial-italic": ["Cormorant Garamond"],
+                        "functional-sm": ["Manrope"],
+                        "display-lg-mobile": ["Cormorant Garamond"],
+                        "label-caps": ["Manrope"],
+                        "body-md": ["Manrope"],
+                        "headline-md": ["Cormorant Garamond"],
+                        "body-lg": ["Manrope"],
+                        "display-lg": ["Cormorant Garamond"]
+                    },
+                    "fontSize": {
+                        "editorial-italic": ["24px", { "lineHeight": "1.4", "fontWeight": "400" }],
+                        "functional-sm": ["14px", { "lineHeight": "1.4", "fontWeight": "500" }],
+                        "display-lg-mobile": ["40px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "1.2", "letterSpacing": "0.1em", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "headline-md": ["32px", { "lineHeight": "1.3", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "display-lg": ["64px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.on-background');
+        }
+        .text-cormorant { font-family: 'Cormorant Garamond', serif; }
+        .text-manrope { font-family: 'Manrope', sans-serif; }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<header class="bg-surface top-0 w-full z-50 flex justify-between items-center px-margin-desktop py-6 border-b border-outline-variant/10 transition-all duration-500 ease-in-out fixed">
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-on-surface-variant dark:text-on-surface-variant/70 text-label-caps font-label-caps hover:text-primary dark:hover:text-primary-fixed transition-colors duration-300" href="#">Shop</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant/70 text-label-caps font-label-caps hover:text-primary dark:hover:text-primary-fixed transition-colors duration-300" href="#">New Arrivals</a>
+<a class="text-primary dark:text-on-primary-container text-label-caps font-label-caps border-b border-primary dark:border-on-primary-container pb-1 hover:text-primary dark:hover:text-primary-fixed transition-colors duration-300" href="#">Collections</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant/70 text-label-caps font-label-caps hover:text-primary dark:hover:text-primary-fixed transition-colors duration-300" href="#">About</a>
+</nav>
+<div class="absolute left-1/2 -translate-x-1/2">
+<h1 class="text-headline-md font-headline-md tracking-widest text-primary dark:text-on-primary-container m-0 leading-none">AURORA JEWELS</h1>
+</div>
+<div class="flex items-center gap-6">
+<button aria-label="Search" class="text-primary dark:text-on-primary-container hover:text-primary dark:hover:text-primary-fixed transition-colors duration-300">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</button>
+<button aria-label="Account" class="text-primary dark:text-on-primary-container hover:text-primary dark:hover:text-primary-fixed transition-colors duration-300 hidden md:block">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+</button>
+<button aria-label="Wishlist" class="text-primary dark:text-on-primary-container hover:text-primary dark:hover:text-primary-fixed transition-colors duration-300 hidden md:block">
+<span class="material-symbols-outlined" data-icon="favorite">favorite</span>
+</button>
+<button aria-label="Bag" class="text-primary dark:text-on-primary-container hover:text-primary dark:hover:text-primary-fixed transition-colors duration-300">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+</button>
+</div>
+</header>
+<main class="flex-grow pt-[100px]">
+<!-- Hero Section -->
+<section class="relative w-full h-[70vh] min-h-[600px] flex items-center justify-start overflow-hidden">
+<div class="absolute inset-0 w-full h-full">
+<img alt="Collections Hero" class="object-cover w-full h-full" data-alt="A wide cinematic editorial photograph of an elegant model wearing stunning high-fashion diamond jewelry against a softly lit, minimalist architectural backdrop in light mode. The color palette features ivory and deep emerald accents. The image conveys quiet luxury, with dramatic lighting highlighting the brilliance of the diamonds and the sophisticated atmosphere of a premium jewelry brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCO-qL2A2umc2QehP9vMl-d1IcD0L-kgHYgxL0-tOdRFHO9Tt9S2G7C2sMFvP8-qmE68bGAKK0y7T1jZ5BZiw7jCRgdEYcGH8H5X3FG26aqvdbDFXLOvomGg5ERXaaRbvNbIqL2ZLKmv-6CLxt2GK__GHyqMDEvtGMh04dDBjRU6nVTlN84APRXNhTM4mzQCs41uS7xURI-FtmjSWTBdv2898tQT2gHP3CHikbZkIXpSdr4VFUW39OFXA">
+</div>
+<div class="absolute inset-0 bg-gradient-to-r from-surface/80 to-transparent"></div>
+<div class="relative z-10 pl-margin-desktop md:w-1/2 max-w-2xl">
+<h2 class="text-display-lg md:text-display-lg text-primary mb-6">Collections</h2>
+<p class="text-body-lg text-on-surface-variant max-w-md">Discover our meticulously curated collections. Each piece represents an architectural approach to fine jewelry, balancing strict structural forms with the organic brilliance of carefully sourced stones.</p>
+</div>
+</section>
+<!-- Collections Editorial Listing -->
+<section class="max-w-[container-max] mx-auto px-margin-mobile md:px-margin-desktop py-section-gap flex flex-col gap-32">
+<!-- Collection 1 (Left Aligned Image) -->
+<div class="grid grid-cols-12 gap-gutter items-center">
+<div class="col-span-12 md:col-span-7 h-[600px] bg-surface-container-high relative group overflow-hidden">
+<img alt="The Emerald Cut Collection" class="object-cover w-full h-full transition-transform duration-700 group-hover:scale-105" data-alt="An editorial close-up photograph of hands adorned with geometric emerald and gold rings. The styling is minimalist and architectural, set against a stark ivory background. Lighting is sharp, creating precise shadows that emphasize the high-end, quiet luxury aesthetic of the jewelry collection." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBTWVkhWJ19f2vaQ7SYcxR7Pf_gb046SW10EX8fwfuPDQfdaqO9qEjNRuTqvT1w37e4CwFevE7SJfCJ8_MQ0laK9CYNytPbV33UYnnLY-XgEcGuyI2xnb2f4W83l41bDOeyk6nABWtBX5yfaPQWb0_2O4mlc8UoGEQMkIJBpVCewXt5zu-JXAne6I5apNCv8S8T0J8b4BKNz8b0rLh0c-dVTR1p5iZIptQCiafr_eamNMMM9i4mhmoPlg">
+</div>
+<div class="col-span-12 md:col-span-4 md:col-start-9 flex flex-col justify-center py-8">
+<span class="text-label-caps font-label-caps text-on-surface-variant mb-4 uppercase tracking-widest">High Jewelry</span>
+<h3 class="text-headline-md font-headline-md text-primary mb-6">The Emerald Cut</h3>
+<p class="text-body-md text-on-surface-variant mb-8">A study in sharp lines and profound depth. The Emerald Cut collection eschews traditional curves for strong, architectural geometries, celebrating the clarity and structure of each stone.</p>
+<a class="inline-flex items-center text-functional-sm font-functional-sm text-primary hover:text-on-surface-variant transition-colors group" href="#">
+                        Explore Collection
+                        <span class="material-symbols-outlined ml-2 text-[18px] group-hover:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+</div>
+<!-- Collection 2 (Right Aligned Image) -->
+<div class="grid grid-cols-12 gap-gutter items-center">
+<div class="col-span-12 md:col-span-4 flex flex-col justify-center py-8 order-2 md:order-1">
+<span class="text-label-caps font-label-caps text-on-surface-variant mb-4 uppercase tracking-widest">Everyday Architecture</span>
+<h3 class="text-headline-md font-headline-md text-primary mb-6">The Foundation Line</h3>
+<p class="text-body-md text-on-surface-variant mb-8">Essential forms designed for daily wear. This collection focuses on pristine white metals and subtle diamond accents, engineered to be layered or stand confidently alone.</p>
+<a class="inline-flex items-center text-functional-sm font-functional-sm text-primary hover:text-on-surface-variant transition-colors group" href="#">
+                        Explore Collection
+                        <span class="material-symbols-outlined ml-2 text-[18px] group-hover:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+<div class="col-span-12 md:col-span-7 md:col-start-6 h-[600px] bg-surface-container-high relative group overflow-hidden order-1 md:order-2">
+<img alt="The Foundation Line Collection" class="object-cover w-full h-full transition-transform duration-700 group-hover:scale-105" data-alt="A striking minimalist still life of a pristine white gold and diamond bangle resting on a raw, textured concrete block. The scene is bathed in soft, high-key light mode illumination. The contrast between the smooth, polished luxury of the jewelry and the rough architectural element conveys a sophisticated, modern aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDkK4kpfz8XiY06IscG5pXRsgeqFZPvleCoRLzSJuDLeWNF4k3etpGDpKIadcDQUODMHOBQN6j9Goi3odrGeWkHCE0Z0B7s-0fFrYiqZmozB7SfBW9Dq6dLoe9G0mkh_vvQHylpmTWyPVS7wB3ukp67vBuzsQOCH3NKAnZhjJM-wJ_8726-CeMFYti-_7Eo20gpHRB8k-IjmeTeHniEcXLC3U6Vg-BNT_S2I3Fir8oz_INO4zpMJ_qYcw">
+</div>
+</div>
+</section>
+<!-- Product Preview Grid -->
+<section class="max-w-[container-max] mx-auto px-margin-mobile md:px-margin-desktop py-section-gap border-t border-outline-variant/10">
+<div class="flex justify-between items-end mb-12">
+<h3 class="text-headline-md font-headline-md text-primary m-0">Curated Selection</h3>
+<a class="text-functional-sm font-functional-sm text-on-surface-variant hover:text-primary transition-colors uppercase tracking-widest border-b border-on-surface-variant/30 pb-1" href="#">View All Pieces</a>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-x-gutter gap-y-12">
+<!-- Product 1 -->
+<div class="group cursor-pointer">
+<div class="relative w-full aspect-[4/5] bg-surface-container-low mb-4 overflow-hidden">
+<img alt="Apex Diamond Necklace" class="object-cover w-full h-full transition-transform duration-700 group-hover:scale-105" data-alt="A clean, front-facing product shot of a sleek geometric diamond necklace against a pure white background. The lighting is perfectly even, capturing the sparkle without harsh shadows. Minimalist, high-end e-commerce style reflecting quiet luxury." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtTOQiCI1wBqYUn5o1ncrwXg2D4KpFP5dZUltWw2HJKj5MaQh4IFBg6LzPU0TXfcqvUE_UR8GEieoFde_TedaFGLnXPr9gZ9W0KAUBYkWoJBPibywDoemzVzyWcqOEX18wMTsapv6FfIlRpWom1laUrUlTGwl0JdcKHJUuEPQ_bGz_mrwu7qSQwgPCCPpxNCBeotLneXpeMN2xsrVg-ImykXtYFhIzzFooVfabXiQODL-KPO0CJgGOig">
+<button aria-label="Add to wishlist" class="absolute top-4 right-4 text-on-surface-variant hover:text-primary transition-colors bg-surface/50 p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+<span class="material-symbols-outlined" data-icon="favorite">favorite</span>
+</button>
+</div>
+<div class="flex flex-col gap-1">
+<h4 class="text-functional-sm font-functional-sm text-primary m-0">Apex Diamond Necklace</h4>
+<p class="text-body-md text-on-surface-variant m-0">$4,200</p>
+</div>
+</div>
+<!-- Product 2 -->
+<div class="group cursor-pointer">
+<div class="relative w-full aspect-[4/5] bg-surface-container-low mb-4 overflow-hidden">
+<img alt="Structural Cuff" class="object-cover w-full h-full transition-transform duration-700 group-hover:scale-105" data-alt="A clean, front-facing product shot of a substantial white gold architectural cuff bracelet against a pure white background. The lighting is perfectly even, capturing the polished surface without harsh shadows. Minimalist, high-end e-commerce style reflecting quiet luxury." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwSFyAKWaqiLBrDmz2YMiXrd2XE_b0wFb8SF5SzxefpI1NPZw39JD1aWD_Z8bworR1jG_G01W8M5_Zuq_6IqoEBoJ7_QA5xdzNg2GKJtTr1gOfSyXP1Htigm-iKlt--ArtIHO6LhxZZpJmMptgwjUe3KtRJFuHcbGwC8cymwFUq1erZOnPxsSUBFx7LDFqXFcTxQ5SP3I4VlOebiWshkQGcsYuv013pE_mET7B84ll1fn3sa3WdrX36Q">
+<button aria-label="Add to wishlist" class="absolute top-4 right-4 text-on-surface-variant hover:text-primary transition-colors bg-surface/50 p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+<span class="material-symbols-outlined" data-icon="favorite">favorite</span>
+</button>
+</div>
+<div class="flex flex-col gap-1">
+<h4 class="text-functional-sm font-functional-sm text-primary m-0">Structural Cuff</h4>
+<p class="text-body-md text-on-surface-variant m-0">$3,850</p>
+</div>
+</div>
+<!-- Product 3 -->
+<div class="group cursor-pointer">
+<div class="relative w-full aspect-[4/5] bg-surface-container-low mb-4 overflow-hidden">
+<img alt="Obelisk Emerald Studs" class="object-cover w-full h-full transition-transform duration-700 group-hover:scale-105" data-alt="A clean, front-facing product shot of minimalist emerald stud earrings set in dark metal against a pure white background. The lighting is perfectly even, capturing the deep green of the stone without harsh shadows. Minimalist, high-end e-commerce style reflecting quiet luxury." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwcE6kIV1Ta33MgBxckW3fjM9ydmclM42vo_b4cMBzcTtvx04HxEU4zMlUWkQUHHW18QSfJ8c0hbXdLSgLmVYPKj3JHeDQBkTmbR6DN62SYdPn_TG4RnHI4NqZlUE1q-gEE3pyd6oOTtr7LHk4-2U_jYOtsUZKVBtoFx3OpUc9iOHR6vrNbrzsTY5OCcZRC51DZfPDJiRQI71l6uo_R7LcTjivoe5tkb-Eq_riYCvmvFUZirz0PduO-A">
+<button aria-label="Add to wishlist" class="absolute top-4 right-4 text-on-surface-variant hover:text-primary transition-colors bg-surface/50 p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+<span class="material-symbols-outlined" data-icon="favorite">favorite</span>
+</button>
+</div>
+<div class="flex flex-col gap-1">
+<h4 class="text-functional-sm font-functional-sm text-primary m-0">Obelisk Emerald Studs</h4>
+<p class="text-body-md text-on-surface-variant m-0">$2,100</p>
+</div>
+</div>
+<!-- Product 4 -->
+<div class="group cursor-pointer">
+<div class="relative w-full aspect-[4/5] bg-surface-container-low mb-4 overflow-hidden">
+<img alt="Elevation Ring" class="object-cover w-full h-full transition-transform duration-700 group-hover:scale-105" data-alt="A clean, front-facing product shot of a layered multi-band ring featuring subtle diamond pavé against a pure white background. The lighting is perfectly even, capturing the intricate details without harsh shadows. Minimalist, high-end e-commerce style reflecting quiet luxury." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9CcFpVFrJFtV8eKTo6UEpegw3VGbtyHMiub_5uGQrg4yGGk_YK9s0DfWfPIZrteKjFt8G-SeXO5Fbma3q6TWNhTo5vkXiACMf2uAOdTi-1T7xBuC9kbdh3zCAVvEbyeOkrPD1LCzhP6b-XZKEc5k4Ez2rKyWLLha9Ja9IBeS32ze7oTf5fz1LD1XbDYwX-RLpzi30BIhqssvcsnsRsC5qQ2FaEm7bjNZB2L4M1tJ1Vp4jqHno5aRZhw">
+<button aria-label="Add to wishlist" class="absolute top-4 right-4 text-on-surface-variant hover:text-primary transition-colors bg-surface/50 p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+<span class="material-symbols-outlined" data-icon="favorite">favorite</span>
+</button>
+</div>
+<div class="flex flex-col gap-1">
+<h4 class="text-functional-sm font-functional-sm text-primary m-0">Elevation Ring</h4>
+<p class="text-body-md text-on-surface-variant m-0">$1,950</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-primary-container dark:bg-primary-container w-full px-margin-desktop py-section-gap grid grid-cols-12 gap-gutter text-on-primary-container">
+<div class="col-span-12 md:col-span-4 mb-12 md:mb-0 flex flex-col justify-between">
+<h2 class="text-headline-md font-headline-md text-on-primary-container m-0 mb-6 uppercase tracking-widest">AURORA JEWELS</h2>
+<p class="text-label-caps font-label-caps text-on-primary-container/80 m-0">© 2024 AURORA JEWELS. ALL RIGHTS RESERVED.</p>
+</div>
+<div class="col-span-6 md:col-span-2 md:col-start-7 flex flex-col gap-4">
+<h4 class="text-label-caps font-label-caps text-on-primary-container mb-2">Explore</h4>
+<a class="text-body-md font-body-md text-on-primary-container/80 hover:text-on-primary-fixed transition-colors" href="#">Shop All Jewelry</a>
+<a class="text-body-md font-body-md text-on-primary-container/80 hover:text-on-primary-fixed transition-colors" href="#">New Arrivals</a>
+<a class="text-body-md font-body-md text-on-primary-container underline hover:text-on-primary-fixed transition-colors" href="#">Collections</a>
+</div>
+<div class="col-span-6 md:col-span-2 flex flex-col gap-4">
+<h4 class="text-label-caps font-label-caps text-on-primary-container mb-2">Maison</h4>
+<a class="text-body-md font-body-md text-on-primary-container/80 hover:text-on-primary-fixed transition-colors" href="#">Our Story</a>
+<a class="text-body-md font-body-md text-on-primary-container/80 hover:text-on-primary-fixed transition-colors" href="#">Ethical Sourcing</a>
+</div>
+<div class="col-span-12 md:col-span-2 flex flex-col gap-4 mt-8 md:mt-0">
+<h4 class="text-label-caps font-label-caps text-on-primary-container mb-2">Support</h4>
+<a class="text-body-md font-body-md text-on-primary-container/80 hover:text-on-primary-fixed transition-colors" href="#">Shipping &amp; Returns</a>
+<a class="text-body-md font-body-md text-on-primary-container/80 hover:text-on-primary-fixed transition-colors" href="#">Contact Us</a>
+<a class="text-body-md font-body-md text-on-primary-container/80 hover:text-on-primary-fixed transition-colors" href="#">Privacy Policy</a>
+</div>
+</footer><section class="w-full overflow-hidden bg-[#F8F5ED] py-12 md:py-[72px]"><style>@keyframes signature-marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } } .animate-signature { display: flex; width: max-content; animation: signature-marquee 60s linear infinite; } @media (prefers-reduced-motion: reduce) { .animate-signature { animation: none; width: 100%; justify-content: center; flex-wrap: wrap; } }</style><div class="relative flex overflow-hidden"><div class="animate-signature whitespace-nowrap flex items-center"><span class="text-[#C6A56A] font-headline-md font-medium px-8 uppercase tracking-[0.2em]">AURORA JEWELS · AURORA JEWELS · AURORA JEWELS · AURORA JEWELS · AURORA JEWELS · AURORA JEWELS · AURORA JEWELS · AURORA JEWELS ·</span><span class="text-[#C6A56A] font-headline-md font-medium px-8 uppercase tracking-[0.2em]">AURORA JEWELS · AURORA JEWELS · AURORA JEWELS · AURORA JEWELS · AURORA JEWELS · AURORA JEWELS · AURORA JEWELS · AURORA JEWELS ·</span></div></div></section>
+
+
+
+
+
+
+</body></html>

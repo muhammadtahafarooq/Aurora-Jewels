@@ -1,0 +1,80 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Aurora Jewels — Premium Jewelry Editorial Store">
+  <main class="min-h-screen flex flex-col justify-between">
+    <!-- Header -->
+    <header class="h-[88px] px-10 flex items-center justify-between border-b border-border/10">
+      <div class="flex items-center gap-8 text-[12px] font-semibold tracking-[0.1em] uppercase">
+        <a href="/shop" class="hover:text-primary transition-colors">Shop</a>
+        <a href="/collections" class="hover:text-primary transition-colors">Collections</a>
+      </div>
+      <div>
+        <a href="/" class="text-[20px] font-serif tracking-[0.15em] font-medium uppercase">
+          Aurora Jewels
+        </a>
+      </div>
+      <div class="flex items-center gap-8 text-[12px] font-semibold tracking-[0.1em] uppercase">
+        <a href="/cart" class="hover:text-primary transition-colors">Bag (0)</a>
+      </div>
+    </header>
+
+    <!-- Hero Content -->
+    <section class="max-w-[1440px] mx-auto px-10 py-20 flex-1 grid grid-cols-1 lg:grid-cols-12 gap-[24px] items-center">
+      <div class="lg:col-span-5 flex flex-col gap-6 items-start pr-8">
+        <span class="text-[12px] font-semibold uppercase tracking-[0.15em] text-accent">Editorial No. 01</span>
+        <h1 class="text-[56px] lg:text-[72px] leading-[0.98] font-serif font-normal tracking-[-0.035em]">
+          Timeless <br /><span class="italic">Elegance</span> Refined.
+        </h1>
+        <p class="text-[16px] text-text-secondary leading-[1.6] max-w-[400px]">
+          Luxury jewelry designed for daily wearable prestige. Craftsmanship made to frame individual character.
+        </p>
+        <div class="flex gap-4 mt-4">
+          <a href="/shop" class="btn-primary">Shop Collection</a>
+        </div>
+      </div>
+      <div class="lg:col-span-7 h-[600px] bg-secondary flex items-center justify-center relative overflow-hidden">
+        <!-- Editorial photograph placeholder container (4:5 ratio styling) -->
+        <div class="w-[80%] h-[90%] bg-surface border border-border/20 flex flex-col items-center justify-center p-8">
+          <span class="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted mb-2">Aurora Jewels</span>
+          <span class="text-[18px] font-serif italic text-primary">Luxury Photography Placeholder</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-primary-hover text-background py-16 px-10 border-t border-primary/20">
+      <div class="max-w-[1440px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div class="flex flex-col gap-4">
+          <span class="text-[16px] font-serif tracking-[0.1em] uppercase">Aurora Jewels</span>
+          <p class="text-[13px] text-background/60 leading-[1.5] max-w-[200px]">
+            Sophisticated, timeless and exclusive jewelry house based in Pakistan.
+          </p>
+        </div>
+        <div class="flex flex-col gap-2">
+          <span class="text-[12px] font-semibold uppercase tracking-[0.1em] text-accent">Shop</span>
+          <a href="/shop" class="text-[13px] text-background/80 hover:text-white">All Jewelry</a>
+          <a href="/collections" class="text-[13px] text-background/80 hover:text-white">Collections</a>
+        </div>
+        <div class="flex flex-col gap-2">
+          <span class="text-[12px] font-semibold uppercase tracking-[0.1em] text-accent">About</span>
+          <a href="/about" class="text-[13px] text-background/80 hover:text-white">About Aurora</a>
+          <a href="/story" class="text-[13px] text-background/80 hover:text-white">Our Story</a>
+        </div>
+        <div class="flex flex-col gap-2">
+          <span class="text-[12px] font-semibold uppercase tracking-[0.1em] text-accent">Customer Care</span>
+          <a href="/faq" class="text-[13px] text-background/80 hover:text-white">FAQ</a>
+          <a href="/shipping" class="text-[13px] text-background/80 hover:text-white">Shipping & Returns</a>
+        </div>
+      </div>
+      <div class="max-w-[1440px] mx-auto border-t border-white/10 mt-12 pt-6 flex flex-col md:flex-row justify-between text-[11px] text-background/40">
+        <span>© {new Date().getFullYear()} Aurora Jewels. All Rights Reserved.</span>
+        <div class="flex gap-4">
+          <a href="/privacy" class="hover:text-white">Privacy Policy</a>
+          <a href="/terms" class="hover:text-white">Terms & Conditions</a>
+        </div>
+      </div>
+    </footer>
+  </main>
+</Layout>

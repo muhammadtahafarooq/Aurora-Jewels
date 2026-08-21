@@ -1,0 +1,501 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Checkout - AURORA JEWELS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&amp;family=Manrope:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-error-container": "#93000a",
+                      "on-tertiary-fixed-variant": "#623e34",
+                      "surface-container-high": "#eae8e3",
+                      "on-error": "#ffffff",
+                      "primary": "#001a17",
+                      "on-secondary-container": "#795e2b",
+                      "on-tertiary": "#ffffff",
+                      "on-secondary-fixed": "#271900",
+                      "on-surface-variant": "#414846",
+                      "surface-container-low": "#f5f3ee",
+                      "secondary-container": "#ffdb9c",
+                      "surface-bright": "#fbf9f4",
+                      "surface-container": "#f0eee9",
+                      "on-secondary": "#ffffff",
+                      "primary-fixed-dim": "#aacec6",
+                      "surface-dim": "#dbdad5",
+                      "on-surface": "#1b1c19",
+                      "surface-tint": "#43655e",
+                      "on-tertiary-fixed": "#2f140c",
+                      "tertiary-fixed": "#ffdbd2",
+                      "error-container": "#ffdad6",
+                      "primary-container": "#0d302b",
+                      "surface-variant": "#e4e2dd",
+                      "on-primary": "#ffffff",
+                      "outline-variant": "#c1c8c5",
+                      "tertiary-container": "#41221a",
+                      "secondary-fixed-dim": "#e5c284",
+                      "background": "#fbf9f4",
+                      "secondary": "#755a27",
+                      "inverse-surface": "#30312e",
+                      "on-secondary-fixed-variant": "#5b4311",
+                      "on-primary-container": "#769992",
+                      "primary-fixed": "#c6eae2",
+                      "on-tertiary-container": "#b5877b",
+                      "surface": "#fbf9f4",
+                      "secondary-fixed": "#ffdea6",
+                      "error": "#ba1a1a",
+                      "on-primary-fixed": "#00201c",
+                      "outline": "#717976",
+                      "tertiary": "#290e08",
+                      "surface-container-highest": "#e4e2dd",
+                      "tertiary-fixed-dim": "#eebbae",
+                      "inverse-on-surface": "#f2f1ec",
+                      "inverse-primary": "#aacec6",
+                      "surface-container-lowest": "#ffffff",
+                      "on-primary-fixed-variant": "#2c4d47",
+                      "on-background": "#1b1c19"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "unit": "4px",
+                      "margin-mobile": "20px",
+                      "container-max": "1440px",
+                      "gutter": "24px",
+                      "section-gap": "120px",
+                      "margin-desktop": "64px"
+              },
+              "fontFamily": {
+                      "headline-md": [
+                              "ebGaramond"
+                      ],
+                      "body-lg": [
+                              "manrope"
+                      ],
+                      "label-caps": [
+                              "manrope"
+                      ],
+                      "display-lg": [
+                              "ebGaramond"
+                      ],
+                      "editorial-italic": [
+                              "ebGaramond"
+                      ],
+                      "display-lg-mobile": [
+                              "ebGaramond"
+                      ],
+                      "functional-sm": [
+                              "manrope"
+                      ],
+                      "body-md": [
+                              "manrope"
+                      ]
+              },
+              "fontSize": {
+                      "headline-md": [
+                              "32px",
+                              {
+                                      "lineHeight": "1.3",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-caps": [
+                              "12px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "letterSpacing": "0.1em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "display-lg": [
+                              "64px",
+                              {
+                                      "lineHeight": "1.1",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "editorial-italic": [
+                              "24px",
+                              {
+                                      "lineHeight": "1.4",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "display-lg-mobile": [
+                              "40px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "functional-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "1.4",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        .custom-input {
+            border: 1px solid #DDD9D0;
+            background-color: transparent;
+            border-radius: 2px;
+            padding: 0 16px;
+            height: 48px;
+            font-family: 'Manrope', sans-serif;
+            font-size: 16px;
+            color: #1b1c19;
+            transition: border-color 0.2s ease;
+        }
+        .custom-input:focus {
+            outline: none;
+            border-color: #123C36;
+            box-shadow: none;
+        }
+        .custom-label {
+            font-family: 'Manrope', sans-serif;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #414846;
+            margin-bottom: 8px;
+            display: block;
+        }
+        .custom-radio:checked {
+            background-color: #123C36;
+            border-color: #123C36;
+        }
+        .checkout-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 64px;
+        }
+        @media (min-width: 1024px) {
+            .checkout-grid {
+                grid-template-columns: 7fr 5fr;
+            }
+        }
+        
+        .cormorant-heading {
+            font-family: 'Cormorant Garamond', serif;
+        }
+      </style>
+</head>
+<body class="bg-background text-on-surface antialiased min-h-screen flex flex-col">
+<!-- 1. Checkout Header -->
+<header class="w-full py-6 px-margin-mobile md:px-margin-desktop border-b border-[#DDD9D0] bg-surface flex justify-between items-center z-50">
+<div class="flex items-center gap-2">
+<a class="text-headline-md font-headline-md tracking-widest text-primary cormorant-heading" href="#">AURORA JEWELS</a>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]">lock</span>
+<span class="font-label-caps text-label-caps uppercase tracking-wider hidden md:inline">Secure Checkout</span>
+</div>
+</header>
+<main class="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-12 md:py-24">
+<!-- Main Form Container -->
+<form class="checkout-grid w-full" id="checkout-form">
+<!-- Left Column: Flow -->
+<div class="flex flex-col gap-16">
+<!-- 2. Customer / Delivery Information -->
+<section class="flex flex-col gap-8" id="contact-info">
+<div class="flex justify-between items-end border-b border-[#DDD9D0] pb-4">
+<h2 class="text-editorial-italic font-editorial-italic cormorant-heading text-primary">Contact Information</h2>
+<span class="font-functional-sm text-functional-sm text-on-surface-variant">Already have an account? <a class="underline text-primary" href="#">Log in</a></span>
+</div>
+<div class="grid grid-cols-1 gap-6">
+<div>
+<label class="custom-label" for="email">Email Address *</label>
+<input class="custom-input w-full" id="email" name="email" placeholder="Enter your email" required="" type="email">
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div>
+<label class="custom-label" for="firstName">First Name *</label>
+<input class="custom-input w-full" id="firstName" name="firstName" required="" type="text">
+</div>
+<div>
+<label class="custom-label" for="lastName">Last Name *</label>
+<input class="custom-input w-full" id="lastName" name="lastName" required="" type="text">
+</div>
+</div>
+<div>
+<label class="custom-label" for="phone">Phone Number *</label>
+<input class="custom-input w-full" id="phone" name="phone" placeholder="+92 XXX XXXXXXX" required="" type="tel">
+</div>
+</div>
+</section>
+<!-- 3. Saved Address Selection -->
+<section class="flex flex-col gap-8" id="saved-addresses">
+<div class="border-b border-[#DDD9D0] pb-4">
+<h2 class="text-editorial-italic font-editorial-italic cormorant-heading text-primary">Delivery Address</h2>
+</div>
+<div class="flex flex-col gap-4">
+<!-- Selected Address -->
+<label class="flex items-start gap-4 p-6 border border-[#123C36] bg-[#E8F0ED] rounded-[2px] cursor-pointer transition-colors">
+<input checked="" class="mt-1 custom-radio text-[#123C36] focus:ring-[#123C36]" name="address_id" type="radio" value="1">
+<div class="flex flex-col gap-1">
+<span class="font-body-md text-body-md font-semibold text-primary">Home</span>
+<span class="font-body-md text-body-md text-on-surface-variant">123 Defense Housing Authority (DHA), Phase 5</span>
+<span class="font-body-md text-body-md text-on-surface-variant">Lahore, Punjab, Pakistan</span>
+</div>
+</label>
+<!-- Unselected Address -->
+<label class="flex items-start gap-4 p-6 border border-[#DDD9D0] hover:border-[#123C36]/50 bg-transparent rounded-[2px] cursor-pointer transition-colors">
+<input class="mt-1 custom-radio text-[#123C36] focus:ring-[#123C36]" name="address_id" type="radio" value="2">
+<div class="flex flex-col gap-1">
+<span class="font-body-md text-body-md font-semibold text-primary">Office</span>
+<span class="font-body-md text-body-md text-on-surface-variant">45 Blue Area, F-7 Markaz</span>
+<span class="font-body-md text-body-md text-on-surface-variant">Islamabad, Capital Territory, Pakistan</span>
+</div>
+</label>
+<button class="mt-2 text-left font-functional-sm text-functional-sm text-primary underline underline-offset-4 flex items-center gap-2 w-fit" type="button">
+<span class="material-symbols-outlined text-[18px]">add</span> Add a new address
+                        </button>
+</div>
+</section>
+<!-- 4. Delivery / Shipping Information -->
+<section class="flex flex-col gap-8" id="shipping-method">
+<div class="border-b border-[#DDD9D0] pb-4">
+<h2 class="text-editorial-italic font-editorial-italic cormorant-heading text-primary">Shipping Method</h2>
+</div>
+<div class="p-6 border border-[#DDD9D0] rounded-[2px] bg-surface-container-low flex justify-between items-center">
+<div class="flex flex-col gap-1">
+<span class="font-body-md text-body-md font-medium text-primary">Standard Insured Delivery (Pakistan)</span>
+<span class="font-functional-sm text-functional-sm text-on-surface-variant">3-5 Business Days</span>
+</div>
+<span class="font-body-md text-body-md font-semibold text-primary">Complimentary</span>
+</div>
+</section>
+<!-- 6. Payment Method -->
+<section class="flex flex-col gap-8" id="payment-method">
+<div class="border-b border-[#DDD9D0] pb-4">
+<h2 class="text-editorial-italic font-editorial-italic cormorant-heading text-primary">Payment</h2>
+</div>
+<div class="flex flex-col gap-4">
+<!-- COD -->
+<label class="flex items-start gap-4 p-6 border border-[#123C36] bg-[#E8F0ED] rounded-[2px] cursor-pointer transition-colors">
+<input checked="" class="mt-1 custom-radio text-[#123C36] focus:ring-[#123C36]" name="payment_method" type="radio" value="cod">
+<div class="flex flex-col gap-1 w-full">
+<div class="flex justify-between items-center w-full">
+<span class="font-body-md text-body-md font-semibold text-primary">Cash on Delivery</span>
+<span class="material-symbols-outlined text-primary">payments</span>
+</div>
+<span class="font-functional-sm text-functional-sm text-on-surface-variant">Pay in cash when your order is delivered.</span>
+</div>
+</label>
+<!-- Online Payment -->
+<label class="flex flex-col p-6 border border-[#DDD9D0] hover:border-[#123C36]/50 bg-transparent rounded-[2px] cursor-pointer transition-colors">
+<div class="flex items-start gap-4">
+<input class="mt-1 custom-radio text-[#123C36] focus:ring-[#123C36]" name="payment_method" type="radio" value="card">
+<div class="flex justify-between items-center w-full">
+<span class="font-body-md text-body-md font-semibold text-primary">Credit / Debit Card</span>
+<div class="flex gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined">credit_card</span>
+</div>
+</div>
+</div>
+</label>
+</div>
+</section>
+<!-- 8. Validation / Error States (Hidden by default, shown for visual representation) -->
+<section class="hidden flex-col gap-4 p-4 border border-error-container bg-error-container/20 rounded-[2px]" id="validation-errors">
+<div class="flex items-center gap-2 text-error">
+<span class="material-symbols-outlined">error</span>
+<span class="font-functional-sm text-functional-sm">Please ensure all required fields are filled out correctly before proceeding.</span>
+</div>
+</section>
+<!-- 9. Order Processing State (Hidden by default) -->
+<section class="hidden flex-col items-center justify-center gap-4 py-8" id="processing-state">
+<span class="material-symbols-outlined animate-spin text-[32px] text-[#123C36]">progress_activity</span>
+<span class="font-body-md text-body-md text-primary">Processing your secure payment...</span>
+</section>
+</div>
+<!-- Right Column: Summary -->
+<div class="flex flex-col">
+<!-- 5. Order Summary -->
+<section class="bg-surface-container-low p-8 border border-[#DDD9D0] rounded-[2px] sticky top-32 flex flex-col gap-8">
+<h2 class="text-editorial-italic font-editorial-italic cormorant-heading text-primary border-b border-[#DDD9D0] pb-4">Order Summary</h2>
+<!-- Products -->
+<div class="flex flex-col gap-6 border-b border-[#DDD9D0] pb-8">
+<!-- Item 1 -->
+<div class="flex gap-6 items-center">
+<div class="w-20 h-24 bg-surface-variant flex-shrink-0 relative border border-[#DDD9D0]">
+<img class="w-full h-full object-cover" data-alt="A high-end product photography shot of a minimalist gold ring with a single small emerald stone, set against a pristine white background. Studio lighting, sharp focus, capturing the subtle reflection on the polished gold surface. Quiet luxury aesthetic, high resolution." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMV51IFvU3igP1vIciZ1lknfh6aEL5WSHGRgDITlQclj7ezfoqk1bum112xeNT_OIeNHX5B9cQSU37Tn-NBmAJOFC4K8Fgsz5jZRxQBdkjU8DNvYT07JhxWfMWafJDVnAsk1vdPB9o5ojcnry5cSz3f0fgWsSErf4Cdp5BxcPtwEiVGFukKR51zVXNinM1eU20DZ9mxrioNCUH7ShJ-RMcP4NZJ4MdT4FQeF59DIcxLSly-bxqbEWfiw">
+<span class="absolute -top-2 -right-2 bg-primary text-on-primary w-6 h-6 flex items-center justify-center rounded-full font-label-caps text-[10px]">1</span>
+</div>
+<div class="flex flex-col gap-1 flex-grow">
+<span class="font-body-md text-body-md font-semibold text-primary cormorant-heading text-[20px]">The Emerald Solitaire</span>
+<span class="font-functional-sm text-functional-sm text-on-surface-variant uppercase tracking-wider text-[10px]">18k Yellow Gold / Size 6</span>
+</div>
+<div class="font-body-md text-body-md font-medium text-primary whitespace-nowrap">
+                                PKR 145,000
+                            </div>
+</div>
+<!-- Item 2 -->
+<div class="flex gap-6 items-center">
+<div class="w-20 h-24 bg-surface-variant flex-shrink-0 relative border border-[#DDD9D0]">
+<img class="w-full h-full object-cover" data-alt="A detailed macro shot of a delicate diamond tennis bracelet resting on a textured ivory fabric. Soft, diffused lighting highlighting the clarity of the diamonds and the craftsmanship of the white gold setting. Minimalist composition, deep depth of field, elegant and understated luxury." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrfFYOiGxaI4OBvbPNZNzXqBX0g1JbSUVvB5ak7YGtpYQc9WtAjJIuJWC5pcHiP5RXKOULntUfic6dej0y1SMAbc27SqOTrjWdFMtMZ8Ty05ludK64vV3OxISbfLvqtfn3PGpZoFpAkJpE_v-26LkAAkxSE5uH0s0d-TZKC5qL8QZZbqGXd52lEF9b5Y_ZzWq1rWF8x4uYb0ybYBtLk4SWHWV4xqbx1zpkPaN6et92_q0UxCtSy3XvAw">
+<span class="absolute -top-2 -right-2 bg-primary text-on-primary w-6 h-6 flex items-center justify-center rounded-full font-label-caps text-[10px]">1</span>
+</div>
+<div class="flex flex-col gap-1 flex-grow">
+<span class="font-body-md text-body-md font-semibold text-primary cormorant-heading text-[20px]">Classic Tennis Bracelet</span>
+<span class="font-functional-sm text-functional-sm text-on-surface-variant uppercase tracking-wider text-[10px]">18k White Gold / 6.5"</span>
+</div>
+<div class="font-body-md text-body-md font-medium text-primary whitespace-nowrap">
+                                PKR 280,000
+                            </div>
+</div>
+</div>
+<!-- Totals -->
+<div class="flex flex-col gap-4 border-b border-[#DDD9D0] pb-8">
+<div class="flex justify-between items-center font-functional-sm text-functional-sm text-on-surface-variant">
+<span class="">Subtotal</span>
+<span class="">PKR 425,000</span>
+</div>
+<div class="flex justify-between items-center font-functional-sm text-functional-sm text-on-surface-variant">
+<span class="">Shipping</span>
+<span class="">Complimentary</span>
+</div>
+<div class="flex justify-between items-center font-functional-sm text-functional-sm text-on-surface-variant">
+<span class="">Taxes (Included)</span>
+<span class="">PKR 0</span>
+</div>
+</div>
+<div class="flex justify-between items-end">
+<span class="font-body-md text-body-md text-on-surface-variant uppercase tracking-widest text-[12px]">Total</span>
+<span class="font-headline-md text-headline-md cormorant-heading text-primary font-semibold">PKR 425,000</span>
+</div>
+<!-- 7. Final Purchase CTA -->
+<button class="w-full h-[52px] bg-[#123C36] hover:bg-[#0D302B] text-[#FAF8F3] font-label-caps text-label-caps uppercase tracking-widest transition-colors flex items-center justify-center mt-4" type="submit">
+                        Place Order
+                    </button>
+<div class="flex items-center justify-center gap-2 mt-2 text-on-surface-variant/70">
+<span class="material-symbols-outlined text-[14px]">lock</span>
+<span class="font-functional-sm text-[11px] uppercase tracking-wider">Secured via SSL Encryption</span>
+</div>
+</section>
+</div>
+</form>
+</main>
+<!-- 10. Minimal Footer -->
+<footer class="w-full py-16 border-t border-[#123C36] bg-[#0D302B] text-[#F8F5ED] flex flex-col items-center justify-center gap-12"><div class="max-w-container-max w-full px-margin-mobile md:px-margin-desktop grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-8">
+    <div class="flex flex-col gap-6 md:col-span-1">
+        <a href="#" class="text-headline-md font-headline-md tracking-widest cormorant-heading text-[#F8F5ED]">AURORA JEWELS</a>
+        <p class="font-body-md text-body-md text-[#B9BDB8] max-w-[280px]">Crafting timeless elegance through ethically sourced gemstones and artisanal craftsmanship.</p>
+    </div>
+    <div class="flex flex-col gap-4">
+        <h4 class="font-label-caps text-label-caps uppercase tracking-widest text-[#F8F5ED]">Shop</h4>
+        <ul class="flex flex-col gap-2">
+            <li class=""><a href="#" class="font-functional-sm text-functional-sm text-[#B9BDB8] hover:text-[#F8F5ED] transition-colors">New Arrivals</a></li>
+            <li class=""><a href="#" class="font-functional-sm text-functional-sm text-[#B9BDB8] hover:text-[#F8F5ED] transition-colors">Engagement Rings</a></li>
+            <li class=""><a href="#" class="font-functional-sm text-functional-sm text-[#B9BDB8] hover:text-[#F8F5ED] transition-colors">Fine Jewelry</a></li>
+        </ul>
+    </div>
+    <div class="flex flex-col gap-4">
+        <h4 class="font-label-caps text-label-caps uppercase tracking-widest text-[#F8F5ED]">About</h4>
+        <ul class="flex flex-col gap-2">
+            <li class=""><a href="#" class="font-functional-sm text-functional-sm text-[#B9BDB8] hover:text-[#F8F5ED] transition-colors">Our Story</a></li>
+            <li class=""><a href="#" class="font-functional-sm text-functional-sm text-[#B9BDB8] hover:text-[#F8F5ED] transition-colors">Sustainability</a></li>
+            <li class=""><a href="#" class="font-functional-sm text-functional-sm text-[#B9BDB8] hover:text-[#F8F5ED] transition-colors">Craftsmanship</a></li>
+        </ul>
+    </div>
+    <div class="flex flex-col gap-4">
+        <h4 class="font-label-caps text-label-caps uppercase tracking-widest text-[#F8F5ED]">Customer Care</h4>
+        <ul class="flex flex-col gap-2">
+            <li class=""><a href="#" class="font-functional-sm text-functional-sm text-[#B9BDB8] hover:text-[#F8F5ED] transition-colors">Contact Us</a></li>
+            <li class=""><a href="#" class="font-functional-sm text-functional-sm text-[#B9BDB8] hover:text-[#F8F5ED] transition-colors">Shipping &amp; Returns</a></li>
+            <li class=""><a href="#" class="font-functional-sm text-functional-sm text-[#B9BDB8] hover:text-[#F8F5ED] transition-colors">Jewelry Care</a></li>
+        </ul>
+    </div>
+</div>
+<div class="max-w-container-max w-full px-margin-mobile md:px-margin-desktop border-t border-[#F8F5ED]/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-6">
+    <div class="flex gap-8">
+        <a href="#" class="font-functional-sm text-[11px] uppercase tracking-widest text-[#B9BDB8] hover:text-[#F8F5ED] transition-colors">Privacy Policy</a>
+        <a href="#" class="font-functional-sm text-[11px] uppercase tracking-widest text-[#B9BDB8] hover:text-[#F8F5ED] transition-colors">Terms of Service</a>
+    </div>
+    <div class="flex items-center gap-4">
+        <a href="#" class="text-[#B9BDB8] hover:text-[#F8F5ED] transition-colors flex items-center gap-2">
+            <span class="font-label-caps text-label-caps uppercase tracking-widest">Instagram</span>
+        </a>
+    </div>
+    <div class="font-functional-sm text-[11px] uppercase tracking-widest text-[#B9BDB8]/50">
+        © 2024 AURORA JEWELS. ALL RIGHTS RESERVED.
+    </div>
+</div></footer><div class="w-full bg-[#F8F5ED] py-12 md:py-[72px] overflow-hidden select-none">
+  <style>
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .animate-marquee {
+      display: flex;
+      width: max-content;
+      animation: marquee 40s linear infinite;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .animate-marquee {
+        animation: none;
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+  <div class="animate-marquee flex gap-12 whitespace-nowrap">
+    <span class="text-[#C6A56A] font-headline-md cormorant-heading uppercase tracking-[0.2em] text-[24px] md:text-[32px] font-medium">
+      AURORA JEWELS &nbsp;·&nbsp; AURORA JEWELS &nbsp;·&nbsp; AURORA JEWELS &nbsp;·&nbsp; AURORA JEWELS &nbsp;·&nbsp; AURORA JEWELS &nbsp;·&nbsp; AURORA JEWELS &nbsp;·&nbsp;
+    </span>
+    <span class="text-[#C6A56A] font-headline-md cormorant-heading uppercase tracking-[0.2em] text-[24px] md:text-[32px] font-medium">
+      AURORA JEWELS &nbsp;·&nbsp; AURORA JEWELS &nbsp;·&nbsp; AURORA JEWELS &nbsp;·&nbsp; AURORA JEWELS &nbsp;·&nbsp; AURORA JEWELS &nbsp;·&nbsp; AURORA JEWELS &nbsp;·&nbsp;
+    </span>
+  </div>
+</div>
+<script>
+        // Simple form interaction simulation
+        document.getElementById('checkout-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = this.querySelector('button[type="submit"]');
+            btn.innerHTML = '<span class="material-symbols-outlined animate-spin mr-2">progress_activity</span> Processing...';
+            btn.disabled = true;
+            btn.classList.add('opacity-80');
+            
+            setTimeout(() => {
+                btn.innerHTML = '<span class="material-symbols-outlined mr-2">check</span> Order Placed';
+                btn.classList.replace('bg-[#123C36]', 'bg-[#001a17]');
+            }, 2000);
+        });
+    </script>
+
+
+
+
+</body></html>

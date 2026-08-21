@@ -1,0 +1,19 @@
+# Ignore node_modules globally
+node_modules/
+
+# Ignore app-specific secrets and builds
+app/dist/
+app/.astro/
+app/.env
+app/.env.local
+
+# Ignore Drizzle/SQLite local database files
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
+.wrangler/
+
+# System files
+.DS_Store
+Thumbs.db

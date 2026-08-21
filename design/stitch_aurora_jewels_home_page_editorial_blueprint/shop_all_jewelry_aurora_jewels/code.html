@@ -1,0 +1,399 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Aurora Jewels - Shop All Jewelry</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&amp;family=Manrope:wght@200..800&amp;family=EB+Garamond:ital,wght@0,400..800;1,400..800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "error": "#ba1a1a",
+                      "surface-container-high": "#eae8e3",
+                      "on-error": "#ffffff",
+                      "tertiary-fixed-dim": "#eebbae",
+                      "on-tertiary-fixed-variant": "#623e34",
+                      "surface-container-low": "#f5f3ee",
+                      "primary": "#001a17",
+                      "error-container": "#ffdad6",
+                      "tertiary": "#290e08",
+                      "surface-bright": "#fbf9f4",
+                      "on-primary-fixed": "#00201c",
+                      "secondary-fixed": "#ffdea6",
+                      "on-primary": "#ffffff",
+                      "primary-container": "#0d302b",
+                      "surface-container-highest": "#e4e2dd",
+                      "inverse-on-surface": "#f2f1ec",
+                      "on-primary-fixed-variant": "#2c4d47",
+                      "inverse-primary": "#aacec6",
+                      "inverse-surface": "#30312e",
+                      "on-tertiary": "#ffffff",
+                      "primary-fixed-dim": "#aacec6",
+                      "background": "#fbf9f4",
+                      "on-surface-variant": "#414846",
+                      "on-secondary-container": "#795e2b",
+                      "on-tertiary-container": "#b5877b",
+                      "on-primary-container": "#769992",
+                      "outline-variant": "#c1c8c5",
+                      "on-secondary": "#ffffff",
+                      "secondary-fixed-dim": "#e5c284",
+                      "primary-fixed": "#c6eae2",
+                      "on-secondary-fixed-variant": "#5b4311",
+                      "surface": "#fbf9f4",
+                      "tertiary-container": "#41221a",
+                      "secondary-container": "#ffdb9c",
+                      "surface-variant": "#e4e2dd",
+                      "on-error-container": "#93000a",
+                      "surface-dim": "#dbdad5",
+                      "surface-container": "#f0eee9",
+                      "outline": "#717976",
+                      "tertiary-fixed": "#ffdbd2",
+                      "surface-tint": "#43655e",
+                      "on-surface": "#1b1c19",
+                      "on-tertiary-fixed": "#2f140c",
+                      "secondary": "#755a27",
+                      "on-secondary-fixed": "#271900",
+                      "on-background": "#1b1c19",
+                      "surface-container-lowest": "#ffffff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px",
+                      "none": "0px"
+              },
+              "spacing": {
+                      "margin-mobile": "20px",
+                      "section-gap": "120px",
+                      "container-max": "1440px",
+                      "unit": "4px",
+                      "margin-desktop": "64px",
+                      "gutter": "24px"
+              },
+              "fontFamily": {
+                      "label-caps": [
+                              "manrope"
+                      ],
+                      "body-lg": [
+                              "manrope"
+                      ],
+                      "display-lg-mobile": [
+                              "ebGaramond"
+                      ],
+                      "headline-md": [
+                              "ebGaramond"
+                      ],
+                      "display-lg": [
+                              "ebGaramond"
+                      ],
+                      "body-md": [
+                              "manrope"
+                      ],
+                      "functional-sm": [
+                              "manrope"
+                      ],
+                      "editorial-italic": [
+                              "ebGaramond"
+                      ]
+              },
+              "fontSize": {
+                      "label-caps": [
+                              "12px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "letterSpacing": "0.1em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "display-lg-mobile": [
+                              "40px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-md": [
+                              "32px",
+                              {
+                                      "lineHeight": "1.3",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "display-lg": [
+                              "64px",
+                              {
+                                      "lineHeight": "1.1",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "functional-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "1.4",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "editorial-italic": [
+                              "24px",
+                              {
+                                      "lineHeight": "1.4",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        body {
+            background-color: #FAF8F3;
+            color: #1b1c19;
+        }
+        .text-cormorant {
+            font-family: 'Cormorant Garamond', serif;
+        }
+      </style>
+</head>
+<body class="min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<nav class="bg-transparent dark:bg-transparent fixed top-0 w-full z-50 flex justify-between items-center px-margin-desktop py-6 h-[88px] bg-[#FAF8F3]">
+<div class="flex items-center gap-6 hidden md:flex">
+<a class="text-primary dark:text-on-primary-container border-b border-primary dark:border-on-primary-container pb-1 text-label-caps font-label-caps uppercase transition-all duration-500 ease-in-out hover:text-primary dark:hover:text-primary-fixed transition-colors duration-300" href="#">Shop</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant/70 text-label-caps font-label-caps uppercase transition-all duration-500 ease-in-out hover:text-primary dark:hover:text-primary-fixed transition-colors duration-300" href="#">New Arrivals</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant/70 text-label-caps font-label-caps uppercase transition-all duration-500 ease-in-out hover:text-primary dark:hover:text-primary-fixed transition-colors duration-300" href="#">Collections</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant/70 text-label-caps font-label-caps uppercase transition-all duration-500 ease-in-out hover:text-primary dark:hover:text-primary-fixed transition-colors duration-300" href="#">About</a>
+</div>
+<div class="absolute left-1/2 transform -translate-x-1/2">
+<h1 class="text-headline-md font-headline-md tracking-widest text-primary dark:text-on-primary-container m-0">AURORA JEWELS</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-primary dark:text-on-primary-container transition-all duration-500 ease-in-out hover:text-primary dark:hover:text-primary-fixed transition-colors duration-300">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</button>
+<button class="text-primary dark:text-on-primary-container transition-all duration-500 ease-in-out hover:text-primary dark:hover:text-primary-fixed transition-colors duration-300">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+</button>
+<button class="text-primary dark:text-on-primary-container transition-all duration-500 ease-in-out hover:text-primary dark:hover:text-primary-fixed transition-colors duration-300">
+<span class="material-symbols-outlined" data-icon="favorite">favorite</span>
+</button>
+<button class="text-primary dark:text-on-primary-container transition-all duration-500 ease-in-out hover:text-primary dark:hover:text-primary-fixed transition-colors duration-300">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+</button>
+</div>
+</nav>
+<div class="h-[88px]"></div>
+<!-- Main Content -->
+<main class="flex-grow max-w-[1440px] mx-auto w-full px-[40px] py-section-gap flex flex-col items-center">
+<!-- Page Introduction -->
+<section class="max-w-[620px] text-center mb-section-gap">
+<span class="text-label-caps font-label-caps uppercase tracking-widest text-on-surface-variant mb-4 block">COLLECTIONS</span>
+<h1 class="text-display-lg md:text-display-lg font-display-lg text-cormorant text-primary mb-6">Shop All Jewelry</h1>
+<p class="text-body-lg font-body-lg text-on-surface-variant">Explore our curated collection of masterful jewelry pieces, designed to capture light and endure through generations.</p>
+</section>
+<!-- Product Browsing Grid -->
+<section class="w-full">
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-gutter w-full">
+<!-- Product 1 -->
+<div class="group cursor-pointer flex flex-col">
+<div class="relative w-full aspect-[4/5] bg-surface-container-low mb-4 overflow-hidden">
+<img alt="Product Image" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A high-end editorial close-up of a minimalist gold ring with a single baguette diamond, resting on a smooth, slightly textured ivory stone plinth. The lighting is soft, directional, and cinematic, creating subtle highlights and deep, rich shadows that emphasize the ring's precise architectural lines. The aesthetic is modern, quiet luxury with a crisp, timeless feel." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsUZBR4UUTDBMrbIN4WA5ZL78ZMmqMBRARMJrUvn44FJwqoZEioINutZvuG0O1cnPWFRUAXp7-c28Wf_JN9G2VpItDu7sPndoS7Irt6aVZLSASV7LCHb4nadqjHTVcdV2LV8W06ZKDaLh5BiyrFbE3aYr6yKSzXjeJfRx5W-gLr0SdRK6j4_QZjl5JCGpBHikdBnMYmjyOhBuLwz8_3UN9MKvDoy1nn7WhdEF3ZLqOrlpkhqpEaAJ0Rw">
+<button class="absolute top-4 right-4 z-10 text-on-surface/50 hover:text-primary transition-colors bg-white/10 backdrop-blur-sm p-2 rounded-none">
+<span class="material-symbols-outlined font-light text-[20px]">favorite</span>
+</button>
+</div>
+<div class="flex flex-col">
+<h3 class="text-functional-sm font-functional-sm text-primary uppercase tracking-wide">The Architect Ring</h3>
+<p class="text-body-md font-body-md text-on-surface-variant/80 mt-1 mb-2">18k Solid Gold &amp; Diamond</p>
+<span class="text-functional-sm font-functional-sm text-primary">$1,250</span>
+</div>
+</div>
+<!-- Product 2 -->
+<div class="group cursor-pointer flex flex-col">
+<div class="relative w-full aspect-[4/5] bg-surface-container-low mb-4 overflow-hidden">
+<img alt="Product Image" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A striking editorial shot of a delicate silver chain necklace featuring a geometric emerald pendant, draped gracefully over a sharply folded, stark white linen cloth. The composition is asymmetrical, leaving negative space to the left. The lighting is high-key and pristine, communicating a minimalist, architectural aesthetic rooted in quiet luxury and refinement." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAu4RvGVcEYzd-OIuPRebzpLVdMECPqMgPPs8KZSiKxqy1bv_fAzsU4scIkVCVRnYCbhp_7TPHlra1b8I9av69xbHnlsNYbwrbDzS181VjdcXACGhWZNVKs8Zc5fTLHfnIYd4oABzSyouC8wP-8WT8qS16rxQB7RAtCatHJFX8axoPf4w3ptsp07FN_kirKHvCzowgOZUmIc8GbZycyiUtyNOu2B75MUPMx724fIF6ItOcijNplARagXg">
+<button class="absolute top-4 right-4 z-10 text-on-surface/50 hover:text-primary transition-colors bg-white/10 backdrop-blur-sm p-2 rounded-none">
+<span class="material-symbols-outlined font-light text-[20px]">favorite</span>
+</button>
+</div>
+<div class="flex flex-col">
+<h3 class="text-functional-sm font-functional-sm text-primary uppercase tracking-wide">Emerald Linea Necklace</h3>
+<p class="text-body-md font-body-md text-on-surface-variant/80 mt-1 mb-2">Sterling Silver &amp; Emerald</p>
+<span class="text-functional-sm font-functional-sm text-primary">$890</span>
+</div>
+</div>
+<!-- Product 3 -->
+<div class="group cursor-pointer flex flex-col">
+<div class="relative w-full aspect-[4/5] bg-surface-container-low mb-4 overflow-hidden">
+<img alt="Product Image" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A sophisticated still life of minimalist gold hoop earrings positioned precisely on an expanse of smooth, pale concrete. The image uses sharp, defined shadows cast by an unseen window, highlighting the crisp metallic edges against the raw, matte surface. The overall mood is understated, confident, and heavily influenced by architectural minimalism and modern elegance." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAcLkIRjXsNZpcWdA2A2ZPOF6oEP_10BFUUv22njnHrwE9yGHwePaDHTj4Ycs_O41oKfTD-krUU6LhCMNNHZcuzuoSmzfftIpqmz7eB0I6qk04hSGQxROrdVwAXjvdFKDZHyLeOj0WWgitCEgrIcsqw-fvQeE0-2KLcTZ5-fWbv9XHtKnWSrjH3nczZqC87w2pxDPZvxUGHxovCbZ95gvcVlqw20Gi8QMSGKBu3EInlHMCqDc1Z5wfVxg">
+<button class="absolute top-4 right-4 z-10 text-on-surface/50 hover:text-primary transition-colors bg-white/10 backdrop-blur-sm p-2 rounded-none">
+<span class="material-symbols-outlined font-light text-[20px]">favorite</span>
+</button>
+</div>
+<div class="flex flex-col">
+<h3 class="text-functional-sm font-functional-sm text-primary uppercase tracking-wide">Structural Hoops</h3>
+<p class="text-body-md font-body-md text-on-surface-variant/80 mt-1 mb-2">14k Solid Gold</p>
+<span class="text-functional-sm font-functional-sm text-primary">$450</span>
+</div>
+</div>
+<!-- Product 4 -->
+<div class="group cursor-pointer flex flex-col">
+<div class="relative w-full aspect-[4/5] bg-surface-container-low mb-4 overflow-hidden">
+<img alt="Product Image" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A pristine, high-contrast editorial photograph of a thick, architectural silver cuff bracelet resting on a slab of dark, unpolished slate. The surrounding space is vast and light, creating a striking tonal contrast between the deep slate, the bright silver, and the ivory background. The composition embodies quiet luxury, precise geometry, and uncompromising material quality." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxeJqAD2ZGLdmKQTnlpRLIHdTz-DCIP4-bmT60RvYIPttgVNEwWFrddUk7LrpsOXR4mOTG6hqojXvdG6NjS7jzMflZQZDR2yGp51dmntg3EIdnbr_f0BlNUtkA87gr_W5ZDIb67oNks-C-Z5aFdhSOBbKRnNXMq8WJjcL9te_0HjVqOeyM3c6yqpr8iFVnd3yPLyUo_o2L90rCCJa03iVBpRPMeHWnao0-xgsFJuUFqwDg9ZuIG3hZHA">
+<button class="absolute top-4 right-4 z-10 text-on-surface/50 hover:text-primary transition-colors bg-white/10 backdrop-blur-sm p-2 rounded-none">
+<span class="material-symbols-outlined font-light text-[20px]">favorite</span>
+</button>
+</div>
+<div class="flex flex-col">
+<h3 class="text-functional-sm font-functional-sm text-primary uppercase tracking-wide">Monolith Cuff</h3>
+<p class="text-body-md font-body-md text-on-surface-variant/80 mt-1 mb-2">Sterling Silver</p>
+<span class="text-functional-sm font-functional-sm text-primary">$1,800</span>
+</div>
+</div>
+<!-- Product 5 -->
+<div class="group cursor-pointer flex flex-col mt-12 md:mt-0">
+<div class="relative w-full aspect-[4/5] bg-surface-container-low mb-4 overflow-hidden">
+<img alt="Product Image" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A delicate, macro editorial shot of a white gold ring set with an asymmetrical cluster of small sapphires. The ring sits on a stark, matte white platform. The lighting is diffused but directional, capturing the subtle sparkle of the stones without introducing any messy reflections. The visual tone is incredibly clean, precise, and effortlessly elegant." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDGRb1UIRxyRzC6Ji-PTET0mnynjwfZRzXWQE3WZcHLpEHMbO_Fq3XHW5LBqm_1dSje0DHpnUxMhccHvHlJqZYpT_MnqhoFDttB5rBA8hEeyRfsWxoqgt5ISLQZE-xE_P3uDfWY08vYIJ9SDxvaidK-Md17Em3JrX62Tzs7wlj2tHrU2BHBEPI6QNlR2X5XVGUxKwmA6khv1qRzT3hhcSMG6o4GLoVYjFArdKMqneADICujYLCtEoTm2A">
+<button class="absolute top-4 right-4 z-10 text-on-surface/50 hover:text-primary transition-colors bg-white/10 backdrop-blur-sm p-2 rounded-none">
+<span class="material-symbols-outlined font-light text-[20px]">favorite</span>
+</button>
+</div>
+<div class="flex flex-col">
+<h3 class="text-functional-sm font-functional-sm text-primary uppercase tracking-wide">Constellation Ring</h3>
+<p class="text-body-md font-body-md text-on-surface-variant/80 mt-1 mb-2">White Gold &amp; Sapphire</p>
+<span class="text-functional-sm font-functional-sm text-primary">$2,100</span>
+</div>
+</div>
+<!-- Product 6 -->
+<div class="group cursor-pointer flex flex-col mt-12 md:mt-0">
+<div class="relative w-full aspect-[4/5] bg-surface-container-low mb-4 overflow-hidden">
+<img alt="Product Image" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A modern, high-fashion still life of a long, heavy-link gold chain necklace coiled elegantly inside a minimalist, shallow ivory ceramic bowl. The scene is bathed in bright, soft light that highlights the polished surface of the gold against the matte ceramic. The aesthetic strictly adheres to a quiet luxury, eliminating any superfluous decorative elements." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGJRZy7LmGzfk9-YRiGGNmKy23_-eA5MLtAQfT7hQLXnLiig9zlJ-dEiitFS-yFbkSxilUXU3s6iLkONEfML1HOpjXZKRzJe33nmcxVxwxHO4jzzo7fxIaW91s2Ld0WgNO5nD2tRmgluGfPwd7Nu6XMhrg_InnFMT8gnjb49owst6kyFcuo6xx9ctXiludHQgoU1HI4wysuJQ7FkKh-3uxOVBEntzwiuwIFnCUE9zF4ueQfe-0zc51mA">
+<button class="absolute top-4 right-4 z-10 text-on-surface/50 hover:text-primary transition-colors bg-white/10 backdrop-blur-sm p-2 rounded-none">
+<span class="material-symbols-outlined font-light text-[20px]">favorite</span>
+</button>
+</div>
+<div class="flex flex-col">
+<h3 class="text-functional-sm font-functional-sm text-primary uppercase tracking-wide">Foundry Chain</h3>
+<p class="text-body-md font-body-md text-on-surface-variant/80 mt-1 mb-2">18k Solid Gold</p>
+<span class="text-functional-sm font-functional-sm text-primary">$3,400</span>
+</div>
+</div>
+<!-- Product 7 -->
+<div class="group cursor-pointer flex flex-col mt-12 md:mt-0">
+<div class="relative w-full aspect-[4/5] bg-surface-container-low mb-4 overflow-hidden">
+<img alt="Product Image" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="An architectural close-up of a pair of drop earrings featuring geometric cut pieces of onyx set in minimal silver bezels. The earrings are suspended from thin silver wire against a vast, stark white background. The composition relies on pure geometric forms and high contrast, evoking a sense of calm authority and timeless design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAS5FshY2NtSXe6Fu5wVqgC8h8sGSGNSwwCbCW7M3rzn9mmhILg0Pzka4MlvSiIvozVg-uyGuDrzy297Esl3DAUHVWwfJF3pdubaalyfWRW9Quyn9vswlTg0PNf5Y9GhXkJdzoYkTXuE6u7aN3YfccwPDwP0sAErKgQl3BVgKwTxMKC88enBd52AkyiL3hWdaCIRs_i6KwAmFoP4fKocfVjfLoJ5uj6IOxPbWo1uYTqKd48W_0NCcFk9g">
+<button class="absolute top-4 right-4 z-10 text-on-surface/50 hover:text-primary transition-colors bg-white/10 backdrop-blur-sm p-2 rounded-none">
+<span class="material-symbols-outlined font-light text-[20px]">favorite</span>
+</button>
+</div>
+<div class="flex flex-col">
+<h3 class="text-functional-sm font-functional-sm text-primary uppercase tracking-wide">Onyx Drop Earrings</h3>
+<p class="text-body-md font-body-md text-on-surface-variant/80 mt-1 mb-2">Silver &amp; Black Onyx</p>
+<span class="text-functional-sm font-functional-sm text-primary">$650</span>
+</div>
+</div>
+<!-- Product 8 -->
+<div class="group cursor-pointer flex flex-col mt-12 md:mt-0">
+<div class="relative w-full aspect-[4/5] bg-surface-container-low mb-4 overflow-hidden">
+<img alt="Product Image" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A meticulously composed editorial image of a thick, solid gold signet ring engraved with minimal, modern lines. The ring is perched on the sharp edge of a white marble block. The lighting creates intense, defining shadows and bright highlights, emphasizing the weight, edge, and material purity of the jewelry within a strict, flat UI aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuApcE5BzIunflnbqjAyEl2mR1ZHjFW_l9S-FnzuDGsExqGJHZvZdAv5uhLcZ7WHUQxXAQRTmsWVvv9v2absk5JIWVSYzUHZDkCg-qEd3oe4gM6N7b_cJETgnBo8-Sv1-P1bfejWkBqmoku4AhUS8FaT5FrBmHmRyMUpLwHfMN_l10hQexBzifZ-uhyZwggGZPyPJyVws0emCJnSEHnC5Cvtl3CGK72dYoYAg4SePEGYYLpl4cp_n6xJzQ">
+<button class="absolute top-4 right-4 z-10 text-on-surface/50 hover:text-primary transition-colors bg-white/10 backdrop-blur-sm p-2 rounded-none">
+<span class="material-symbols-outlined font-light text-[20px]">favorite</span>
+</button>
+</div>
+<div class="flex flex-col">
+<h3 class="text-functional-sm font-functional-sm text-primary uppercase tracking-wide">Heritage Signet</h3>
+<p class="text-body-md font-body-md text-on-surface-variant/80 mt-1 mb-2">14k Solid Gold</p>
+<span class="text-functional-sm font-functional-sm text-primary">$1,100</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Collection/Product Navigation -->
+<section class="mt-section-gap w-full flex justify-center border-t border-outline-variant/10 pt-12">
+<div class="flex items-center gap-8 text-label-caps font-label-caps uppercase text-on-surface-variant">
+<a class="hover:text-primary transition-colors border-b border-primary pb-1 text-primary" href="#">Shop All</a>
+<span class="w-[1px] h-[12px] bg-outline-variant/30"></span>
+<a class="hover:text-primary transition-colors pb-1" href="#">New Arrivals</a>
+<span class="w-[1px] h-[12px] bg-outline-variant/30"></span>
+<a class="hover:text-primary transition-colors pb-1" href="#">Collections</a>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-primary-container dark:bg-primary-container w-full px-margin-desktop py-section-gap grid grid-cols-12 gap-gutter mt-auto bg-[#101412]">
+<div class="col-span-12 md:col-span-4 flex flex-col justify-between mb-12 md:mb-0">
+<h2 class="text-headline-md font-headline-md text-on-primary-container mb-8">AURORA JEWELS</h2>
+<p class="text-body-md font-body-md text-on-primary-container/80 text-[14px]">© 2024 AURORA JEWELS. ALL RIGHTS RESERVED.</p>
+</div>
+<div class="col-span-6 md:col-span-2 md:col-start-7 flex flex-col gap-4">
+<a class="text-on-primary-container underline text-label-caps font-label-caps hover:text-on-primary-fixed transition-colors" href="#">Shop All Jewelry</a>
+<a class="text-on-primary-container/80 text-label-caps font-label-caps hover:text-on-primary-fixed transition-colors" href="#">New Arrivals</a>
+<a class="text-on-primary-container/80 text-label-caps font-label-caps hover:text-on-primary-fixed transition-colors" href="#">Our Story</a>
+</div>
+<div class="col-span-6 md:col-span-2 flex flex-col gap-4">
+<a class="text-on-primary-container/80 text-label-caps font-label-caps hover:text-on-primary-fixed transition-colors" href="#">Ethical Sourcing</a>
+<a class="text-on-primary-container/80 text-label-caps font-label-caps hover:text-on-primary-fixed transition-colors" href="#">Shipping &amp; Returns</a>
+<a class="text-on-primary-container/80 text-label-caps font-label-caps hover:text-on-primary-fixed transition-colors" href="#">Contact Us</a>
+</div>
+<div class="col-span-12 md:col-span-2 flex flex-col gap-4 mt-8 md:mt-0">
+<a class="text-on-primary-container/80 text-label-caps font-label-caps hover:text-on-primary-fixed transition-colors" href="#">Privacy Policy</a>
+</div>
+</footer><section class="w-full bg-[#F8F5ED] overflow-hidden py-12 md:py-16">
+  <style>
+    @keyframes marquee-slow {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .animate-marquee-slow {
+      display: flex;
+      white-space: nowrap;
+      animation: marquee-slow 60s linear infinite;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .animate-marquee-slow {
+        animation: none;
+        overflow-x: auto;
+      }
+    }
+  </style>
+  <div class="flex overflow-hidden">
+    <div class="animate-marquee-slow">
+      <span class="text-cormorant text-[40px] md:text-[72px] font-medium text-[#C6A56A] uppercase tracking-[0.2em] px-8">
+        AURORA JEWELS &nbsp;·&nbsp; AURORA JEWELS &nbsp;·&nbsp; AURORA JEWELS &nbsp;·&nbsp; AURORA JEWELS &nbsp;·&nbsp;
+      </span>
+      <span class="text-cormorant text-[40px] md:text-[72px] font-medium text-[#C6A56A] uppercase tracking-[0.2em] px-8">
+        AURORA JEWELS &nbsp;·&nbsp; AURORA JEWELS &nbsp;·&nbsp; AURORA JEWELS &nbsp;·&nbsp; AURORA JEWELS &nbsp;·&nbsp;
+      </span>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+
+</body></html>
