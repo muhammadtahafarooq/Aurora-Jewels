@@ -14,6 +14,15 @@ app/.env.local
 *.db-wal
 .wrangler/
 
+# Dev-time utility scripts and generated files
+app/apply-migration.mjs
+app/check-db.mjs
+app/crop-images.ps1
+app/schema-full.sql
+app/seed.sql
+app/public/images/reference/
+prompts/
+
 # System files
 .DS_Store
 Thumbs.db
