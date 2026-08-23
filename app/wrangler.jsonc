@@ -1,0 +1,19 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "aurora-jewels",
+  "compatibility_date": "2024-12-01",
+  "pages_build_output_dir": "./dist",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "aurora-jewels",
+      "database_id": "55d511b6-7b99-4db8-9ae2-f2bb3b452fc6"
+    }
+  ],
+  "kv_namespaces": [
+    {
+      "binding": "SESSION",
+      "id": "5bf3cbe461b941b8958d75184638a04e"
+    }
+  ]
+}
