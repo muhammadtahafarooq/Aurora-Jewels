@@ -1,0 +1,87 @@
+---
+export const prerender = false;
+import '../../styles/global.css';
+
+let alreadyAdmin = false;
+try {
+  const cookieHeader = Astro.request.headers.get('Cookie') || '';
+  const match = cookieHeader.match(/aj_session=([^;]+)/);
+  if (match) {
+    const { verifySession } = await import('../../lib/auth');
+    const session = await verifySession(match[1]);
+    if (session && session.role === 'admin') {
+      alreadyAdmin = true;
+    }
+  }
+} catch {}
+if (alreadyAdmin) return Astro.redirect('/admin/dashboard');
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Login — Aurora Jewels</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  </head>
+  <body class="bg-background text-text font-body flex min-h-screen items-center justify-center">
+    <div class="w-full max-w-[400px] px-5">
+      <h1 class="text-[20px] font-semibold tracking-tight mb-1">Admin Login</h1>
+      <p class="text-[14px] text-muted mb-8">Aurora Jewels management console.</p>
+
+      <div id="error-box" class="hidden mb-4 border border-error/30 bg-error/5 px-4 py-3 text-[13px] text-error"></div>
+
+      <form id="login-form" class="flex flex-col gap-4">
+        <div>
+          <label for="email" class="block text-[13px] font-medium mb-1">Email</label>
+          <input id="email" type="email" required class="w-full border border-border bg-surface px-3 py-2.5 text-[14px] outline-none focus:border-primary transition-colors" />
+        </div>
+        <div>
+          <label for="password" class="block text-[13px] font-medium mb-1">Password</label>
+          <input id="password" type="password" required class="w-full border border-border bg-surface px-3 py-2.5 text-[14px] outline-none focus:border-primary transition-colors" />
+        </div>
+        <button type="submit" class="w-full bg-primary text-white py-2.5 text-[14px] font-medium hover:bg-primary-hover transition-colors">
+          Sign In
+        </button>
+      </form>
+    </div>
+    <script>
+      const form = document.getElementById('login-form') as HTMLFormElement;
+      const errorBox = document.getElementById('error-box')!;
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        errorBox.classList.add('hidden');
+        const email = (document.getElementById('email') as HTMLInputElement).value.trim();
+        const password = (document.getElementById('password') as HTMLInputElement).value;
+
+        try {
+          const res = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'same-origin',
+            body: JSON.stringify({ email, password }),
+          });
+          const data = await res.json();
+          if (!res.ok) {
+            errorBox.textContent = data.error || 'Login failed';
+            errorBox.classList.remove('hidden');
+            return;
+          }
+          if (data.role !== 'admin') {
+            errorBox.textContent = 'Access denied. Admin account required.';
+            errorBox.classList.remove('hidden');
+            return;
+          }
+          window.location.href = '/admin/dashboard';
+        } catch {
+          errorBox.textContent = 'Network error. Try again.';
+          errorBox.classList.remove('hidden');
+        }
+      });
+    </script>
+  </body>
+</html>

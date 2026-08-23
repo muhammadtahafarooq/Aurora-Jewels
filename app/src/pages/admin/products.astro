@@ -1,0 +1,187 @@
+---
+export const prerender = false;
+import { requireAdminPage } from '../../lib/admin-auth';
+if (!await requireAdminPage(Astro)) return Astro.redirect('/admin/login');
+import AdminLayout from '../../layouts/AdminLayout.astro';
+---
+
+<AdminLayout title="Products">
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-[22px] font-semibold">Products</h1>
+    <button id="show-create" class="bg-primary text-white px-4 py-2 text-[13px] font-medium hover:bg-primary-hover transition-colors">Add Product</button>
+  </div>
+
+  <div id="error-msg" class="hidden mb-4 border border-error/30 bg-error/5 px-4 py-3 text-[13px] text-error"></div>
+
+  <div id="create-form" class="hidden border border-border bg-surface p-5 mb-6">
+    <h3 class="text-[15px] font-semibold mb-4">New Product</h3>
+    <form id="product-form" class="grid grid-cols-2 gap-4">
+      <div>
+        <label class="block text-[12px] uppercase tracking-wider text-muted mb-1">Name</label>
+        <input name="name" required class="w-full border border-border bg-background px-3 py-2 text-[14px] outline-none focus:border-primary" />
+      </div>
+      <div>
+        <label class="block text-[12px] uppercase tracking-wider text-muted mb-1">Slug</label>
+        <input name="slug" required class="w-full border border-border bg-background px-3 py-2 text-[14px] outline-none focus:border-primary" />
+      </div>
+      <div class="col-span-2">
+        <label class="block text-[12px] uppercase tracking-wider text-muted mb-1">Short Description</label>
+        <input name="shortDescription" class="w-full border border-border bg-background px-3 py-2 text-[14px] outline-none focus:border-primary" />
+      </div>
+      <div class="col-span-2">
+        <label class="block text-[12px] uppercase tracking-wider text-muted mb-1">Description</label>
+        <textarea name="description" rows="3" class="w-full border border-border bg-background px-3 py-2 text-[14px] outline-none focus:border-primary resize-none"></textarea>
+      </div>
+      <div>
+        <label class="block text-[12px] uppercase tracking-wider text-muted mb-1">Status</label>
+        <select name="status" class="w-full border border-border bg-background px-3 py-2 text-[14px] outline-none focus:border-primary">
+          <option value="active">Active</option>
+          <option value="draft">Draft</option>
+          <option value="archived">Archived</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-[12px] uppercase tracking-wider text-muted mb-1">Featured</label>
+        <select name="isFeatured" class="w-full border border-border bg-background px-3 py-2 text-[14px] outline-none focus:border-primary">
+          <option value="0">No</option>
+          <option value="1">Yes</option>
+        </select>
+      </div>
+      <div class="col-span-2 flex gap-3">
+        <button type="submit" class="bg-primary text-white px-5 py-2 text-[13px] font-medium hover:bg-primary-hover transition-colors">Create</button>
+        <button type="button" id="cancel-create" class="border border-border px-5 py-2 text-[13px] text-muted hover:border-border-strong transition-colors">Cancel</button>
+      </div>
+    </form>
+  </div>
+
+  <div id="products-table" class="border border-border bg-surface">
+    <p class="px-5 py-8 text-center text-[14px] text-muted">Loading...</p>
+  </div>
+
+  <div id="edit-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-dark/50">
+    <div class="bg-surface border border-border w-full max-w-[560px] max-h-[90vh] overflow-auto p-6">
+      <h3 class="text-[15px] font-semibold mb-4">Edit Product</h3>
+      <form id="edit-form" class="flex flex-col gap-4">
+        <input type="hidden" name="id" />
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-[12px] uppercase tracking-wider text-muted mb-1">Name</label>
+            <input name="name" class="w-full border border-border bg-background px-3 py-2 text-[14px] outline-none focus:border-primary" />
+          </div>
+          <div>
+            <label class="block text-[12px] uppercase tracking-wider text-muted mb-1">Slug</label>
+            <input name="slug" class="w-full border border-border bg-background px-3 py-2 text-[14px] outline-none focus:border-primary" />
+          </div>
+          <div>
+            <label class="block text-[12px] uppercase tracking-wider text-muted mb-1">Status</label>
+            <select name="status" class="w-full border border-border bg-background px-3 py-2 text-[14px] outline-none focus:border-primary">
+              <option value="active">Active</option>
+              <option value="draft">Draft</option>
+              <option value="archived">Archived</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[12px] uppercase tracking-wider text-muted mb-1">Featured</label>
+            <select name="isFeatured" class="w-full border border-border bg-background px-3 py-2 text-[14px] outline-none focus:border-primary">
+              <option value="0">No</option>
+              <option value="1">Yes</option>
+            </select>
+          </div>
+          <div class="col-span-2">
+            <label class="block text-[12px] uppercase tracking-wider text-muted mb-1">Short Description</label>
+            <input name="shortDescription" class="w-full border border-border bg-background px-3 py-2 text-[14px] outline-none focus:border-primary" />
+          </div>
+          <div class="col-span-2">
+            <label class="block text-[12px] uppercase tracking-wider text-muted mb-1">Description</label>
+            <textarea name="description" rows="3" class="w-full border border-border bg-background px-3 py-2 text-[14px] outline-none focus:border-primary resize-none"></textarea>
+          </div>
+        </div>
+        <div class="flex gap-3">
+          <button type="submit" class="bg-primary text-white px-5 py-2 text-[13px] font-medium hover:bg-primary-hover transition-colors">Save Changes</button>
+          <button type="button" id="close-edit" class="border border-border px-5 py-2 text-[13px] text-muted hover:border-border-strong transition-colors">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function showError(msg) {
+      const el = document.getElementById('error-msg');
+      el.textContent = msg;
+      el.classList.remove('hidden');
+    }
+    function hideError() { document.getElementById('error-msg').classList.add('hidden'); }
+    function statusBadge(s) {
+      const colors = { active: 'bg-success/10 text-success', draft: 'bg-warning/10 text-warning', archived: 'bg-surface-warm text-muted' };
+      return `<span class="inline-block px-2 py-0.5 text-[12px] font-medium ${colors[s] || 'bg-surface-warm text-muted'}">${s}</span>`;
+    }
+
+    document.getElementById('show-create')!.addEventListener('click', () => { document.getElementById('create-form')!.classList.remove('hidden'); });
+    document.getElementById('cancel-create')!.addEventListener('click', () => { document.getElementById('create-form')!.classList.add('hidden'); });
+    document.getElementById('close-edit')!.addEventListener('click', () => { document.getElementById('edit-modal')!.classList.add('hidden'); });
+
+    document.getElementById('product-form')!.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      hideError();
+      const fd = new FormData(e.target);
+      const body = { name: fd.get('name'), slug: fd.get('slug'), shortDescription: fd.get('shortDescription'), description: fd.get('description'), status: fd.get('status'), isFeatured: parseInt(fd.get('isFeatured') as string) };
+      try {
+        const res = await fetch('/api/admin/products', { method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'same-origin', body: JSON.stringify(body) });
+        if (!res.ok) { const d = await res.json(); showError(d.error); return; }
+        window.location.reload();
+      } catch { showError('Network error'); }
+    });
+
+    document.getElementById('edit-form')!.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      hideError();
+      const fd = new FormData(e.target);
+      const id = fd.get('id');
+      const body = { name: fd.get('name'), slug: fd.get('slug'), shortDescription: fd.get('shortDescription'), description: fd.get('description'), status: fd.get('status'), isFeatured: parseInt(fd.get('isFeatured') as string) };
+      try {
+        const res = await fetch(`/api/admin/products?id=${id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, credentials: 'same-origin', body: JSON.stringify(body) });
+        if (!res.ok) { const d = await res.json(); showError(d.error); return; }
+        window.location.reload();
+      } catch { showError('Network error'); }
+    });
+
+    async function loadProducts() {
+      try {
+        const res = await fetch('/api/admin/products?perPage=100', { credentials: 'same-origin' });
+        if (!res.ok) throw new Error();
+        const d = await res.json();
+        const list = d.products || [];
+        const container = document.getElementById('products-table')!;
+        if (list.length === 0) { container.innerHTML = '<p class="px-5 py-8 text-center text-[14px] text-muted">No products found.</p>'; return; }
+        container.innerHTML = `<table class="w-full text-left"><thead><tr class="border-b border-border"><th class="px-5 py-3 text-[12px] uppercase tracking-wider text-muted font-medium">Product</th><th class="px-5 py-3 text-[12px] uppercase tracking-wider text-muted font-medium">Status</th><th class="px-5 py-3 text-[12px] uppercase tracking-wider text-muted font-medium">Featured</th><th class="px-5 py-3 text-[12px] uppercase tracking-wider text-muted font-medium">Actions</th></tr></thead><tbody>` +
+          list.map(p => `<tr class="border-b border-border last:border-0"><td class="px-5 py-3"><p class="text-[14px] font-medium">${p.name}</p><p class="text-[12px] text-muted">${p.slug}</p></td><td class="px-5 py-3">${statusBadge(p.status)}</td><td class="px-5 py-3 text-[13px]">${p.isFeatured ? 'Yes' : 'No'}</td><td class="px-5 py-3"><div class="flex gap-2"><button class="edit-btn text-[13px] text-accent hover:underline" data-id="${p.id}" data-name="${p.name}" data-slug="${p.slug}" data-desc="${(p.description||'').replace(/"/g,'&quot;')}" data-short="${(p.shortDescription||'').replace(/"/g,'&quot;')}" data-status="${p.status}" data-featured="${p.isFeatured}">Edit</button><button class="delete-btn text-[13px] text-error hover:underline" data-id="${p.id}" data-name="${p.name}">Delete</button></div></td></tr>`).join('') +
+          `</tbody></table>`;
+
+        document.querySelectorAll('.edit-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const f = document.getElementById('edit-form') as HTMLFormElement;
+            f.id.value = btn.dataset.id;
+            f.name.value = btn.dataset.name;
+            f.slug.value = btn.dataset.slug;
+            f.description.value = btn.dataset.desc;
+            f.shortDescription.value = btn.dataset.short;
+            f.status.value = btn.dataset.status;
+            f.isFeatured.value = btn.dataset.featured;
+            document.getElementById('edit-modal')!.classList.remove('hidden');
+          });
+        });
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            if (!confirm(`Delete "${btn.dataset.name}"?`)) return;
+            try {
+              const res = await fetch(`/api/admin/products?id=${btn.dataset.id}`, { method: 'DELETE', credentials: 'same-origin' });
+              if (!res.ok) { const d = await res.json(); showError(d.error); return; }
+              window.location.reload();
+            } catch { showError('Network error'); }
+          });
+        });
+      } catch { document.getElementById('products-table').innerHTML = '<p class="px-5 py-8 text-center text-[14px] text-error">Failed to load products.</p>'; }
+    }
+    loadProducts();
+  </script>
+</AdminLayout>

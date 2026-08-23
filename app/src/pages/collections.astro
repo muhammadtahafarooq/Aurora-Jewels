@@ -1,0 +1,141 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Icon from '../components/Icon.astro';
+import { createDb } from '../lib/db';
+
+export const prerender = false;
+
+function formatPrice(minorUnits: number): string {
+  return new Intl.NumberFormat('en-PK', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(Math.round(minorUnits / 100));
+}
+
+let collectionList: any[] = [];
+let featuredProducts: any[] = [];
+
+const env = (Astro.locals as any).runtime?.env;
+if (env?.DB) {
+  const db = createDb(env);
+  const { listProducts, listCollections } = await import('../services/products');
+  const { productVariants } = await import('@database/schema');
+  const { inArray } = await import('drizzle-orm');
+
+  collectionList = await listCollections(db);
+
+  const result = await listProducts(db, { page: 1, perPage: 8, featured: true });
+  const productRows = result.products || [];
+
+  if (productRows.length > 0) {
+    const ids = productRows.map((p: any) => p.id);
+    const defaultVariants = await db
+      .select({ productId: productVariants.productId, price: productVariants.price })
+      .from(productVariants)
+      .where(inArray(productVariants.productId, ids));
+    const priceMap = new Map(defaultVariants.map((v) => [v.productId, v.price]));
+    featuredProducts = productRows.map((p: any) => ({ ...p, price: priceMap.get(p.id) ?? 0 }));
+  }
+}
+
+const collectionImages: Record<string, string> = {
+  'the-eternity-collection': '/images/collections/heritage.jpg',
+  'aura-gold': '/images/collections/aurora-gold.jpg',
+  'lumina-pearls': '/images/collections/lumiere-pearls.jpg',
+};
+---
+
+<Layout title="Collections — Aurora Jewels" description="Explore the Aurora Jewels collections — signature studies in form, light and everyday luxury.">
+  <section class="relative flex min-h-[60vh] items-end overflow-hidden bg-primary md:min-h-[70vh]">
+    <img
+      src="/images/collections/heritage.jpg"
+      alt=""
+      aria-hidden="true"
+      loading="eager"
+      decoding="async"
+      class="absolute inset-0 h-full w-full object-cover object-center"
+      onerror="this.remove()"
+    />
+    <div class="absolute inset-0 bg-gradient-to-r from-dark/70 via-dark/40 to-transparent" />
+    <div class="relative mx-auto w-full max-w-[1440px] px-5 pb-16 pt-[160px] md:px-10 md:pb-24">
+      <span class="type-eyebrow text-accent" data-reveal-eyebrow>The House Collections</span>
+      <h1 class="type-h2 mt-3 text-dark-text" data-reveal-text>Collections</h1>
+      <p class="mt-4 max-w-[420px] text-dark-text/85">
+        Each collection is a complete thought — a small world of pieces designed to live together.
+      </p>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-[1440px] px-5 py-12 md:px-10 md:py-20" aria-label="Collections">
+    {
+      collectionList.map((collection, i) => (
+        <article
+          id={collection.slug}
+          class:list={[
+            'group scroll-mt-32 grid grid-cols-1 items-center gap-10 py-12 md:grid-cols-12 md:gap-6 md:py-20',
+            i > 0 && 'border-t border-border',
+          ]}
+        >
+          <div class:list={[
+            'overflow-hidden',
+            i % 2 === 0 ? 'md:order-1 md:col-span-7' : 'md:order-2 md:col-span-7',
+          ]}>
+            <div class="aspect-[4/5] overflow-hidden bg-surface-warm transition-transform duration-[600ms] ease-out group-hover:scale-[1.02]">
+              <img
+                src={collection.imageUrl || collectionImages[collection.slug] || '/images/collections/heritage.jpg'}
+                alt={collection.name}
+                loading="lazy"
+                decoding="async"
+                class="h-full w-full object-cover"
+                onerror="this.style.display='none'"
+              />
+            </div>
+          </div>
+          <div class:list={[
+            'flex flex-col items-start gap-5',
+            i % 2 === 0 ? 'md:order-2 md:col-span-4 md:col-start-9' : 'md:order-1 md:col-span-4',
+          ]}>
+            <span class="type-eyebrow text-accent" data-reveal-eyebrow>Collection</span>
+            <h2 class="type-h3" data-reveal-text>{collection.name}</h2>
+            <p class="max-w-[400px] text-[15px] leading-relaxed text-text-secondary">
+              {collection.description || ''}
+            </p>
+            <a href={`/collections#${collection.slug}`} class="btn-text mt-2">
+              <span class="link-underline">Explore Collection</span>
+              <Icon name="arrow-right" size={16} class="arrow-shift" />
+            </a>
+          </div>
+        </article>
+      ))
+    }
+  </section>
+
+  <section class="border-t border-border" aria-labelledby="collections-preview" data-section-reveal>
+    <div class="mx-auto max-w-[1440px] px-5 py-12 md:px-10 md:py-20">
+      <div class="mb-10 flex items-end justify-between gap-4">
+        <h2 id="collections-preview" class="type-h3" data-reveal-text>Curated Selection</h2>
+        <a href="/shop" class="btn-text">
+          <span class="link-underline">View All</span>
+          <Icon name="arrow-right" size={16} class="arrow-shift" />
+        </a>
+      </div>
+      <div class="grid grid-cols-2 gap-x-3 gap-y-10 md:grid-cols-4 md:gap-x-6" data-stagger>
+        {
+          featuredProducts.map((product) => (
+            <a href={`/products/${product.slug}`} class="group block" data-tilt>
+              <div class="aspect-[4/5] overflow-hidden bg-surface-warm transition-transform duration-[600ms] ease-out group-hover:scale-[1.02]">
+                <img
+                  src={product.imageUrl || `/images/products/${product.slug}-1.jpg`}
+                  alt={product.name}
+                  loading="lazy"
+                  decoding="async"
+                  class="h-full w-full object-cover"
+                  onerror="this.style.display='none'"
+                />
+              </div>
+              <h3 class="type-body-md mt-3 font-semibold">{product.name}</h3>
+              <p class="type-functional-sm text-text-secondary">Rs. {formatPrice(product.price)}</p>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Layout>

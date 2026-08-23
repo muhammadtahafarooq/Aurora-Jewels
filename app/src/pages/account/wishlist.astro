@@ -1,0 +1,104 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import AccountShell from '../../components/AccountShell.astro';
+import Icon from '../../components/Icon.astro';
+---
+
+<Layout title="Wishlist — Aurora Jewels" description="Your saved Aurora Jewels pieces.">
+  <AccountShell active="wishlist" title="Wishlist">
+    <div id="wishlist-content">
+      <p id="wishlist-loading" class="py-16 text-center text-[13px] text-text-secondary">Loading your wishlist…</p>
+
+      <div id="wishlist-grid" class="hidden grid grid-cols-2 gap-x-3 gap-y-10 md:grid-cols-4 md:gap-x-6"></div>
+
+      <div id="wishlist-empty" class="hidden py-16 text-center">
+        <Icon name="heart" size={48} class="text-text-secondary" />
+        <h2 class="type-h4 mt-4">Your wishlist is empty</h2>
+        <p class="mt-2 text-[14px] text-text-secondary">Tap the heart on any piece to save it here for later.</p>
+        <a href="/shop" class="btn-primary mt-6">Explore Jewelry</a>
+      </div>
+    </div>
+  </AccountShell>
+
+  <script>
+    interface WishlistProduct {
+      id: number;
+      name: string;
+      slug: string;
+      price: number;
+      imageUrl: string;
+    }
+
+    interface WishlistItem {
+      productId: number;
+      product: WishlistProduct;
+    }
+
+    function formatPrice(minorUnits: number): string {
+      return new Intl.NumberFormat('en-PK', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      }).format(Math.round(minorUnits / 100));
+    }
+
+    const loadingEl = document.getElementById('wishlist-loading');
+    const gridEl = document.getElementById('wishlist-grid');
+    const emptyEl = document.getElementById('wishlist-empty');
+
+    function showSection(section: 'loading' | 'grid' | 'empty') {
+      loadingEl?.classList.toggle('hidden', section !== 'loading');
+      gridEl?.classList.toggle('hidden', section !== 'grid');
+      emptyEl?.classList.toggle('hidden', section !== 'empty');
+    }
+
+    function renderProductCard(item: WishlistItem): string {
+      const p = item.product;
+      return `
+        <a href="/products/${p.slug}" class="group block">
+          <div class="aspect-[4/5] overflow-hidden bg-surface-warm transition-transform duration-[600ms] ease-out group-hover:scale-[1.02]">
+            <img
+              src="${p.imageUrl}"
+              alt="${p.name}"
+              loading="lazy"
+              decoding="async"
+              class="h-full w-full object-cover"
+              onerror="this.style.display='none'"
+            />
+          </div>
+          <h3 class="type-body-md mt-3 font-semibold">${p.name}</h3>
+          <p class="type-functional-sm text-text-secondary">Rs. ${formatPrice(p.price)}</p>
+        </a>
+      `;
+    }
+
+    async function loadWishlist() {
+      showSection('loading');
+      try {
+        const res = await fetch('/api/wishlist');
+        if (res.status === 401) {
+          window.location.href = '/login';
+          return;
+        }
+        const json = await res.json();
+        const items: WishlistItem[] = json?.items ?? [];
+        if (items.length === 0) {
+          showSection('empty');
+          return;
+        }
+        if (gridEl) {
+          gridEl.innerHTML = items.map(renderProductCard).join('');
+        }
+        showSection('grid');
+      } catch {
+        showSection('empty');
+      }
+    }
+
+    function init() {
+      loadWishlist();
+    }
+
+    init();
+    document.addEventListener('astro:after-swap', init);
+  </script>
+</Layout>

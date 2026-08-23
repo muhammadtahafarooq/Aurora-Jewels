@@ -1,0 +1,78 @@
+---
+export const prerender = false;
+import { requireAdminPage } from '../../lib/admin-auth';
+if (!await requireAdminPage(Astro)) return Astro.redirect('/admin/login');
+import AdminLayout from '../../layouts/AdminLayout.astro';
+---
+
+<AdminLayout title="Dashboard">
+  <h1 class="text-[22px] font-semibold mb-6">Dashboard</h1>
+
+  <div id="stats-grid" class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-10">
+    <div class="border border-border bg-surface p-5">
+      <p class="text-[12px] uppercase tracking-wider text-muted mb-1">Orders</p>
+      <p class="text-[28px] font-bold" id="stat-orders">-</p>
+    </div>
+    <div class="border border-border bg-surface p-5">
+      <p class="text-[12px] uppercase tracking-wider text-muted mb-1">Products</p>
+      <p class="text-[28px] font-bold" id="stat-products">-</p>
+    </div>
+    <div class="border border-border bg-surface p-5">
+      <p class="text-[12px] uppercase tracking-wider text-muted mb-1">Customers</p>
+      <p class="text-[28px] font-bold" id="stat-customers">-</p>
+    </div>
+    <div class="border border-border bg-surface p-5">
+      <p class="text-[12px] uppercase tracking-wider text-muted mb-1">Revenue</p>
+      <p class="text-[28px] font-bold" id="stat-revenue">-</p>
+    </div>
+    <div class="border border-border bg-surface p-5">
+      <p class="text-[12px] uppercase tracking-wider text-muted mb-1">Pending Reviews</p>
+      <p class="text-[28px] font-bold" id="stat-reviews">-</p>
+    </div>
+  </div>
+
+  <div class="border border-border bg-surface">
+    <div class="px-5 py-4 border-b border-border flex items-center justify-between">
+      <h2 class="text-[15px] font-semibold">Recent Orders</h2>
+      <a href="/admin/orders" class="text-[13px] text-accent hover:underline">View All</a>
+    </div>
+    <div id="recent-orders">
+      <p class="px-5 py-8 text-center text-[14px] text-muted">Loading...</p>
+    </div>
+  </div>
+
+  <script>
+    function formatPrice(n) {
+      return new Intl.NumberFormat('en-PK').format(Math.round(n / 100));
+    }
+    function statusBadge(s) {
+      const colors = { pending: 'bg-warning/10 text-warning', confirmed: 'bg-primary/10 text-primary', processing: 'bg-primary/10 text-primary', shipped: 'bg-accent/10 text-accent', delivered: 'bg-success/10 text-success', cancelled: 'bg-error/10 text-error' };
+      return `<span class="inline-block px-2 py-0.5 text-[12px] font-medium ${colors[s] || 'bg-surface-warm text-muted'}">${s}</span>`;
+    }
+
+    async function load() {
+      try {
+        const res = await fetch('/api/admin/stats', { credentials: 'same-origin' });
+        if (!res.ok) throw new Error();
+        const d = await res.json();
+        document.getElementById('stat-orders').textContent = d.totalOrders;
+        document.getElementById('stat-products').textContent = d.totalProducts;
+        document.getElementById('stat-customers').textContent = d.totalCustomers;
+        document.getElementById('stat-revenue').textContent = 'Rs. ' + formatPrice(d.totalRevenue);
+        document.getElementById('stat-reviews').textContent = d.pendingReviews;
+
+        const container = document.getElementById('recent-orders')!;
+        if (!d.recentOrders || d.recentOrders.length === 0) {
+          container.innerHTML = '<p class="px-5 py-8 text-center text-[14px] text-muted">No orders yet.</p>';
+          return;
+        }
+        container.innerHTML = `<table class="w-full text-left"><thead><tr class="border-b border-border"><th class="px-5 py-3 text-[12px] uppercase tracking-wider text-muted font-medium">Order</th><th class="px-5 py-3 text-[12px] uppercase tracking-wider text-muted font-medium">Customer</th><th class="px-5 py-3 text-[12px] uppercase tracking-wider text-muted font-medium">Amount</th><th class="px-5 py-3 text-[12px] uppercase tracking-wider text-muted font-medium">Status</th></tr></thead><tbody>` +
+          d.recentOrders.map(o => `<tr class="border-b border-border last:border-0"><td class="px-5 py-3 text-[13px]">${o.orderNumber}</td><td class="px-5 py-3 text-[13px]">${o.customerName}</td><td class="px-5 py-3 text-[13px]">Rs. ${formatPrice(o.totalAmount)}</td><td class="px-5 py-3">${statusBadge(o.status)}</td></tr>`).join('') +
+          `</tbody></table>`;
+      } catch {
+        document.getElementById('recent-orders').innerHTML = '<p class="px-5 py-8 text-center text-[14px] text-error">Failed to load stats.</p>';
+      }
+    }
+    load();
+  </script>
+</AdminLayout>

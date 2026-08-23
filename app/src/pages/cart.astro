@@ -1,0 +1,240 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Icon from '../components/Icon.astro';
+---
+
+<Layout title="Your Bag — Aurora Jewels" description="Review your Aurora Jewels shopping bag before checkout.">
+  <section class="mx-auto max-w-[1440px] px-5 pb-20 pt-[120px] md:px-10 md:pb-32 md:pt-[160px]">
+    <!-- Cart Header -->
+    <header class="mb-12">
+      <h1 class="type-h2">Your Bag</h1>
+      <p id="cart-count-label" class="mt-2 text-[14px] text-text-secondary">0 items</p>
+    </header>
+
+    <!-- Empty state -->
+    <div id="cart-empty" class="hidden border-t border-border">
+      <div class="py-16 text-center">
+        <Icon name="bag" size={48} class="text-text-secondary" />
+        <h2 class="type-h4 mt-4">Your bag is empty</h2>
+        <p class="mt-2 text-[14px] text-text-secondary">Pieces you add will appear here, ready whenever you are.</p>
+        <a href="/shop" class="btn-primary mt-6">Explore Jewelry</a>
+      </div>
+    </div>
+
+    <!-- Populated cart -->
+    <div id="cart-filled" class="hidden grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-6">
+      <!-- Product list -->
+      <ul id="cart-items" class="flex flex-col divide-y divide-border border-y border-border lg:col-span-7" aria-label="Bag items"></ul>
+
+      <!-- Summary -->
+      <aside class="lg:col-span-4 lg:col-start-9">
+        <div class="flex flex-col gap-6 lg:sticky lg:top-[120px]">
+          <!-- Coupon -->
+          <div>
+            <label for="coupon-code" class="form-label">Discount Code</label>
+            <div class="flex gap-3">
+              <input id="coupon-code" type="text" class="input-field" autocomplete="off" />
+              <button type="button" id="coupon-apply" class="btn-secondary shrink-0">Apply</button>
+            </div>
+            <p id="coupon-feedback" class="mt-3 hidden text-[13px]" role="status"></p>
+          </div>
+
+          <!-- Totals -->
+          <dl class="flex flex-col gap-3 border-t border-border pt-6 text-[15px]">
+            <div class="flex justify-between">
+              <dt class="text-text-secondary">Subtotal</dt>
+              <dd id="cart-subtotal" class="font-semibold">Rs. 0</dd>
+            </div>
+            <div class="flex justify-between">
+              <dt class="text-text-secondary">Delivery</dt>
+              <dd class="text-text-secondary">Confirmed at checkout</dd>
+            </div>
+            <div class="mt-2 flex justify-between border-t border-border pt-4 text-[17px] font-semibold">
+              <dt>Total</dt>
+              <dd id="cart-total">Rs. 0</dd>
+            </div>
+          </dl>
+
+          <a href="/checkout" class="btn-primary w-full">Proceed to Checkout</a>
+
+          <a href="/shop" class="btn-text self-center">
+            <span class="link-underline">Continue Shopping</span>
+            <Icon name="arrow-right" size={16} class="arrow-shift" />
+          </a>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <script>
+    interface CartItem {
+      slug: string;
+      name: string;
+      price: number;
+      variant?: string;
+      qty: number;
+    }
+
+    const fmt = (minor: number) => 'Rs. ' + new Intl.NumberFormat('en-PK').format(Math.round(minor / 100));
+
+    function readCart(): CartItem[] {
+      try {
+        return JSON.parse(localStorage.getItem('aj_cart') ?? '[]');
+      } catch {
+        return [];
+      }
+    }
+
+    function writeCart(items: CartItem[]) {
+      localStorage.setItem('aj_cart', JSON.stringify(items));
+      document.dispatchEvent(new CustomEvent('aj-cart-changed'));
+    }
+
+    function initCartPage() {
+      const empty = document.getElementById('cart-empty');
+      const filled = document.getElementById('cart-filled');
+      if (!empty || !filled) return;
+
+      const items = readCart();
+
+      if (items.length === 0) {
+        empty.classList.remove('hidden');
+        filled.classList.add('hidden');
+        filled.classList.remove('grid');
+        return;
+      }
+
+      filled.classList.remove('hidden');
+      filled.classList.add('grid');
+      empty.classList.add('hidden');
+
+      const list = document.getElementById('cart-items')!;
+      list.innerHTML = '';
+      let subtotal = 0;
+
+      items.forEach((item, index) => {
+        subtotal += item.price * item.qty;
+        const li = document.createElement('li');
+        li.className = 'flex gap-5 py-6';
+        li.innerHTML = `
+          <div class="h-[120px] w-[96px] shrink-0 overflow-hidden bg-surface-warm">
+            <img src="/images/products/${item.slug}-1.jpg" alt="${item.name}" loading="lazy" decoding="async" class="h-full w-full object-cover" onerror="this.style.display='none'" />
+          </div>
+          <div class="flex flex-1 flex-col">
+            <div class="flex justify-between gap-4">
+              <div>
+                <p class="text-[15px] font-semibold">${item.name}</p>
+                ${item.variant ? `<p class="mt-1 text-[13px] text-text-secondary">${item.variant}</p>` : ''}
+                <p class="mt-1 text-[14px] text-text-secondary">${fmt(item.price)}</p>
+              </div>
+              <p class="text-[15px] font-semibold whitespace-nowrap">${fmt(item.price * item.qty)}</p>
+            </div>
+            <div class="mt-auto flex items-center justify-between pt-4">
+              <div class="flex items-center border border-border">
+                <button type="button" data-dec="${index}" aria-label="Decrease quantity" class="flex h-10 w-10 items-center justify-center hover:bg-surface-warm">\u2212</button>
+                <span class="w-10 text-center text-[14px] font-semibold" data-qty>${item.qty}</span>
+                <button type="button" data-inc="${index}" aria-label="Increase quantity" class="flex h-10 w-10 items-center justify-center hover:bg-surface-warm">+</button>
+              </div>
+              <button type="button" data-remove="${index}" class="flex items-center gap-2 text-[13px] text-text-secondary hover:text-error">
+                Remove
+              </button>
+            </div>
+          </div>`;
+        list.appendChild(li);
+      });
+
+      const totalEl = document.getElementById('cart-subtotal')!;
+      const grandEl = document.getElementById('cart-total')!;
+      totalEl.textContent = fmt(subtotal);
+      grandEl.textContent = fmt(subtotal);
+
+      document.getElementById('cart-count-label')!.textContent =
+        `${items.reduce((n, i) => n + i.qty, 0)} item(s)`;
+
+      list.querySelectorAll('[data-inc]').forEach((b) =>
+        b.addEventListener('click', () => {
+          const c = readCart();
+          c[Number((b as HTMLElement).dataset.inc)].qty += 1;
+          writeCart(c);
+          initCartPage();
+        })
+      );
+      list.querySelectorAll('[data-dec]').forEach((b) =>
+        b.addEventListener('click', () => {
+          const c = readCart();
+          const i = Number((b as HTMLElement).dataset.dec);
+          c[i].qty = Math.max(1, c[i].qty - 1);
+          writeCart(c);
+          initCartPage();
+        })
+      );
+      list.querySelectorAll('[data-remove]').forEach((b) =>
+        b.addEventListener('click', () => {
+          const c = readCart();
+          c.splice(Number((b as HTMLElement).dataset.remove), 1);
+          writeCart(c);
+          initCartPage();
+        })
+      );
+    }
+
+    function initCoupon() {
+      const btn = document.getElementById('coupon-apply');
+      const input = document.getElementById('coupon-code') as HTMLInputElement | null;
+      const feedback = document.getElementById('coupon-feedback');
+      if (!btn || !input || !feedback) return;
+
+      btn.addEventListener('click', async () => {
+        feedback.classList.remove('hidden');
+        feedback.className = 'mt-3 text-[13px] flex items-center gap-2';
+        if (!input.value.trim()) {
+          feedback.classList.add('text-error');
+          feedback.textContent = 'Please enter a discount code.';
+          return;
+        }
+
+        btn.textContent = 'Checking...';
+        btn.setAttribute('disabled', 'true');
+
+        try {
+          const cart = readCart();
+          const subtotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+          const res = await fetch('/api/coupons', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ code: input.value.trim(), subtotal }),
+          });
+          const data = await res.json();
+
+          if (res.ok && data.valid) {
+            feedback.classList.add('text-success');
+            const disc = data.discount ?? 0;
+            feedback.textContent = `Code applied! You save Rs. ${new Intl.NumberFormat('en-PK').format(Math.round(disc / 100))}`;
+            document.dispatchEvent(new CustomEvent('aj-coupon-applied', { detail: { code: input.value.trim().toUpperCase(), discount: disc } }));
+          } else {
+            feedback.classList.add('text-error');
+            feedback.textContent = data.reason || 'Invalid discount code.';
+          }
+        } catch {
+          feedback.classList.add('text-error');
+          feedback.textContent = 'Could not validate code. Please try again.';
+        } finally {
+          btn.textContent = 'Apply';
+          btn.removeAttribute('disabled');
+        }
+      });
+    }
+
+    initCartPage();
+    initCoupon();
+    document.addEventListener('astro:after-swap', () => {
+      initCartPage();
+      initCoupon();
+    });
+
+    document.addEventListener('aj-coupon-applied', ((e: CustomEvent) => {
+      sessionStorage.setItem('aj_coupon_code', e.detail.code);
+      sessionStorage.setItem('aj_coupon_discount', String(e.detail.discount));
+    }) as EventListener);
+  </script>
+</Layout>

@@ -1,0 +1,129 @@
+---
+interface Props {
+  compact?: boolean;
+}
+
+const { compact = false } = Astro.props;
+
+const columns = [
+  {
+    heading: 'Shop',
+    links: [
+      { label: 'All Jewelry', href: '/shop' },
+      { label: 'New Arrivals', href: '/new-arrivals' },
+      { label: 'Collections', href: '/collections' },
+    ],
+  },
+  {
+    heading: 'About',
+    links: [
+      { label: 'About Aurora', href: '/about' },
+      { label: 'Our Story', href: '/our-story' },
+    ],
+  },
+  {
+    heading: 'Customer Care',
+    links: [
+      { label: 'FAQ', href: '/faq' },
+      { label: 'Shipping & Returns', href: '/shipping-returns' },
+      { label: 'Visit Us', href: '/location' },
+      { label: 'Contact', href: '/contact' },
+    ],
+  },
+  {
+    heading: 'Social',
+    links: [
+      { label: 'Instagram', href: 'https://instagram.com' },
+    ],
+  },
+];
+---
+
+<footer class:list={['bg-dark text-dark-text', compact ? 'py-10' : 'py-16 md:py-20']}>
+  {
+    !compact && (
+      <div class="mx-auto max-w-container px-5 md:px-10">
+        <div class="grid grid-cols-1 gap-12 md:grid-cols-12 md:gap-x-8 md:gap-y-12">
+          <div class="md:col-span-5 flex flex-col gap-4">
+            <span class="font-display text-[22px] font-medium uppercase tracking-[0.18em]">
+              Aurora Jewels
+            </span>
+            <p class="max-w-[320px] text-[14px] leading-[1.7] text-dark-muted">
+              Sophisticated, timeless and exclusive jewelry — designed to be worn every day and
+              treasured for a lifetime.
+            </p>
+          </div>
+
+          {columns.map((col) => (
+            <nav class="md:col-span-2" aria-label={col.heading}>
+              <h2 class="type-eyebrow mb-5 text-dark-accent">{col.heading}</h2>
+              <ul class="flex flex-col gap-4">
+                {col.links.map((link) => (
+                  <li>
+                    <a
+                      href={link.href}
+                      class="text-[13px] text-dark-text/80 transition-colors duration-250 hover:text-white"
+                    >
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  {
+    compact && (
+      <div class="mx-auto flex max-w-container flex-col gap-4 px-5 md:flex-row md:items-center md:justify-between md:px-10">
+        <span class="text-[12px] uppercase tracking-[0.18em]">Aurora Jewels</span>
+        <ul class="flex flex-wrap gap-5">
+          <li><a href="/faq" class="text-[12px] text-dark-text/70 hover:text-white">Support</a></li>
+          <li>
+            <a href="/shipping-returns" class="text-[12px] text-dark-text/70 hover:text-white">
+              Shipping &amp; Returns
+            </a>
+          </li>
+        </ul>
+      </div>
+    )
+  }
+
+  <div
+    class:list={[
+      'mx-auto max-w-container px-5 md:px-10',
+      compact ? 'mt-6 border-t border-dark-border pt-6' : 'mt-10 border-t border-dark-border pt-6 md:mt-16',
+    ]}
+  >
+    <div class="flex flex-col justify-between gap-4 text-[11px] text-dark-muted md:flex-row">
+      <span>&copy; {new Date().getFullYear()} Aurora Jewels. All rights reserved.</span>
+      <div class="flex gap-6">
+        <a href="/privacy-policy" class="hover:text-white">Privacy Policy</a>
+        <a href="/terms-conditions" class="hover:text-white">Terms &amp; Conditions</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Marquee band BELOW footer -->
+{
+  !compact && (
+    <div class="bg-secondary py-6 md:py-8 overflow-hidden" aria-hidden="true">
+      <div class="animate-marquee flex w-max items-center whitespace-nowrap">
+        {[0, 1].map(() => (
+          <span class="flex items-center font-display text-[56px] font-medium uppercase leading-none tracking-[0.08em] text-accent md:text-[96px]">
+            {[0, 1, 2].map(() => (
+              <>
+                <span class="px-6 md:px-10">Aurora Jewels</span>
+                <span class="text-[28px] md:text-[44px]">&middot;</span>
+              </>
+            ))}
+          </span>
+        ))}
+      </div>
+    </div>
+  )
+}

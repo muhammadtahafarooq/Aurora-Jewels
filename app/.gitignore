@@ -3,6 +3,9 @@ dist/
 .astro/
 node_modules/
 
+# Cloudflare local state
+.wrangler/
+
 # local environment variables
 .env
 .env.production

@@ -1,0 +1,133 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import AccountShell from '../../components/AccountShell.astro';
+import Icon from '../../components/Icon.astro';
+---
+
+<Layout title="Order History — Aurora Jewels" description="View your past Aurora Jewels orders and their status.">
+  <AccountShell active="orders" title="Order History">
+    <div id="orders-content">
+      <p id="orders-loading" class="py-16 text-center text-[13px] text-text-secondary">Loading your orders…</p>
+
+      <div id="orders-list" class="hidden">
+        <ul id="orders-items" class="flex flex-col gap-4"></ul>
+      </div>
+
+      <div id="orders-empty" class="hidden py-16 text-center">
+        <Icon name="bag" size={48} class="text-text-secondary" />
+        <h2 class="type-h4 mt-4">No orders yet</h2>
+        <p class="mt-2 text-[14px] text-text-secondary">When you place an order, its status and history will appear here.</p>
+        <a href="/shop" class="btn-primary mt-6">Start Shopping</a>
+      </div>
+    </div>
+  </AccountShell>
+
+  <script>
+    interface OrderItem {
+      id: number;
+      productId: number;
+      quantity: number;
+      unitPrice: number;
+    }
+
+    interface Order {
+      id: number;
+      orderNumber: string;
+      status: string;
+      totalAmount: number;
+      createdAt: string;
+      orderItems: OrderItem[];
+    }
+
+    function formatPrice(minorUnits: number): string {
+      return 'Rs. ' + new Intl.NumberFormat('en-PK', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      }).format(Math.round(minorUnits / 100));
+    }
+
+    function formatDate(iso: string): string {
+      return new Date(iso).toLocaleDateString('en-PK', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      });
+    }
+
+    const statusClasses: Record<string, string> = {
+      pending: 'bg-amber-100 text-amber-800',
+      confirmed: 'bg-blue-100 text-blue-800',
+      processing: 'bg-blue-100 text-blue-800',
+      shipped: 'bg-indigo-100 text-indigo-800',
+      delivered: 'bg-green-100 text-green-800',
+      cancelled: 'bg-red-100 text-red-800',
+    };
+
+    function statusBadge(status: string): string {
+      const cls = statusClasses[status] ?? 'bg-border text-text-secondary';
+      return `<span class="inline-block px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide ${cls}">${status}</span>`;
+    }
+
+    const loadingEl = document.getElementById('orders-loading');
+    const listEl = document.getElementById('orders-list');
+    const emptyEl = document.getElementById('orders-empty');
+    const itemsEl = document.getElementById('orders-items');
+
+    function showSection(section: 'loading' | 'list' | 'empty') {
+      loadingEl?.classList.toggle('hidden', section !== 'loading');
+      listEl?.classList.toggle('hidden', section !== 'list');
+      emptyEl?.classList.toggle('hidden', section !== 'empty');
+    }
+
+    function renderOrder(order: Order): string {
+      const count = order.orderItems.length;
+      return `
+        <li>
+          <a href="/account/orders/${order.id}" class="block border border-border p-5 transition-colors duration-250 hover:border-primary/30">
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div class="flex flex-col gap-1">
+                <span class="text-[14px] font-semibold">${order.orderNumber}</span>
+                <span class="text-[13px] text-text-secondary">${formatDate(order.createdAt)}</span>
+              </div>
+              <div class="flex items-center gap-3">
+                ${statusBadge(order.status)}
+                <span class="text-[14px] font-semibold">${formatPrice(order.totalAmount)}</span>
+              </div>
+            </div>
+            <p class="mt-2 text-[12px] text-text-secondary">${count} item${count !== 1 ? 's' : ''}</p>
+          </a>
+        </li>
+      `;
+    }
+
+    async function loadOrders() {
+      showSection('loading');
+      try {
+        const res = await fetch('/api/user/orders', { credentials: 'same-origin' });
+        if (res.status === 401) {
+          window.location.href = '/login';
+          return;
+        }
+        const json = await res.json();
+        const orders: Order[] = json?.orders ?? [];
+        if (orders.length === 0) {
+          showSection('empty');
+          return;
+        }
+        if (itemsEl) {
+          itemsEl.innerHTML = orders.map(renderOrder).join('');
+        }
+        showSection('list');
+      } catch {
+        showSection('empty');
+      }
+    }
+
+    function init() {
+      loadOrders();
+    }
+
+    init();
+    document.addEventListener('astro:after-swap', init);
+  </script>
+</Layout>

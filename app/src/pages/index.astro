@@ -1,80 +1,254 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Icon from '../components/Icon.astro';
+import { createDb } from '../lib/db';
+
+export const prerender = false;
+
+function formatPrice(minorUnits: number): string {
+  return new Intl.NumberFormat('en-PK', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(Math.round(minorUnits / 100));
+}
+
+let featured: any[] = [];
+let collectionList: any[] = [];
+
+const env = (Astro.locals as any).runtime?.env;
+if (env?.DB) {
+  const db = createDb(env);
+  const { listProducts, listCollections } = await import('../services/products');
+  const { productVariants } = await import('@database/schema');
+  const { inArray } = await import('drizzle-orm');
+
+  const result = await listProducts(db, { page: 1, perPage: 8, featured: true });
+  const productRows = result.products || [];
+
+  if (productRows.length > 0) {
+    const ids = productRows.map((p: any) => p.id);
+    const defaultVariants = await db
+      .select({ productId: productVariants.productId, price: productVariants.price })
+      .from(productVariants)
+      .where(inArray(productVariants.productId, ids));
+    const priceMap = new Map(defaultVariants.map((v) => [v.productId, v.price]));
+    featured = productRows.map((p: any) => ({ ...p, price: priceMap.get(p.id) ?? 0 }));
+  }
+
+  collectionList = await listCollections(db);
+}
+
+const collectionImages: Record<string, string> = {
+  'the-eternity-collection': '/images/collections/heritage.jpg',
+  'aura-gold': '/images/collections/aurora-gold.jpg',
+  'lumina-pearls': '/images/collections/lumiere-pearls.jpg',
+};
 ---
 
-<Layout title="Aurora Jewels — Premium Jewelry Editorial Store">
-  <main class="min-h-screen flex flex-col justify-between">
-    <!-- Header -->
-    <header class="h-[88px] px-10 flex items-center justify-between border-b border-border/10">
-      <div class="flex items-center gap-8 text-[12px] font-semibold tracking-[0.1em] uppercase">
-        <a href="/shop" class="hover:text-primary transition-colors">Shop</a>
-        <a href="/collections" class="hover:text-primary transition-colors">Collections</a>
-      </div>
-      <div>
-        <a href="/" class="text-[20px] font-serif tracking-[0.15em] font-medium uppercase">
-          Aurora Jewels
-        </a>
-      </div>
-      <div class="flex items-center gap-8 text-[12px] font-semibold tracking-[0.1em] uppercase">
-        <a href="/cart" class="hover:text-primary transition-colors">Bag (0)</a>
-      </div>
-    </header>
-
-    <!-- Hero Content -->
-    <section class="max-w-[1440px] mx-auto px-10 py-20 flex-1 grid grid-cols-1 lg:grid-cols-12 gap-[24px] items-center">
-      <div class="lg:col-span-5 flex flex-col gap-6 items-start pr-8">
-        <span class="text-[12px] font-semibold uppercase tracking-[0.15em] text-accent">Editorial No. 01</span>
-        <h1 class="text-[56px] lg:text-[72px] leading-[0.98] font-serif font-normal tracking-[-0.035em]">
-          Timeless <br /><span class="italic">Elegance</span> Refined.
+<Layout
+  title="Aurora Jewels — Premium Jewelry Editorial Store"
+  transparentNav
+>
+  <!-- Hero -->
+  <section
+    class="relative flex min-h-[80vh] items-end overflow-hidden bg-primary md:min-h-[90vh]"
+  >
+    <img
+      src="/images/hero-home-bg.jpg"
+      alt=""
+      aria-hidden="true"
+      loading="eager"
+      decoding="async"
+      class="absolute inset-0 h-full w-full object-cover object-center"
+      data-hero-media
+      onerror="this.style.display='none'"
+    />
+    <div class="absolute inset-0 bg-gradient-to-r from-dark/70 via-dark/40 to-transparent" />
+    <div class="relative mx-auto w-full max-w-[1440px] px-5 pb-16 pt-[160px] md:px-10 md:pb-24">
+      <div data-hero class="flex max-w-[680px] flex-col items-start gap-6">
+        <span class="type-eyebrow text-accent">Elegance &middot; Heritage &middot; Radiance</span>
+        <h1 class="type-display text-dark-text">
+          Timeless Elegance<br /><em class="italic">Refined</em>
         </h1>
-        <p class="text-[16px] text-text-secondary leading-[1.6] max-w-[400px]">
-          Luxury jewelry designed for daily wearable prestige. Craftsmanship made to frame individual character.
+        <p class="max-w-[440px] text-[16px] leading-[1.65] text-dark-text/85">
+          Sophisticated, timeless jewelry designed for everyday wear — crafted with intention,
+          made to feel quietly extraordinary.
         </p>
-        <div class="flex gap-4 mt-4">
-          <a href="/shop" class="btn-primary">Shop Collection</a>
+        <div class="mt-2 flex flex-wrap gap-4">
+          <a
+            href="/shop"
+            data-magnetic
+            class="inline-flex h-12 items-center justify-center bg-dark-text px-8 font-body text-[13px] font-semibold uppercase tracking-[0.14em] text-primary transition-colors duration-250 hover:bg-white"
+          >
+            Shop Jewelry
+          </a>
+          <a
+            href="/collections"
+            data-magnetic
+            class="inline-flex h-12 items-center justify-center border border-dark-text/50 px-8 font-body text-[13px] font-semibold uppercase tracking-[0.14em] text-dark-text transition-colors duration-250 hover:border-dark-text"
+          >
+            Explore Collections
+          </a>
         </div>
       </div>
-      <div class="lg:col-span-7 h-[600px] bg-secondary flex items-center justify-center relative overflow-hidden">
-        <!-- Editorial photograph placeholder container (4:5 ratio styling) -->
-        <div class="w-[80%] h-[90%] bg-surface border border-border/20 flex flex-col items-center justify-center p-8">
-          <span class="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted mb-2">Aurora Jewels</span>
-          <span class="text-[18px] font-serif italic text-primary">Luxury Photography Placeholder</span>
-        </div>
-      </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- Footer -->
-    <footer class="bg-primary-hover text-background py-16 px-10 border-t border-primary/20">
-      <div class="max-w-[1440px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
-        <div class="flex flex-col gap-4">
-          <span class="text-[16px] font-serif tracking-[0.1em] uppercase">Aurora Jewels</span>
-          <p class="text-[13px] text-background/60 leading-[1.5] max-w-[200px]">
-            Sophisticated, timeless and exclusive jewelry house based in Pakistan.
+  <!-- Featured Collections -->
+  <section class="mx-auto max-w-[1440px] px-5 py-16 md:px-10 md:py-32" aria-labelledby="home-collections">
+    <div class="mb-12 max-w-[620px]">
+      <h2 id="home-collections" class="type-h2" data-reveal-text>Collections</h2>
+      <p class="mt-4 text-text-secondary" data-reveal-text>Three studies in form, light and everyday luxury.</p>
+    </div>
+
+    <div class="grid grid-cols-1 gap-12 md:grid-cols-12 md:items-end md:gap-6" data-stagger>
+      {
+        collectionList.map((collection, i) => (
+          <article
+            class:list={[
+              'group flex flex-col',
+              i === 0 && 'md:col-span-5',
+              i === 1 && 'md:col-span-3 md:translate-y-[-48px]',
+              i === 2 && 'md:col-span-4',
+            ]}
+          >
+            <a href={`/collections#${collection.slug}`} class="block overflow-hidden">
+              <div class="reveal aspect-[4/5] overflow-hidden bg-surface-warm transition-transform duration-[600ms] ease-out group-hover:scale-[1.02]">
+                <img
+                  src={collectionImages[collection.slug] ?? '/images/collections/heritage.jpg'}
+                  alt={collection.name}
+                  loading="lazy"
+                  decoding="async"
+                  class="h-full w-full object-cover"
+      onerror="this.remove()"
+                />
+              </div>
+            </a>
+            <h3 class="type-h3 mt-6">{collection.name}</h3>
+            <p class="mt-2 max-w-[360px] text-[15px] leading-relaxed text-text-secondary">
+              {collection.description || ''}
+            </p>
+            <a href={`/collections#${collection.slug}`} class="btn-text mt-4">
+              <span class="link-underline">Explore Collection</span>
+              <Icon name="arrow-right" size={16} class="arrow-shift" />
+            </a>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- Featured Products -->
+  <section class="mx-auto max-w-[1440px] px-5 py-16 md:px-10 md:py-32" aria-labelledby="home-featured">
+    <div class="mb-12 flex flex-col justify-between gap-4 md:flex-row md:items-end">
+      <div class="max-w-[520px]">
+        <h2 id="home-featured" class="type-h2" data-reveal-text>Featured Jewelry</h2>
+        <p class="mt-3 text-text-secondary" data-reveal-text>A considered selection from the current house collection.</p>
+      </div>
+      <a href="/shop" class="btn-text">
+        <span class="link-underline">View All Jewelry</span>
+        <Icon name="arrow-right" size={16} class="arrow-shift" />
+      </a>
+    </div>
+
+    <div class="grid grid-cols-2 gap-x-3 gap-y-10 md:grid-cols-4 md:gap-x-6" data-stagger>
+      {
+        featured.map((product) => (
+          <a href={`/products/${product.slug}`} class="group block" data-tilt>
+            <div class="aspect-[4/5] overflow-hidden bg-surface-warm transition-transform duration-[600ms] ease-out group-hover:scale-[1.02]">
+              <img
+                src={product.imageUrl || `/images/products/${product.slug}-1.jpg`}
+                alt={product.name}
+                loading="lazy"
+                decoding="async"
+                class="h-full w-full object-cover"
+                onerror="this.style.display='none'"
+              />
+            </div>
+            <h3 class="type-body-md mt-3 font-semibold">{product.name}</h3>
+            <p class="type-functional-sm text-text-secondary">Rs. {formatPrice(product.price)}</p>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- Brand Storytelling -->
+  <section class="mx-auto grid max-w-[1440px] grid-cols-1 items-center gap-10 px-5 py-16 md:grid-cols-12 md:gap-6 md:px-10 md:py-32" data-mouse-follow aria-labelledby="home-story">
+    <div data-parallax-frame class="order-1 overflow-hidden md:order-none md:col-span-7">
+      <div data-parallax="-5" class="aspect-[4/3] scale-[1.08] overflow-hidden bg-surface-warm" data-mouse-follow-target>
+        <img
+          src="/images/our-story/jeweler.jpg"
+          alt="Aurora Jewels craftsmanship"
+          loading="lazy"
+          decoding="async"
+          class="h-full w-full object-cover"
+          onerror="this.style.display='none'"
+        />
+      </div>
+    </div>
+    <div class="order-2 flex flex-col items-start gap-5 md:col-span-5 md:pl-8">
+      <span class="type-eyebrow text-accent" data-reveal-eyebrow>The House</span>
+      <h2 class="type-h3" data-reveal-text>Quiet luxury, worn every day.</h2>
+      <p class="text-[16px] leading-[1.7] text-text-secondary" data-reveal-text>
+        Aurora Jewels exists for the woman who values restraint over ornament — jewelry that
+        frames character rather than announcing it.
+      </p>
+      <a href="/our-story" class="btn-text mt-2" data-magnetic>
+        <span class="link-underline">Discover Our Story</span>
+        <Icon name="arrow-right" size={16} class="arrow-shift" />
+      </a>
+    </div>
+  </section>
+
+  <!-- Seascape with card overlay -->
+  <section class="relative overflow-hidden bg-surface-warm" data-section-reveal data-mouse-follow>
+      <div class="h-[60vh] w-full md:h-[80vh]" data-mouse-follow-target>
+      <img
+        src="/images/about/sea.jpg"
+        alt="Aurora Jewels inspired by the elements"
+        loading="lazy"
+        decoding="async"
+        class="h-full w-full object-cover"
+        onerror="this.style.display='none'"
+      />
+    </div>
+    <div class="absolute inset-0 bg-gradient-to-t from-primary/60 to-transparent" />
+    <div class="absolute bottom-0 left-0 w-full px-5 pb-16 md:px-10 md:pb-24">
+      <div class="mx-auto max-w-[1440px]">
+        <div class="max-w-[500px] bg-surface p-8 md:p-10">
+          <span class="type-eyebrow text-accent">Inspired by the Elements</span>
+          <h2 class="type-h3 mt-3">A Quiet Authority.</h2>
+          <p class="mt-4 text-[15px] leading-relaxed text-text-secondary">
+            Each piece draws from the natural world — stone, water, light — reformed into
+            jewelry that carries a quiet, distinctive presence.
           </p>
-        </div>
-        <div class="flex flex-col gap-2">
-          <span class="text-[12px] font-semibold uppercase tracking-[0.1em] text-accent">Shop</span>
-          <a href="/shop" class="text-[13px] text-background/80 hover:text-white">All Jewelry</a>
-          <a href="/collections" class="text-[13px] text-background/80 hover:text-white">Collections</a>
-        </div>
-        <div class="flex flex-col gap-2">
-          <span class="text-[12px] font-semibold uppercase tracking-[0.1em] text-accent">About</span>
-          <a href="/about" class="text-[13px] text-background/80 hover:text-white">About Aurora</a>
-          <a href="/story" class="text-[13px] text-background/80 hover:text-white">Our Story</a>
-        </div>
-        <div class="flex flex-col gap-2">
-          <span class="text-[12px] font-semibold uppercase tracking-[0.1em] text-accent">Customer Care</span>
-          <a href="/faq" class="text-[13px] text-background/80 hover:text-white">FAQ</a>
-          <a href="/shipping" class="text-[13px] text-background/80 hover:text-white">Shipping & Returns</a>
+          <a href="/about" class="btn-text mt-6">
+            <span class="link-underline">Discover Our Story</span>
+            <Icon name="arrow-right" size={16} class="arrow-shift" />
+          </a>
         </div>
       </div>
-      <div class="max-w-[1440px] mx-auto border-t border-white/10 mt-12 pt-6 flex flex-col md:flex-row justify-between text-[11px] text-background/40">
-        <span>© {new Date().getFullYear()} Aurora Jewels. All Rights Reserved.</span>
-        <div class="flex gap-4">
-          <a href="/privacy" class="hover:text-white">Privacy Policy</a>
-          <a href="/terms" class="hover:text-white">Terms & Conditions</a>
-        </div>
-      </div>
-    </footer>
-  </main>
+    </div>
+  </section>
+
+  <!-- Trust -->
+  <section class="bg-surface-warm" aria-label="Shopping information" data-section-reveal>
+    <div class="mx-auto grid max-w-[1440px] grid-cols-1 gap-10 px-5 py-16 md:grid-cols-3 md:gap-6 md:px-10 md:py-20" data-stagger>
+      {
+        [
+          { icon: 'bag', title: 'Considered Shipping', copy: 'Careful packaging and tracked delivery nationwide.' },
+          { icon: 'check', title: 'Ethically Sourced', copy: 'Responsibly sourced materials and conflict-free stones.' },
+          { icon: 'user', title: 'Personal Care', copy: 'Our team is available on WhatsApp for any question.' },
+        ].map((item) => (
+          <div class="flex flex-col gap-3 border-t border-border pt-6">
+            <Icon name={item.icon} size={28} class="text-primary" />
+            <h3 class="type-h4">{item.title}</h3>
+            <p class="max-w-[300px] text-[14px] leading-relaxed text-text-secondary">{item.copy}</p>
+            <a href="/shipping-returns" class="btn-text mt-1">
+              <span class="link-underline">Learn More</span>
+              <Icon name="arrow-right" size={14} class="arrow-shift" />
+            </a>
+          </div>
+        ))
+      }
+    </div>
+  </section>
 </Layout>

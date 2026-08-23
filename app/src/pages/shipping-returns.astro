@@ -1,0 +1,85 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Icon from '../components/Icon.astro';
+---
+
+<Layout title="Shipping & Returns — Aurora Jewels" description="Shipping and returns information for Aurora Jewels — Pakistan-first delivery with Cash on Delivery.">
+  <!-- Page Introduction — centered -->
+  <section class="mx-auto max-w-[1440px] px-5 pb-12 pt-[120px] md:pb-16 md:pt-[160px]">
+    <span class="type-eyebrow text-accent" data-reveal-eyebrow>Customer Care</span>
+    <h1 class="type-h2 mt-4" data-reveal-text>Shipping &amp; Returns</h1>
+    <p class="mt-4 max-w-[620px] text-text-secondary">
+      Everything you need to know about delivery across Pakistan and our returns process.
+    </p>
+  </section>
+
+  <!-- Shipping Information -->
+  <section class="mx-auto max-w-[1440px] border-t border-border px-5 py-12 md:px-10 md:py-16">
+    <div class="max-w-[760px]">
+      <h2 class="type-h3">Shipping</h2>
+      <div class="mt-6 flex flex-col gap-5 text-[15px] leading-relaxed text-text-secondary">
+        <p>
+          We deliver nationwide across Pakistan. Orders are confirmed by phone before dispatch
+          and shipped with tracking within 1\u20132 business days.
+        </p>
+        <p>
+          Cash on Delivery is available for all orders. Final shipping rates and delivery times
+          are confirmed at checkout.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Returns Information -->
+  <section class="mx-auto max-w-[1440px] border-t border-border px-5 py-12 md:px-10 md:py-16">
+    <div class="max-w-[760px]">
+      <h2 class="type-h3">Returns</h2>
+      <div class="mt-6 flex flex-col gap-5 text-[15px] leading-relaxed text-text-secondary">
+        <p>
+          If a piece arrives damaged or is not as described, contact us within 7 days of delivery
+          and we will make it right.
+        </p>
+        <p>
+          Full policy conditions and the exchange process are provided by the business and will
+          accompany the final published content.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Returns Steps -->
+  <section class="mx-auto max-w-[1440px] border-t border-border px-5 py-12 md:px-10 md:py-16">
+    <div class="max-w-[760px]">
+      <h2 class="type-h3">How to Return</h2>
+      <div class="mt-8 flex flex-col gap-6">
+        {
+          [
+            { step: '01', title: 'Contact Us', copy: 'Reach out on WhatsApp or email within 7 days of delivery.' },
+            { step: '02', title: 'Share Details', copy: 'Provide your order number and reason for return.' },
+            { step: '03', title: 'Ship Back', copy: 'We will arrange a pickup or provide return instructions.' },
+            { step: '04', title: 'Resolution', copy: 'Receive a replacement or refund once the item is inspected.' },
+          ].map((item) => (
+            <div class="flex gap-6 border-t border-border pt-6">
+              <span class="type-eyebrow text-text-secondary">{item.step}</span>
+              <div>
+                <h3 class="type-h4">{item.title}</h3>
+                <p class="mt-2 text-[14px] text-text-secondary">{item.copy}</p>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Assistance band -->
+  <section class="bg-primary">
+    <div class="mx-auto max-w-[1440px] px-5 py-16 text-center md:py-20">
+      <h2 class="type-h3 text-dark-text">Need help with an order?</h2>
+      <a href="/contact" class="btn-primary mt-8" data-magnetic>
+        Contact Aurora
+        <Icon name="arrow-right" size={16} />
+      </a>
+    </div>
+  </section>
+</Layout>

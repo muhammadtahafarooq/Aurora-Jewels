@@ -1,0 +1,582 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Icon from '../../components/Icon.astro';
+import ProductViewer from '../../components/ProductViewer.astro';
+import { createDb } from '../../lib/db';
+
+export const prerender = false;
+
+const slug = Astro.params.slug;
+if (!slug) {
+  return Astro.redirect('/404');
+}
+
+const env = (Astro.locals as any).runtime?.env;
+if (!env?.DB) {
+  return Astro.redirect('/404');
+}
+
+const db = createDb(env);
+
+let productData: any = null;
+let productReviews: any[] = [];
+let relatedProducts: any[] = [];
+
+try {
+  const { getProductBySlug } = await import('../../services/products');
+  const { listApprovedReviews } = await import('../../services/reviews');
+  productData = await getProductBySlug(db, slug);
+  productReviews = await listApprovedReviews(db, productData.id);
+
+  const { listProducts } = await import('../../services/products');
+  const { productVariants } = await import('@database/schema');
+  const { eq: drizzleEq, inArray } = await import('drizzle-orm');
+  const related = await listProducts(db, { page: 1, perPage: 4 });
+  const relatedIds = (related.products || []).filter((p: any) => p.id !== productData.id).slice(0, 4).map((p: any) => p.id);
+
+  if (relatedIds.length > 0) {
+    const defaultVariants = await db
+      .select({ productId: productVariants.productId, price: productVariants.price })
+      .from(productVariants)
+      .where(inArray(productVariants.productId, relatedIds));
+
+    const priceMap = new Map(defaultVariants.map((v) => [v.productId, v.price]));
+    relatedProducts = (related.products || [])
+      .filter((p: any) => p.id !== productData.id)
+      .slice(0, 4)
+      .map((p: any) => ({ ...p, price: priceMap.get(p.id) ?? 0 }));
+  }
+} catch {
+  return Astro.redirect('/404');
+}
+
+const product = {
+  slug: productData.slug,
+  name: productData.name,
+  price: productData.variants?.[0]?.price ?? 0,
+  descriptor: productData.shortDescription ?? '',
+  description: productData.description ?? '',
+  status: productData.status === 'out_of_stock' ? 'out_of_stock' : 'in_stock',
+  collection: productData.collections?.[0]?.name ?? '',
+};
+
+const price = 'Rs. ' + new Intl.NumberFormat('en-PK').format(Math.round(product.price / 100));
+const outOfStock = product.status === 'out_of_stock';
+
+const details: Array<{ title: string; body: string }> = [
+  {
+    title: 'Details and Care',
+    body:
+      (product.description ?? product.descriptor ?? '') +
+      ' Store in the provided pouch away from moisture and wipe gently with a soft cloth after wear.',
+  },
+  {
+    title: 'Shipping & Returns',
+    body: 'Delivered across Pakistan with tracked shipping in careful packaging. Cash on delivery is available at checkout, with 14-day returns on unworn pieces.',
+  },
+];
+---
+
+<Layout title={`${product.name} — Aurora Jewels`} description={product.descriptor ?? `${product.name} from Aurora Jewels.`}>
+  <script type="application/ld+json" set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.name,
+    description: product.description ?? product.descriptor ?? '',
+    image: `/images/products/${product.slug}-1.jpg`,
+    brand: { '@type': 'Brand', name: 'Aurora Jewels' },
+    offers: {
+      '@type': 'Offer',
+      priceCurrency: 'PKR',
+      price: product.price,
+      availability: product.status === 'out_of_stock' ? 'https://schema.org/OutOfStock' : 'https://schema.org/InStock',
+      seller: { '@type': 'Organization', name: 'Aurora Jewels' },
+    },
+  })} />
+  <div class="mx-auto max-w-[1440px] px-5 pt-[104px] md:px-10 md:pt-[120px]">
+    <nav aria-label="Breadcrumb" class="mb-8">
+      <ol class="flex items-center gap-2 text-[12px] text-text-secondary">
+        <li><a href="/collections" class="hover:text-text">Collections</a></li>
+        <li aria-hidden="true">/</li>
+        <li><a href="/shop" class="hover:text-text">Shop</a></li>
+        <li aria-hidden="true">/</li>
+        <li aria-current="page" class="text-text">{product.name}</li>
+      </ol>
+    </nav>
+  </div>
+
+  <div class="mx-auto max-w-[1440px] px-5 pb-16 md:px-10 md:pb-24">
+    <div class="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-6">
+      <!-- Gallery -->
+      <section class="lg:col-span-7" aria-label="Product gallery">
+        <!-- 2D / 3D toggle -->
+        <div class="mb-3 flex gap-2">
+          <button
+            type="button"
+            data-view-toggle="2d"
+            class="flex items-center gap-1.5 border border-primary bg-surface px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-primary transition-colors duration-250 hover:bg-primary hover:text-dark-text"
+          >
+            <Icon name="search" size={14} />
+            Photos
+          </button>
+          <button
+            type="button"
+            data-view-toggle="3d"
+            class="flex items-center gap-1.5 border border-border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-text-secondary transition-colors duration-250 hover:border-text-secondary hover:text-text"
+          >
+            <Icon name="arrow-right" size={14} />
+            3D View
+          </button>
+        </div>
+
+        <!-- 2D Gallery -->
+        <div data-view-panel="2d">
+          <div class="flex flex-col gap-3 md:flex-row-reverse md:gap-4">
+            <div id="pdp-main" class="aspect-[4/5] w-full overflow-hidden bg-surface-warm">
+              <img
+                src={productData.images?.[0]?.imageUrl || `/images/products/${product.slug}-1.jpg`}
+                alt={product.name}
+                loading="eager"
+                decoding="async"
+                class="h-full w-full object-cover"
+                onerror="this.style.display='none'"
+              />
+            </div>
+            <div
+              class="flex gap-3 overflow-x-auto md:w-[84px] md:shrink-0 md:flex-col md:overflow-visible"
+              role="group"
+              aria-label="Product image thumbnails"
+            >
+              {
+                (productData.images?.length > 0
+                  ? productData.images.slice(0, 4)
+                  : [1, 2, 3, 4].map((n) => ({ imageUrl: `/images/products/${product.slug}-${n}.jpg`, altText: `${product.name} — view ${n}` }))
+                ).map((img: any, i: number) => (
+                  <button
+                    type="button"
+                    data-thumb
+                    data-index={i + 1}
+                    data-img={img.imageUrl}
+                    class:list={[
+                      'block aspect-[3/4] w-[64px] shrink-0 overflow-hidden border bg-surface-warm transition-colors duration-250 md:w-full',
+                      i === 0 ? 'border-primary' : 'border-border hover:border-text-secondary',
+                    ]}
+                    aria-label={`View image ${i + 1} of ${product.name}`}
+                    aria-pressed={i === 0 ? 'true' : 'false'}
+                  >
+                    <img
+                      src={img.imageUrl}
+                      alt={img.altText || `${product.name} — view ${i + 1}`}
+                      loading="lazy"
+                      decoding="async"
+                      class="h-full w-full object-cover"
+                      onerror="this.style.display='none'"
+                    />
+                  </button>
+                ))
+              }
+            </div>
+          </div>
+        </div>
+
+        <!-- 3D Viewer (lazy-loaded via client:visible) -->
+        <div data-view-panel="3d" class="hidden">
+          <ProductViewer slug={product.slug} name={product.name} />
+        </div>
+      </section>
+
+      <!-- Product info -->
+      <section class="flex flex-col lg:col-span-5 lg:pl-10">
+        <span class="type-eyebrow text-accent">{product.collection ?? 'Aurora Jewels'}</span>
+        <h1 class="font-display mt-3 text-[34px] font-medium leading-[1.12] md:text-[44px]" data-reveal-text>
+          {product.name}
+        </h1>
+        <p class="mt-4 font-display text-[18px] italic text-text-secondary">{price}</p>
+        <p class="mt-5 max-w-[480px] text-[15px] leading-[1.75] text-text-secondary">
+          {product.description ?? product.descriptor ?? ''}
+        </p>
+
+        <fieldset class="mt-8">
+          <legend class="form-label">Size</legend>
+          <div class="mt-3 flex flex-wrap gap-3">
+            {
+              ['16', '17', '18', '19'].map((size, i) => (
+                <label class="cursor-pointer">
+                  <input type="radio" name="variant-size" value={size} class="peer sr-only" checked={i === 1} />
+                  <span class="flex h-11 min-w-[56px] items-center justify-center border border-border px-4 text-[13px] font-semibold transition-colors duration-250 peer-checked:border-primary peer-checked:bg-primary peer-checked:text-dark-text peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2">
+                    {size}
+                  </span>
+                </label>
+              ))
+            }
+          </div>
+        </fieldset>
+
+        <div class="mt-8 flex flex-col gap-3">
+          {
+            outOfStock ? (
+              <button type="button" class="btn-primary w-full" disabled>Out of Stock</button>
+            ) : (
+              <button
+                type="button"
+                id="add-to-bag"
+                class="btn-primary w-full uppercase tracking-[0.14em]"
+                data-magnetic
+                data-slug={product.slug}
+                data-name={product.name}
+                data-price={product.price}
+              >
+                Add to Bag
+              </button>
+            )
+          }
+          <button type="button" class="mx-auto flex items-center gap-2 py-1 text-[13px] text-text-secondary link-underline" data-wishlist data-product-id={productData.id}>
+            <Icon name="heart" size={14} />
+            Add to Wishlist
+          </button>
+        </div>
+
+        <div class="accordion mt-10 border-t border-border">
+          {
+            details.map((detail) => (
+              <details class="border-b border-border">
+                <summary class="flex items-center justify-between py-5">
+                  <span class="font-body text-[14px] font-semibold">{detail.title}</span>
+                  <span class="text-text-secondary">
+                    <Icon name="plus" size={16} class="icon-plus" />
+                    <Icon name="minus" size={16} class="icon-minus" />
+                  </span>
+                </summary>
+                <div class="accordion-content pb-6 pr-8 text-[14px] leading-relaxed text-text-secondary">
+                  {detail.body}
+                </div>
+              </details>
+            ))
+          }
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <section class="border-t border-border" aria-labelledby="why-heading" data-section-reveal>
+    <div class="mx-auto max-w-[1440px] px-5 py-12 md:px-10 md:py-20">
+      <h2 id="why-heading" class="type-h3">Why shop with us</h2>
+      <div class="mt-8 grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-6" data-stagger>
+        {
+          [
+            { icon: 'bag', title: 'Considered Shipping', copy: 'Careful packaging and tracked delivery nationwide.' },
+            { icon: 'check', title: 'Ethically Sourced', copy: 'Responsibly sourced materials and conflict-free stones.' },
+            { icon: 'user', title: 'Personal Care', copy: 'Our team is available on WhatsApp for any question.' },
+          ].map((item) => (
+            <div class="flex flex-col gap-2 border-t border-border pt-5">
+              <Icon name={item.icon} size={28} class="text-primary" />
+              <h3 class="type-h4">{item.title}</h3>
+              <p class="max-w-[300px] text-[14px] leading-relaxed text-text-secondary">{item.copy}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  {productReviews.length > 0 && (
+    <section class="border-t border-border" aria-labelledby="reviews-heading" data-section-reveal>
+      <div class="mx-auto max-w-[1440px] px-5 py-12 md:px-10 md:py-20">
+        <h2 id="reviews-heading" class="type-h3 mb-10">Customer Reviews</h2>
+        <div class="flex flex-col gap-8">
+          {productReviews.map((review: any) => (
+            <div class="border-t border-border pt-6">
+              <div class="flex items-center gap-3">
+                <span class="text-[14px] font-semibold">{review.customerName}</span>
+                <span class="text-[13px] text-text-secondary">{'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}</span>
+              </div>
+              {review.title && <p class="mt-2 text-[14px] font-semibold">{review.title}</p>}
+              <p class="mt-2 text-[14px] leading-relaxed text-text-secondary">{review.body}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="border-t border-border" aria-labelledby="write-review-heading" data-section-reveal>
+    <div class="mx-auto max-w-[1440px] px-5 py-12 md:px-10 md:py-20">
+      <h2 id="write-review-heading" class="type-h3 mb-6">Write a Review</h2>
+      <p id="review-login-msg" class="hidden mb-6 text-[14px] text-text-secondary">
+        <a href="/login" class="font-medium text-primary hover:text-primary-hover link-underline">Sign in</a> to leave a review.
+      </p>
+      <form id="review-form" class="hidden max-w-[600px] flex-col gap-6" novalidate data-product-id={productData.id}>
+        <div id="review-error" class="hidden mb-4 border border-error/30 bg-error/5 px-4 py-3 text-[13px] text-error" role="alert"></div>
+        <div id="review-success" class="hidden mb-4 border border-success/30 bg-success/5 px-4 py-3 text-[13px] text-success" role="status"></div>
+        <div>
+          <label for="review-name" class="form-label">Your Name</label>
+          <input id="review-name" name="customerName" type="text" required class="input-field" />
+        </div>
+        <fieldset>
+          <legend class="form-label">Rating</legend>
+          <div class="mt-2 flex gap-1">
+            {[1,2,3,4,5].map((n) => (
+              <button type="button" data-rating={n} class="review-star text-[20px] text-border transition-colors hover:text-accent" aria-label={`${n} star${n > 1 ? 's' : ''}`}>★</button>
+            ))}
+          </div>
+          <input type="hidden" id="review-rating" name="rating" value="" />
+        </fieldset>
+        <div>
+          <label for="review-title" class="form-label">Title <span class="text-muted">(optional)</span></label>
+          <input id="review-title" name="title" type="text" class="input-field" />
+        </div>
+        <div>
+          <label for="review-body" class="form-label">Review</label>
+          <textarea id="review-body" name="body" rows="4" required class="input-field h-auto resize-none pt-3" minlength="10"></textarea>
+        </div>
+        <button type="submit" class="btn-primary self-start">Submit Review</button>
+      </form>
+    </div>
+  </section>
+
+  <section class="border-t border-border" aria-labelledby="related-heading" data-section-reveal>
+    <div class="mx-auto max-w-[1440px] px-5 py-12 md:px-10 md:py-20">
+      <h2 id="related-heading" class="type-h3 mb-10">You may also like</h2>
+      <div class="grid grid-cols-2 gap-x-3 gap-y-10 md:grid-cols-4 md:gap-x-6" data-stagger>
+        {
+          relatedProducts
+            .map((related: any) => (
+              <a href={`/products/${related.slug}`} class="group block">
+                <div class="aspect-[4/5] overflow-hidden bg-surface-warm transition-transform duration-[600ms] ease-out group-hover:scale-[1.02]">
+                  <img
+                    src={related.imageUrl || `/images/products/${related.slug}-1.jpg`}
+                    alt={related.name}
+                    loading="lazy"
+                    decoding="async"
+                    class="h-full w-full object-cover"
+                    onerror="this.style.display='none'"
+                  />
+                </div>
+                <h3 class="type-body-md mt-3 font-semibold">{related.name}</h3>
+                <p class="type-functional-sm text-text-secondary">Rs. {new Intl.NumberFormat('en-PK').format(Math.round((related.price ?? 0) / 100))}</p>
+              </a>
+            ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <script>
+    function initViewToggle() {
+      const toggles = document.querySelectorAll<HTMLElement>('[data-view-toggle]');
+      const panels = document.querySelectorAll<HTMLElement>('[data-view-panel]');
+      if (toggles.length === 0) return;
+      let viewerLoaded = false;
+
+      toggles.forEach((toggle) => {
+        if (toggle.getAttribute('data-bound') === 'true') return;
+        toggle.setAttribute('data-bound', 'true');
+        toggle.addEventListener('click', () => {
+          const view = toggle.dataset.viewToggle;
+          toggles.forEach((t) => {
+            const isActive = t.dataset.viewToggle === view;
+            t.classList.toggle('border-primary', isActive);
+            t.classList.toggle('bg-surface', isActive);
+            t.classList.toggle('text-primary', isActive);
+            t.classList.toggle('border-border', !isActive);
+            t.classList.toggle('text-text-secondary', !isActive);
+          });
+          panels.forEach((panel) => {
+            const isTarget = panel.dataset.viewPanel === view;
+            panel.classList.toggle('hidden', !isTarget);
+          });
+          if (view === '3d' && !viewerLoaded) {
+            viewerLoaded = true;
+            import('../../scripts/product-viewer.ts');
+          }
+        });
+      });
+    }
+
+    function initGallery() {
+      const mainImg = document.querySelector<HTMLImageElement>('#pdp-main img');
+      document.querySelectorAll<HTMLButtonElement>('[data-thumb]').forEach((btn) => {
+        if (btn.getAttribute('data-bound') === 'true') return;
+        btn.setAttribute('data-bound', 'true');
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('[data-thumb]').forEach((other) => {
+            const active = other === btn;
+            other.setAttribute('aria-pressed', active ? 'true' : 'false');
+            other.classList.toggle('border-primary', active);
+            other.classList.toggle('border-border', !active);
+          });
+          if (mainImg && btn.dataset.img) {
+            mainImg.src = btn.dataset.img;
+          }
+        });
+      });
+    }
+
+    function initAddToBag() {
+      const btn = document.getElementById('add-to-bag');
+      if (!btn || btn.getAttribute('data-bound') === 'true') return;
+      btn.setAttribute('data-bound', 'true');
+
+      const slug = btn.dataset.slug!;
+      const name = btn.dataset.name!;
+      const price = Number(btn.dataset.price);
+
+      const addToBag = (payload: Record<string, unknown>) => {
+        let cart: Array<Record<string, unknown>> = [];
+        try { cart = JSON.parse(localStorage.getItem('aj_cart') ?? '[]'); } catch { cart = []; }
+        const key = (i: Record<string, unknown>) => `${i.slug}|${i.variant ?? ''}`;
+        const existing = cart.find((i) => key(i) === key(payload));
+        if (existing) { existing.qty = Number(existing.qty) + 1; } else { cart.push({ qty: 1, ...payload }); }
+        localStorage.setItem('aj_cart', JSON.stringify(cart));
+        document.dispatchEvent(new CustomEvent('aj-cart-changed'));
+      };
+
+      btn.addEventListener('click', () => {
+        const variantInput = document.querySelector<HTMLInputElement>('input[name="variant-size"]:checked');
+        addToBag({ slug, name, price, variant: variantInput ? `Size ${variantInput.value}` : undefined });
+        btn.classList.add('btn-loading');
+        btn.textContent = 'Adding\u2026';
+        window.setTimeout(() => {
+          btn.classList.remove('btn-loading');
+          btn.textContent = 'Added \u2713';
+          window.setTimeout(() => { btn.textContent = 'Add to Bag'; }, 1200);
+        }, 600);
+      });
+    }
+
+    initGallery();
+    initAddToBag();
+    initViewToggle();
+    initWishlist();
+    initReviewForm();
+    initStickyCta();
+    document.addEventListener('astro:after-swap', () => { initGallery(); initAddToBag(); initViewToggle(); initWishlist(); initReviewForm(); initStickyCta(); });
+
+    function initReviewForm() {
+      const form = document.getElementById('review-form') as HTMLFormElement | null;
+      const loginMsg = document.getElementById('review-login-msg');
+      if (!form) return;
+
+      fetch('/api/auth/me', { credentials: 'same-origin' })
+        .then((r) => r.ok ? r.json() : null)
+        .then((user) => {
+          if (user) { form.classList.remove('hidden'); form.classList.add('flex'); }
+          else if (loginMsg) { loginMsg.classList.remove('hidden'); }
+        })
+        .catch(() => { if (loginMsg) loginMsg.classList.remove('hidden'); });
+
+      const stars = form.querySelectorAll<HTMLElement>('[data-rating]');
+      const ratingInput = document.getElementById('review-rating') as HTMLInputElement;
+      stars.forEach((star) => {
+        star.addEventListener('click', () => {
+          const val = star.dataset.rating || '';
+          ratingInput.value = val;
+          stars.forEach((s) => {
+            s.classList.toggle('text-accent', Number(s.dataset.rating) <= Number(val));
+            s.classList.toggle('text-border', Number(s.dataset.rating) > Number(val));
+          });
+        });
+      });
+
+      if (form.getAttribute('data-bound') === 'true') return;
+      form.setAttribute('data-bound', 'true');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const errBox = document.getElementById('review-error')!;
+        const succBox = document.getElementById('review-success')!;
+        errBox.classList.add('hidden');
+        succBox.classList.add('hidden');
+
+        const customerName = (form.querySelector('#review-name') as HTMLInputElement).value.trim();
+        const rating = ratingInput.value;
+        const title = (form.querySelector('#review-title') as HTMLInputElement).value.trim();
+        const body = (form.querySelector('#review-body') as HTMLTextAreaElement).value.trim();
+        const productId = form.dataset.productId;
+
+        if (!customerName || !rating || !body || body.length < 10) {
+          errBox.textContent = 'Please fill all required fields. Review must be at least 10 characters.';
+          errBox.classList.remove('hidden');
+          return;
+        }
+
+        const btn = form.querySelector('button[type="submit"]') as HTMLButtonElement;
+        btn.classList.add('btn-loading');
+        btn.textContent = 'Submitting…';
+
+        try {
+          const res = await fetch('/api/reviews', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ productId, customerName, rating: Number(rating), title: title || undefined, body }),
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error || 'Failed');
+
+          form.reset();
+          stars.forEach((s) => { s.classList.remove('text-accent'); s.classList.add('text-border'); });
+          ratingInput.value = '';
+          succBox.textContent = 'Thank you — your review has been submitted and will appear once approved.';
+          succBox.classList.remove('hidden');
+        } catch (err: unknown) {
+          const msg = err instanceof Error ? err.message : 'Failed to submit review.';
+          errBox.textContent = msg;
+          errBox.classList.remove('hidden');
+        } finally {
+          btn.classList.remove('btn-loading');
+          btn.textContent = 'Submit Review';
+        }
+      });
+    }
+
+    function initStickyCta() {
+      const addBtn = document.getElementById('add-to-bag');
+      const stickyBar = document.getElementById('sticky-cta');
+      if (!addBtn || !stickyBar) return;
+      if (addBtn.getAttribute('data-bound-sticky') === 'true') return;
+      addBtn.setAttribute('data-bound-sticky', 'true');
+
+      const observer = new IntersectionObserver(
+        ([entry]) => { stickyBar.classList.toggle('hidden', entry.isIntersecting); },
+        { threshold: 0 }
+      );
+      observer.observe(addBtn);
+    }
+
+    function initWishlist() {
+      const btn = document.querySelector<HTMLElement>('[data-wishlist]');
+      if (!btn || btn.getAttribute('data-bound') === 'true') return;
+      btn.setAttribute('data-bound', 'true');
+      btn.addEventListener('click', async () => {
+        const productId = btn.getAttribute('data-product-id');
+        if (!productId) return;
+        try {
+          const meRes = await fetch('/api/auth/me');
+          if (!meRes.ok) { window.location.href = '/login'; return; }
+          const res = await fetch('/api/wishlist', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ productId }),
+          });
+          if (res.ok) {
+            const data = await res.json();
+            btn.textContent = data.added ? 'Added to Wishlist' : 'Removed from Wishlist';
+            setTimeout(() => { btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg> Add to Wishlist'; }, 2000);
+          }
+        } catch { /* silent */ }
+      });
+    }
+  </script>
+
+  {!outOfStock && (
+    <div id="sticky-cta" class="hidden fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-surface p-4 md:hidden">
+      <button
+        type="button"
+        class="btn-primary w-full uppercase tracking-[0.14em]"
+        onclick="document.getElementById('add-to-bag')?.click()"
+      >
+        Add to Bag — {price}
+      </button>
+    </div>
+  )}
+</Layout>

@@ -1,0 +1,136 @@
+---
+export const prerender = false;
+import { requireAdminPage } from '../../lib/admin-auth';
+if (!await requireAdminPage(Astro)) return Astro.redirect('/admin/login');
+import AdminLayout from '../../layouts/AdminLayout.astro';
+---
+
+<AdminLayout title="Reviews">
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-[22px] font-semibold">Reviews</h1>
+    <select id="status-filter" class="border border-border bg-surface px-3 py-2 text-[13px] outline-none focus:border-primary">
+      <option value="">All</option>
+      <option value="pending">Pending</option>
+      <option value="approved">Approved</option>
+      <option value="rejected">Rejected</option>
+    </select>
+  </div>
+
+  <div id="error-msg" class="hidden mb-4 border border-error/30 bg-error/5 px-4 py-3 text-[13px] text-error"></div>
+
+  <div id="reviews-table" class="border border-border bg-surface">
+    <p class="px-5 py-8 text-center text-[14px] text-muted">Loading...</p>
+  </div>
+
+  <script>
+    function showError(msg) {
+      const el = document.getElementById('error-msg');
+      el.textContent = msg;
+      el.classList.remove('hidden');
+    }
+    function hideError() { document.getElementById('error-msg').classList.add('hidden'); }
+
+    function stars(n) {
+      const filled = '★';
+      const empty = '☆';
+      return filled.repeat(n) + empty.repeat(5 - n);
+    }
+
+    function statusBadge(s) {
+      const colors = { pending: 'bg-warning/10 text-warning', approved: 'bg-success/10 text-success', rejected: 'bg-error/10 text-error' };
+      return `<span class="inline-block px-2 py-0.5 text-[12px] font-medium ${colors[s] || 'bg-surface-warm text-muted'}">${s}</span>`;
+    }
+
+    function actionButtons(review) {
+      let html = '<div class="flex gap-2">';
+      if (review.status === 'pending') {
+        html += `<button class="approve-btn text-[13px] text-success hover:underline" data-id="${review.id}">Approve</button>`;
+        html += `<button class="reject-btn text-[13px] text-warning hover:underline" data-id="${review.id}">Reject</button>`;
+      } else if (review.status === 'approved') {
+        html += `<button class="reject-btn text-[13px] text-warning hover:underline" data-id="${review.id}">Reject</button>`;
+      } else if (review.status === 'rejected') {
+        html += `<button class="approve-btn text-[13px] text-success hover:underline" data-id="${review.id}">Approve</button>`;
+      }
+      html += `<button class="delete-btn text-[13px] text-error hover:underline" data-id="${review.id}">Delete</button>`;
+      html += '</div>';
+      return html;
+    }
+
+    async function updateStatus(id, status) {
+      hideError();
+      try {
+        const res = await fetch(`/api/admin/reviews?id=${id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'same-origin',
+          body: JSON.stringify({ status })
+        });
+        if (!res.ok) { const d = await res.json(); showError(d.error); return; }
+        loadReviews();
+      } catch { showError('Network error'); }
+    }
+
+    async function deleteReview(id) {
+      hideError();
+      try {
+        const res = await fetch(`/api/admin/reviews?id=${id}`, { method: 'DELETE', credentials: 'same-origin' });
+        if (!res.ok) { const d = await res.json(); showError(d.error); return; }
+        loadReviews();
+      } catch { showError('Network error'); }
+    }
+
+    async function loadReviews() {
+      const status = (document.getElementById('status-filter') as HTMLSelectElement).value;
+      const container = document.getElementById('reviews-table')!;
+      container.innerHTML = '<p class="px-5 py-8 text-center text-[14px] text-muted">Loading...</p>';
+      try {
+        const url = status ? `/api/admin/reviews?status=${status}` : '/api/admin/reviews';
+        const res = await fetch(url, { credentials: 'same-origin' });
+        if (!res.ok) throw new Error();
+        const d = await res.json();
+        const list = d.reviews || [];
+        if (list.length === 0) {
+          container.innerHTML = '<p class="px-5 py-8 text-center text-[14px] text-muted">No reviews found.</p>';
+          return;
+        }
+        container.innerHTML = `<table class="w-full text-left"><thead><tr class="border-b border-border">
+          <th class="px-5 py-3 text-[12px] uppercase tracking-wider text-muted font-medium">Product</th>
+          <th class="px-5 py-3 text-[12px] uppercase tracking-wider text-muted font-medium">Rating</th>
+          <th class="px-5 py-3 text-[12px] uppercase tracking-wider text-muted font-medium">Title</th>
+          <th class="px-5 py-3 text-[12px] uppercase tracking-wider text-muted font-medium">Customer</th>
+          <th class="px-5 py-3 text-[12px] uppercase tracking-wider text-muted font-medium">Status</th>
+          <th class="px-5 py-3 text-[12px] uppercase tracking-wider text-muted font-medium">Date</th>
+          <th class="px-5 py-3 text-[12px] uppercase tracking-wider text-muted font-medium">Actions</th>
+        </tr></thead><tbody>` +
+          list.map(r => `<tr class="border-b border-border last:border-0">
+            <td class="px-5 py-3 text-[14px]">${r.productName || '-'}</td>
+            <td class="px-5 py-3 text-[14px] text-accent">${stars(r.rating)}</td>
+            <td class="px-5 py-3 text-[14px]">${r.title || '-'}</td>
+            <td class="px-5 py-3 text-[14px]">${r.customerName || '-'}</td>
+            <td class="px-5 py-3">${statusBadge(r.status)}</td>
+            <td class="px-5 py-3 text-[13px] text-muted">${r.date || '-'}</td>
+            <td class="px-5 py-3">${actionButtons(r)}</td>
+          </tr>`).join('') +
+          `</tbody></table>`;
+
+        document.querySelectorAll('.approve-btn').forEach(btn => {
+          btn.addEventListener('click', () => updateStatus(btn.dataset.id, 'approved'));
+        });
+        document.querySelectorAll('.reject-btn').forEach(btn => {
+          btn.addEventListener('click', () => updateStatus(btn.dataset.id, 'rejected'));
+        });
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            if (!confirm('Delete this review?')) return;
+            deleteReview(btn.dataset.id);
+          });
+        });
+      } catch {
+        container.innerHTML = '<p class="px-5 py-8 text-center text-[14px] text-error">Failed to load reviews.</p>';
+      }
+    }
+
+    document.getElementById('status-filter')!.addEventListener('change', loadReviews);
+    loadReviews();
+  </script>
+</AdminLayout>

@@ -1,0 +1,97 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Icon from '../components/Icon.astro';
+---
+
+<Layout title="About Aurora — Aurora Jewels" description="Aurora Jewels is a premium jewelry house — sophisticated, timeless and exclusive.">
+  <section class="mx-auto grid max-w-[1440px] grid-cols-1 items-center gap-10 px-5 pb-16 pt-[120px] md:grid-cols-12 md:gap-6 md:px-10 md:pb-24 md:pt-[160px]">
+    <div data-parallax-frame class="order-2 overflow-hidden md:order-none md:col-span-7">
+      <div data-parallax="-5" class="aspect-[4/5] scale-[1.08] overflow-hidden bg-surface-warm">
+        <img
+          src="/images/about/sea.jpg"
+          alt="About Aurora Jewels"
+          loading="lazy"
+          decoding="async"
+          class="h-full w-full object-cover"
+          onerror="this.style.display='none'"
+        />
+      </div>
+    </div>
+    <div class="order-1 flex flex-col gap-4 md:col-span-5 md:pl-8">
+      <span class="type-eyebrow text-accent" data-reveal-eyebrow>The House</span>
+      <h1 class="type-h2" data-reveal-text>About Aurora</h1>
+      <p class="text-text-secondary">
+        A jewelry house built on restraint, precision and the belief that true luxury is quiet.
+      </p>
+    </div>
+  </section>
+
+  <section class="mx-auto grid max-w-[1440px] grid-cols-1 items-center gap-10 border-t border-border px-5 py-16 md:grid-cols-12 md:gap-6 md:px-10 md:py-32">
+    <div class="flex flex-col items-start gap-5 md:col-span-5 md:pr-8">
+      <h2 class="type-h3" data-reveal-text>Jewelry for character, not costume.</h2>
+      <p class="max-w-[480px] text-[16px] leading-[1.7] text-text-secondary">
+        Aurora designs pieces to be lived in — worn to university, to work, to weddings and back
+        again. Every form begins as a drawing and ends as something personal.
+      </p>
+    </div>
+    <div data-parallax-frame class="order-first overflow-hidden md:col-span-6 md:col-start-7">
+      <div data-parallax="-4" class="flex aspect-[4/3] scale-[1.06] items-center justify-center bg-surface-warm">
+        <img
+          src="/images/our-story/jeweler.jpg"
+          alt="Jewelry for character"
+          loading="lazy"
+          decoding="async"
+          class="h-full w-full object-cover"
+          onerror="this.style.display='none'"
+        />
+      </div>
+    </div>
+  </section>
+
+  <section class="relative overflow-hidden bg-surface-warm" data-mouse-follow>
+    <div class="h-[60vh] w-full md:h-[80vh]">
+      <img
+        src="/images/about/sea.jpg"
+        alt="Inspired by the elements"
+        data-mouse-follow-target
+        loading="lazy"
+        decoding="async"
+        class="h-full w-full object-cover"
+        onerror="this.style.display='none'"
+      />
+    </div>
+    <div class="absolute inset-0 bg-gradient-to-t from-primary/60 to-transparent" />
+    <div class="absolute bottom-0 left-0 w-full px-5 pb-16 md:px-10 md:pb-24">
+      <div class="mx-auto max-w-[1440px]">
+        <span class="type-eyebrow text-accent" data-reveal-eyebrow>Inspired by the Elements</span>
+        <h2 class="type-h2 mt-3 text-dark-text" data-reveal-text>A Quiet Authority.</h2>
+      </div>
+    </div>
+  </section>
+
+  <section class="border-t border-border" aria-label="Our values" data-section-reveal>
+    <div class="mx-auto grid max-w-[1440px] grid-cols-1 gap-10 px-5 py-16 md:grid-cols-3 md:gap-6 md:px-10 md:py-24" data-stagger>
+      {
+        [
+          { label: '01', title: 'Restraint', copy: 'Nothing decorative for its own sake. Every element must earn its place.' },
+          { label: '02', title: 'Craft', copy: 'Small-batch production with careful finishing on every single piece.' },
+          { label: '03', title: 'Everyday Luxury', copy: 'Designed for daily wear first, occasions second.' },
+        ].map((value) => (
+          <div class="flex flex-col gap-3 border-t border-border pt-6">
+            <span class="type-eyebrow text-text-secondary">{value.label}</span>
+            <h3 class="type-h3">{value.title}</h3>
+            <p class="max-w-[340px] text-[15px] leading-relaxed text-text-secondary">{value.copy}</p>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-[1440px] px-5 py-20 text-center md:py-32">
+    <h2 class="type-h3 mx-auto max-w-[720px]" data-reveal-text>The story continues behind every piece.</h2>
+    <a href="/our-story" class="btn-primary mt-8" data-magnetic>
+      Discover Our Story
+      <Icon name="arrow-right" size={16} />
+    </a>
+  </section>
+</Layout>

@@ -1,0 +1,78 @@
+---
+/**
+ * ProductViewer — Lazy-loaded Three.js product viewer for PDP.
+ *
+ * ACR-003 compliant:
+ * - client:visible lazy load (handled by parent)
+ * - DPR capped at 2
+ * - Render-on-demand (no continuous loop)
+ * - Pause offscreen/hidden tab
+ * - FPS watchdog → falls back to static image below 30fps
+ * - Static image is the default markup (canvas never holds critical content)
+ * - Reduced-motion disables auto-rotation; manual drag remains
+ * - No-JS shows static image
+ */
+
+interface Props {
+  slug: string;
+  name: string;
+}
+
+const { slug, name } = Astro.props;
+const imageSrc = `/images/products/${slug}-1.jpg`;
+---
+
+<div
+  class="product-viewer relative aspect-[4/5] w-full overflow-hidden bg-surface-warm"
+  data-product-viewer
+  data-slug={slug}
+>
+  <!-- Static fallback image — always rendered, canvas overlays it -->
+  <img
+    src={imageSrc}
+    alt={name}
+    loading="lazy"
+    decoding="async"
+    class="product-viewer-fallback absolute inset-0 h-full w-full object-cover transition-opacity duration-500"
+    data-viewer-fallback
+  />
+
+  <!-- Loading indicator -->
+  <div
+    class="product-viewer-loader absolute inset-0 flex items-center justify-center bg-surface-warm transition-opacity duration-300"
+    data-viewer-loader
+  >
+    <div class="flex flex-col items-center gap-3">
+      <div class="h-8 w-8 animate-spin border-2 border-border border-t-primary" />
+      <span class="text-[12px] text-muted">Loading 3D view...</span>
+    </div>
+  </div>
+
+  <!-- Three.js canvas container -->
+  <canvas
+    class="product-viewer-canvas absolute inset-0 h-full w-full opacity-0 transition-opacity duration-500"
+    data-viewer-canvas
+  />
+
+  <!-- Controls hint -->
+  <div
+    class="product-viewer-hint absolute bottom-4 left-1/2 -translate-x-1/2 bg-dark/70 px-3 py-1.5 text-[11px] text-dark-text opacity-0 transition-opacity duration-300"
+    data-viewer-hint
+  >
+    Drag to rotate · Scroll to zoom
+  </div>
+</div>
+
+<noscript>
+  <style>
+    .product-viewer-canvas,
+    .product-viewer-loader,
+    .product-viewer-hint {
+      display: none !important;
+    }
+    .product-viewer-fallback {
+      position: relative !important;
+      opacity: 1 !important;
+    }
+  </style>
+</noscript>

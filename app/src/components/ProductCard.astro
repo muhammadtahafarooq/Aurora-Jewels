@@ -1,0 +1,79 @@
+---
+import Icon from './Icon.astro';
+import { productImage, type Product as CatalogProduct } from '../data/catalog';
+
+export interface Product extends Pick<
+  CatalogProduct,
+  'slug' | 'name' | 'price' | 'descriptor' | 'status' | 'isNewArrival' | 'isFeatured'
+> {}
+
+interface Props {
+  product: Product;
+  eager?: boolean;
+}
+
+const { product, eager = false } = Astro.props;
+
+const statusLabels: Record<string, string> = {
+  in_stock: '',
+  low_stock: 'Low Stock',
+  out_of_stock: 'Out of Stock',
+};
+
+const statusLabel = product.status ? statusLabels[product.status] : '';
+const price = new Intl.NumberFormat('en-PK').format(product.price / 100);
+---
+
+<article class="group relative flex flex-col">
+  <a
+    href={`/products/${product.slug}`}
+    class="relative block aspect-[4/5] w-full overflow-hidden bg-surface-warm"
+    aria-label={`${product.name} — Rs. ${price}`}
+    tabindex="-1"
+  >
+    <img
+      src={productImage(product.slug, 1)}
+      alt={`${product.name} — Aurora Jewels`}
+      loading={eager ? 'eager' : 'lazy'}
+      decoding="async"
+      class="h-full w-full object-cover transition-transform duration-[600ms] ease-out group-hover:scale-[1.03]"
+      onerror="this.style.display='none'"
+    />
+
+    {
+      statusLabel && (
+        <span
+          class:list={[
+            'status-label absolute bottom-3 left-3',
+            product.status === 'out_of_stock' && 'status-label--out',
+          ]}
+        >
+          {statusLabel}
+        </span>
+      )
+    }
+  </a>
+
+  <button
+    type="button"
+    class="absolute right-2 top-2 z-10 flex h-10 w-10 items-center justify-center text-text opacity-90 transition-opacity duration-[250ms] hover:opacity-100 md:opacity-0 md:focus:opacity-100 md:group-hover:opacity-100"
+    aria-label={`Add ${product.name} to wishlist`}
+    data-wishlist
+  >
+    <Icon name="heart" size={20} />
+  </button>
+
+  <h3 class="mt-4 font-body text-[15px] font-semibold leading-snug">
+    <a href={`/products/${product.slug}`} class="link-underline">
+      {product.name}
+    </a>
+  </h3>
+
+  {
+    product.descriptor && (
+      <p class="mt-1 text-[13px] leading-relaxed text-muted">{product.descriptor}</p>
+    )
+  }
+
+  <p class="mt-1 font-body text-[14px] font-semibold tracking-[0.02em]">Rs. {price}</p>
+</article>

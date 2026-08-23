@@ -1,0 +1,437 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+  transparent?: boolean;
+}
+
+const { transparent = false } = Astro.props;
+
+const primaryNav = [
+  { label: 'Shop / All Jewelry', href: '/shop' },
+  { label: 'New Arrivals', href: '/new-arrivals' },
+  { label: 'Collections', href: '/collections' },
+  { label: 'About / Our Story', href: '/about' },
+];
+
+const drawerNav = [
+  { label: 'Shop / All Jewelry', href: '/shop' },
+  { label: 'New Arrivals', href: '/new-arrivals' },
+  { label: 'Collections', href: '/collections' },
+  { label: 'About Aurora', href: '/about' },
+  { label: 'Our Story', href: '/our-story' },
+];
+---
+
+<style>
+  /* ── Per-letter duplicate-reveal flip ── */
+  .flip-link {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    gap: 0;
+  }
+  .flip-char {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: bottom;
+    position: relative;
+  }
+  .flip-char.is-static {
+    line-height: 1.25;
+    height: 1.25em;
+  }
+  .flip-char.is-letter {
+    height: 1.25em;
+    line-height: 1.25;
+  }
+  .flip-char.is-letter .flip-top {
+    display: block;
+    height: 1.25em;
+    line-height: 1.25;
+    transition: transform 380ms ease-out, opacity 380ms ease-out;
+    transform-origin: center bottom;
+  }
+  .flip-char.is-letter .flip-bottom {
+    display: block;
+    height: 1.25em;
+    line-height: 1.25;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translateY(100%);
+    transition: transform 380ms ease-out, opacity 380ms ease-out;
+    transform-origin: center top;
+  }
+  /* Hover: top goes up, bottom comes in */
+  .flip-link:hover .flip-char.is-letter .flip-top {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  .flip-link:hover .flip-char.is-letter .flip-bottom {
+    transform: translateY(0%);
+    opacity: 1;
+  }
+
+  /* ── Cart bag animation ── */
+  .bag-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .bag-wrap .bag-main {
+    transition: transform 350ms cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    z-index: 2;
+  }
+  .bag-wrap .bag-side {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    opacity: 0;
+    transition:
+      transform 400ms cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 300ms ease;
+    z-index: 1;
+    pointer-events: none;
+    transform: translate(-50%, -50%) scale(0.6);
+  }
+  .bag-wrap .bag-left {
+    transform: translate(-50%, -50%) scale(0.6) translateX(0);
+  }
+  .bag-wrap .bag-right {
+    transform: translate(-50%, -50%) scale(0.6) translateX(0);
+  }
+  .bag-wrap:hover .bag-main {
+    transform: translateY(-4px);
+  }
+  .bag-wrap:hover .bag-left {
+    opacity: 1;
+    transform: translate(-50%, -50%) translateX(-18px) scale(1);
+  }
+  .bag-wrap:hover .bag-right {
+    opacity: 1;
+    transform: translate(-50%, -50%) translateX(18px) scale(1);
+  }
+
+  /* ── Reduced motion ── */
+  @media (prefers-reduced-motion: reduce) {
+    .flip-char.is-letter .flip-top,
+    .flip-char.is-letter .flip-bottom {
+      transition: none !important;
+    }
+    .flip-link:hover .flip-char.is-letter .flip-top {
+      transform: none !important;
+      opacity: 1 !important;
+    }
+    .flip-link:hover .flip-char.is-letter .flip-bottom {
+      transform: translateY(100%) !important;
+      opacity: 0 !important;
+    }
+    .bag-wrap .bag-main,
+    .bag-wrap .bag-side {
+      transition: none !important;
+    }
+    .bag-wrap:hover .bag-main {
+      transform: none !important;
+    }
+    .bag-wrap:hover .bag-left,
+    .bag-wrap:hover .bag-right {
+      opacity: 0 !important;
+      transform: translate(-50%, -50%) scale(0.6) !important;
+    }
+  }
+</style>
+
+<header
+  id="site-navbar"
+  class:list={[
+    'fixed inset-x-0 top-0 z-50 transition-colors duration-[300ms] ease-out',
+    transparent ? `bg-transparent ${transparent ? 'nav-inverted' : ''}` : 'bg-background border-b border-border',
+  ]}
+  data-transparent={transparent}
+>
+  <div
+    class="mx-auto flex h-[68px] max-w-container items-center justify-between px-5 md:h-[88px] md:px-10"
+  >
+    <!-- Mobile menu trigger -->
+    <button
+      type="button"
+      id="nav-drawer-open"
+      class="flex items-center gap-2 p-2 -ml-2 md:hidden"
+      aria-label="Open navigation menu"
+      aria-expanded="false"
+      aria-controls="nav-drawer"
+    >
+      <Icon name="menu" size={20} />
+      <span class="type-eyebrow">Menu</span>
+    </button>
+
+    <!-- Desktop primary nav (left) — Per-letter flip -->
+    <nav class="hidden md:block" aria-label="Primary">
+      <ul class="flex items-center gap-8">
+        {
+          primaryNav.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                class="flip-link text-[13px] font-semibold tracking-[0.02em] link-underline"
+                aria-label={item.label}
+              >
+                {item.label.split('').map((char) => {
+                  const isLetter = /[a-zA-Z]/.test(char);
+                  const display = char === ' ' ? '\u00A0' : char;
+                  return (
+                    <span class:list={['flip-char', isLetter ? 'is-letter' : 'is-static']}>
+                      {isLetter ? (
+                        <>
+                          <span class="flip-top">{display}</span>
+                          <span class="flip-bottom">{display}</span>
+                        </>
+                      ) : (
+                        <span>{display}</span>
+                      )}
+                    </span>
+                  );
+                })}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <!-- Centered wordmark -->
+    <a
+      href="/"
+      class="absolute left-1/2 -translate-x-1/2 font-display text-[20px] font-medium uppercase tracking-[0.18em]"
+      aria-label="Aurora Jewels home"
+    >
+      Aurora&nbsp;Jewels
+    </a>
+
+    <!-- Utility controls (right) -->
+    <div class="flex items-center gap-1 md:gap-4">
+      <button
+        type="button"
+        class="hidden p-2 md:flex"
+        aria-label="Search"
+        title="Search"
+      >
+        <Icon name="search" size={20} />
+      </button>
+
+      <a href="/account/profile" class="hidden p-2 md:flex" aria-label="Account" id="nav-account-link">
+        <Icon name="user" size={20} />
+      </a>
+      <button type="button" id="nav-logout-btn" class="hidden p-2 md:flex text-[12px] text-text-secondary hover:text-text" aria-label="Log out" style="display:none;">
+        <span class="sr-only">Log out</span>
+        <Icon name="close" size={18} />
+      </button>
+
+      <a href="/account/wishlist" class="hidden p-2 md:flex" aria-label="Wishlist">
+        <Icon name="heart" size={20} />
+      </a>
+
+      <a href="/cart" class="bag-wrap flex p-2" aria-label="Shopping bag">
+        <span class="bag-side bag-left">
+          <Icon name="bag" size={16} />
+        </span>
+        <span class="bag-main">
+          <Icon name="bag" size={20} />
+        </span>
+        <span class="bag-side bag-right">
+          <Icon name="bag" size={16} />
+        </span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- Mobile full-height navigation drawer -->
+<div
+  id="nav-drawer"
+  class="invisible fixed inset-0 z-[60] bg-background transition-opacity duration-[300ms] ease-out md:hidden"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Navigation menu"
+>
+  <div class="flex h-[68px] items-center justify-between px-5">
+    <span class="font-display text-[18px] font-medium uppercase tracking-[0.18em]">Aurora</span>
+    <button type="button" id="nav-drawer-close" class="p-2 -mr-2" aria-label="Close navigation menu">
+      <Icon name="close" size={20} />
+    </button>
+  </div>
+
+  <nav class="mt-6 px-5" aria-label="Mobile">
+    <ul class="flex flex-col divide-y divide-border border-y border-border">
+      {
+        drawerNav.map((item) => (
+          <li>
+            <a href={item.href} class="block py-5 font-display text-[26px] leading-tight">
+              {item.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="mt-8 flex flex-col gap-1">
+      {
+        [
+          { label: 'Search', href: '/shop', icon: 'search' as const },
+          { label: 'Account', href: '/account/profile', icon: 'user' as const },
+          { label: 'Wishlist', href: '/account/wishlist', icon: 'heart' as const },
+        ].map((item) => (
+          <a href={item.href} class="flex items-center gap-3 py-3 text-[14px] text-text-secondary">
+            <Icon name={item.icon} size={16} />
+            {item.label}
+          </a>
+        ))
+      }
+    </div>
+  </nav>
+</div>
+
+<script>
+  const FLIP_STAGGER_MS = 20;
+  const FLIP_DURATION_MS = 380;
+
+  function initFlipNav() {
+    document.querySelectorAll<HTMLAnchorElement>('.flip-link').forEach((link) => {
+      if (link.dataset.flipBound === 'true') return;
+      link.dataset.flipBound = 'true';
+
+      const letters = link.querySelectorAll<HTMLElement>('.flip-char.is-letter');
+      if (letters.length === 0) return;
+
+      link.addEventListener('mouseenter', () => {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+        letters.forEach((charEl, i) => {
+          const top = charEl.querySelector<HTMLElement>('.flip-top');
+          const bottom = charEl.querySelector<HTMLElement>('.flip-bottom');
+          if (!top || !bottom) return;
+
+          const delay = i * FLIP_STAGGER_MS;
+
+          // Reset to default position
+          top.style.transition = 'none';
+          bottom.style.transition = 'none';
+          top.style.transform = 'translateY(0%)';
+          top.style.opacity = '1';
+          bottom.style.transform = 'translateY(100%)';
+          bottom.style.opacity = '0';
+
+          // Force reflow
+          void top.offsetHeight;
+
+          // Animate with stagger
+          setTimeout(() => {
+            const t = `transform ${FLIP_DURATION_MS}ms ease-out, opacity ${FLIP_DURATION_MS}ms ease-out`;
+            top.style.transition = t;
+            bottom.style.transition = t;
+            top.style.transform = 'translateY(-100%)';
+            top.style.opacity = '0';
+            bottom.style.transform = 'translateY(0%)';
+            bottom.style.opacity = '1';
+          }, delay);
+        });
+      });
+
+      // Reset on mouse leave
+      link.addEventListener('mouseleave', () => {
+        letters.forEach((charEl) => {
+          const top = charEl.querySelector<HTMLElement>('.flip-top');
+          const bottom = charEl.querySelector<HTMLElement>('.flip-bottom');
+          if (!top || !bottom) return;
+
+          top.style.transition = 'none';
+          bottom.style.transition = 'none';
+          top.style.transform = 'translateY(0%)';
+          top.style.opacity = '1';
+          bottom.style.transform = 'translateY(100%)';
+          bottom.style.opacity = '0';
+        });
+      });
+    });
+  }
+
+  function initNavbar() {
+    const header = document.getElementById('site-navbar');
+    const openBtn = document.getElementById('nav-drawer-open');
+    const closeBtn = document.getElementById('nav-drawer-close');
+    const drawer = document.getElementById('nav-drawer');
+
+    if (!header || !openBtn || !closeBtn || !drawer) return;
+
+    const onScroll = () => {
+      if (header.dataset.transparent === 'true') {
+        if (window.scrollY > 8) {
+          header.classList.remove('bg-transparent', 'nav-inverted');
+          header.classList.add('bg-background', 'border-b', 'border-border');
+        } else {
+          header.classList.add('bg-transparent', 'nav-inverted');
+          header.classList.remove('bg-background', 'border-b', 'border-border');
+        }
+      }
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    const openDrawer = () => {
+      drawer.classList.remove('invisible', 'opacity-0');
+      drawer.classList.add('opacity-100');
+      openBtn.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+    };
+
+    const closeDrawer = () => {
+      drawer.classList.add('invisible', 'opacity-0');
+      drawer.classList.remove('opacity-100');
+      openBtn.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    };
+
+    openBtn.addEventListener('click', openDrawer);
+    closeBtn.addEventListener('click', closeDrawer);
+    drawer.querySelectorAll('a').forEach((a) => a.addEventListener('click', closeDrawer));
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeDrawer();
+    });
+  }
+
+  initNavbar();
+  initFlipNav();
+  initAuthState();
+  document.addEventListener('astro:after-swap', () => {
+    initNavbar();
+    initFlipNav();
+    initAuthState();
+  });
+
+  function initAuthState() {
+    const accountLink = document.getElementById('nav-account-link');
+    const logoutBtn = document.getElementById('nav-logout-btn');
+    if (!accountLink || !logoutBtn) return;
+
+    fetch('/api/auth/me', { credentials: 'same-origin' })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (data?.profile?.firstName) {
+          accountLink.setAttribute('aria-label', data.profile.firstName);
+        }
+      })
+      .catch(() => {});
+
+    logoutBtn.addEventListener('click', async () => {
+      await fetch('/api/auth/logout', { method: 'POST', credentials: 'same-origin' });
+      window.location.href = '/';
+    });
+  }
+</script>

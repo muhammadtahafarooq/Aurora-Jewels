@@ -84,7 +84,7 @@ Maintain the following directory layout:
 
 ## 7. Database Rules
 * **Schema Integrity**: Declare all mappings inside `database/schema.ts` using Drizzle SQLite builders.
-* **Types**: Store prices as Integers in cents (e.g. 5000 = Rs. 50.00) to prevent precision errors. Store timestamps as Integers (epoch seconds).
+* **Types**: Store prices as Integers in minor currency units/cents (e.g. 500000 = Rs. 5,000.00 PKR) to prevent precision errors. Store timestamps as TEXT in ISO-8601 format (per `docs/database.md`).
 * **Relational Actions**: Enforce `onDelete: 'cascade'` on associated product relations (`product_images`, `product_variants`).
 
 ---
@@ -104,7 +104,11 @@ Maintain the following directory layout:
 ---
 
 ## 10. 3D Rules
-* **Strict Prohibition**: 3D rendering (WebGL, Three.js) is excluded. Do not install 3D rendering packages or write interactive 3D script tags.
+* **ACR-003 Approved (2026-08-21)**: A single lazy-loaded Three.js product viewer is permitted on Product Detail pages ONLY.
+* **Scope limits**: One viewer per page, product-inspection purpose only (rotate/zoom). No decorative/background 3D anywhere else on the site.
+* **Performance contract**: `client:visible` lazy load, DPR capped at 2, render-on-demand (no continuous render loop when idle), pause offscreen/hidden tab, FPS watchdog that permanently falls back to the static product image below ~30fps.
+* **Fallbacks**: Static 4:5 product image is the default markup (critical content must never live inside the canvas). Reduced-motion disables auto-rotation; manual drag remains available. No-JS shows the static image.
+* **Assets**: GLB (Draco-compressed) with textures ≤1024px when real assets exist; a procedural champagne-gold placeholder object is used until then.
 
 ---
 

@@ -1,32 +1,37 @@
 import type { APIRoute } from 'astro';
+import { createDb } from '../../lib/db';
+import { jsonError, jsonSuccess } from '../../lib/errors';
+import { createOrder } from '../../services/orders';
+import { validateCheckout } from '../../lib/validation';
+import { getSession } from '../../lib/auth';
 
-export const prerender = false; // Ensures this endpoint is built as a serverless edge endpoint (SSR)
+export const prerender = false;
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async (context) => {
   try {
-    const body = await request.json();
-    const { name, email, phone, address, city, items } = body;
+    const env = (context.locals as any).runtime?.env;
+    if (!env?.DB) return jsonError(500, { error: 'Database not configured' });
+    const db = createDb(env);
 
-    // 1. Basic validation (Ensure no missing variables)
-    if (!name || !email || !phone || !address || !city || !items || !Array.isArray(items)) {
-      return new Response(JSON.stringify({ error: 'Missing required checkout parameters.' }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' },
-      });
+    const body = await context.request.json();
+    const payload = validateCheckout(body);
+
+    const session = await getSession(context);
+    const userId = session?.sub ?? null;
+
+    const result = await createOrder(db, payload, userId);
+
+    return jsonSuccess({
+      success: true,
+      message: 'Order placed successfully. You will pay on delivery.',
+      orderId: result.orderId,
+      orderNumber: result.orderNumber,
+    });
+  } catch (err) {
+    if (err && typeof err === 'object' && 'status' in err) {
+      const e = err as { status: number; code: string; message: string };
+      return jsonError(e.status, { error: e.message, code: e.code });
     }
-
-    // TODO: Write order record in Cloudflare D1 via Drizzle ORM
-    // TODO: Trigger asynchronous Resend order email notification using context.waitUntil()
-
-    return new Response(JSON.stringify({ success: true, message: 'COD Order placed successfully.' }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
-    });
-  } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : 'Unknown error';
-    return new Response(JSON.stringify({ error: 'Checkout failed internally.', details: message }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return jsonError(500, { error: 'Checkout failed. Please try again.' });
   }
 };

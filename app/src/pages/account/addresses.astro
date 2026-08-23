@@ -1,0 +1,204 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import AccountShell from '../../components/AccountShell.astro';
+import Icon from '../../components/Icon.astro';
+---
+
+<Layout title="Saved Addresses — Aurora Jewels" description="Manage your shipping addresses for faster checkout.">
+  <AccountShell active="addresses" title="Saved Addresses">
+    <section class="max-w-[560px]" aria-labelledby="addresses-heading">
+      <h2 id="addresses-heading" class="type-h4 mb-8">Your Addresses</h2>
+      <div id="addresses-list" class="flex flex-col gap-4">
+        <p class="text-[13px] text-text-secondary">Loading addresses…</p>
+      </div>
+    </section>
+
+    <section class="max-w-[560px] mt-12" aria-labelledby="add-address-heading">
+      <h2 id="add-address-heading" class="type-h4 mb-8">Add an Address</h2>
+      <form id="address-form" class="flex flex-col gap-8" novalidate>
+        <div>
+          <label for="ad-recipient" class="form-label">Recipient Name</label>
+          <input id="ad-recipient" type="text" autocomplete="name" required class="input-field" />
+        </div>
+        <div>
+          <label for="ad-phone" class="form-label">Phone</label>
+          <input id="ad-phone" type="tel" autocomplete="tel" required class="input-field" />
+        </div>
+        <div>
+          <label for="ad-line1" class="form-label">Address Line 1</label>
+          <input id="ad-line1" type="text" autocomplete="address-line1" required class="input-field" />
+        </div>
+        <div>
+          <label for="ad-line2" class="form-label">Address Line 2 <span class="normal-case text-text-secondary">(optional)</span></label>
+          <input id="ad-line2" type="text" autocomplete="address-line2" class="input-field" />
+        </div>
+        <div class="grid grid-cols-2 gap-6">
+          <div>
+            <label for="ad-city" class="form-label">City</label>
+            <input id="ad-city" type="text" autocomplete="address-level2" required class="input-field" />
+          </div>
+          <div>
+            <label for="ad-province" class="form-label">Province</label>
+            <input id="ad-province" type="text" autocomplete="address-level1" required class="input-field" />
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-6">
+          <div>
+            <label for="ad-postal" class="form-label">Postal Code <span class="normal-case text-text-secondary">(optional)</span></label>
+            <input id="ad-postal" type="text" autocomplete="postal-code" class="input-field" />
+          </div>
+          <div class="flex items-end">
+            <label class="flex items-center gap-2 cursor-pointer pb-[10px]">
+              <input id="ad-default" type="checkbox" class="accent-emerald" />
+              <span class="form-label mb-0">Set as default</span>
+            </label>
+          </div>
+        </div>
+        <button type="submit" id="submit-btn" class="btn-primary self-start">Save Address</button>
+        <p id="form-error" class="hidden items-center gap-2 text-[13px] font-semibold text-red-600" role="alert"></p>
+        <p id="form-success" class="hidden items-center gap-2 text-[13px] font-semibold text-success" role="status">
+          <Icon name="check" size={14} /> Address saved.
+        </p>
+      </form>
+    </section>
+  </AccountShell>
+
+  <script>
+    interface Address {
+      id: number;
+      recipientName: string;
+      phone: string;
+      addressLine1: string;
+      addressLine2: string | null;
+      city: string;
+      province: string;
+      postalCode: string | null;
+      isDefault: boolean;
+    }
+
+    const form = document.getElementById('address-form') as HTMLFormElement | null;
+    const listEl = document.getElementById('addresses-list') as HTMLElement | null;
+    const errorEl = document.getElementById('form-error') as HTMLElement | null;
+    const successEl = document.getElementById('form-success') as HTMLElement | null;
+    const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement | null;
+
+    function showStatus(el: HTMLElement | null, msg: string) {
+      if (!el) return;
+      el.textContent = '';
+      el.classList.remove('hidden');
+      el.classList.add('flex');
+      if (el === successEl && msg) {
+        el.textContent = msg;
+      } else {
+        el.textContent = msg;
+      }
+    }
+
+    function hideStatus(el: HTMLElement | null) {
+      if (!el) return;
+      el.classList.add('hidden');
+      el.classList.remove('flex');
+    }
+
+    function renderAddressCard(addr: Address): string {
+      const defaultBadge = addr.isDefault
+        ? '<span class="ml-2 text-[11px] font-semibold uppercase tracking-wide text-champagne">Default</span>'
+        : '';
+      return `
+        <div class="border border-line p-4 text-[13px] leading-relaxed">
+          <p class="font-semibold">${addr.recipientName}${defaultBadge}</p>
+          <p class="text-text-secondary">${addr.phone}</p>
+          <p>${addr.addressLine1}${addr.addressLine2 ? ', ' + addr.addressLine2 : ''}</p>
+          <p>${addr.city}, ${addr.province}${addr.postalCode ? ' ' + addr.postalCode : ''}</p>
+        </div>
+      `;
+    }
+
+    async function loadAddresses() {
+      if (!listEl) return;
+      listEl.innerHTML = '<p class="text-[13px] text-text-secondary">Loading addresses…</p>';
+      try {
+        const res = await fetch('/api/user/addresses');
+        if (res.status === 401) {
+          window.location.href = '/login';
+          return;
+        }
+        const json = await res.json();
+        const addresses: Address[] = json?.addresses ?? [];
+        if (!Array.isArray(addresses)) {
+          listEl.innerHTML = '<p class="text-[13px] text-text-secondary">No addresses yet.</p>';
+          return;
+        }
+        if (addresses.length === 0) {
+          listEl.innerHTML = '<p class="text-[13px] text-text-secondary">No addresses yet. Add your first address below.</p>';
+          return;
+        }
+        listEl.innerHTML = addresses.map(renderAddressCard).join('');
+      } catch {
+        listEl.innerHTML = '<p class="text-[13px] text-text-secondary">Could not load addresses.</p>';
+      }
+    }
+
+    async function handleSubmit(e: Event) {
+      e.preventDefault();
+      if (!form || !submitBtn) return;
+
+      hideStatus(errorEl);
+      hideStatus(successEl);
+
+      const recipientName = (document.getElementById('ad-recipient') as HTMLInputElement)?.value.trim();
+      const phone = (document.getElementById('ad-phone') as HTMLInputElement)?.value.trim();
+      const addressLine1 = (document.getElementById('ad-line1') as HTMLInputElement)?.value.trim();
+      const addressLine2 = (document.getElementById('ad-line2') as HTMLInputElement)?.value.trim() || null;
+      const city = (document.getElementById('ad-city') as HTMLInputElement)?.value.trim();
+      const province = (document.getElementById('ad-province') as HTMLInputElement)?.value.trim();
+      const postalCode = (document.getElementById('ad-postal') as HTMLInputElement)?.value.trim() || null;
+      const isDefault = (document.getElementById('ad-default') as HTMLInputElement)?.checked ?? false;
+
+      if (!recipientName || !phone || !addressLine1 || !city || !province) {
+        showStatus(errorEl, 'Please fill in all required fields.');
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Saving…';
+
+      try {
+        const res = await fetch('/api/user/addresses', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ recipientName, phone, addressLine1, addressLine2, city, province, postalCode, isDefault }),
+        });
+
+        if (res.status === 401) {
+          window.location.href = '/login';
+          return;
+        }
+
+        const json = await res.json();
+
+        if (!res.ok || !json.success) {
+          showStatus(errorEl, json.message || 'Something went wrong. Please try again.');
+          return;
+        }
+
+        form.reset();
+        showStatus(successEl, 'Address saved.');
+        loadAddresses();
+      } catch {
+        showStatus(errorEl, 'Network error. Please try again.');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Save Address';
+      }
+    }
+
+    function init() {
+      loadAddresses();
+      form?.addEventListener('submit', handleSubmit);
+    }
+
+    init();
+    document.addEventListener('astro:after-swap', init);
+  </script>
+</Layout>

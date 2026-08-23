@@ -4,23 +4,54 @@
 
 @layer base {
   :root {
-    --color-primary: #123C36;         /* Primary brand color, primary CTA */
-    --color-primary-hover: #0D302B;   /* Primary hover/pressed state */
-    --color-primary-soft: #E8F0ED;    /* Soft emerald backgrounds */
-    --color-secondary: #F5F0E7;       /* Ivory editorial surfaces */
-    --color-accent: #C6A56A;          /* Champagne/gold accents */
-    --color-accent-soft: #EFE4CF;     /* Soft gold backgrounds */
-    --color-background: #FAF8F3;      /* Main site background */
-    --color-surface: #FFFFFF;         /* Cards, drawers, modals */
-    --color-surface-warm: #F5F0E7;    /* Editorial sections */
-    --color-text: #171A18;            /* Primary text */
-    --color-text-secondary: #343936;  /* Secondary text */
-    --color-muted: #737873;           /* Supporting text */
-    --color-border: #DDD9D0;          /* Dividers and fields */
-    --color-border-strong: #BDB9B0;   /* Focus/strong borders */
-    
-    --font-display: 'EB Garamond', Georgia, serif;
-    --font-body: 'Manrope', Inter, Arial, sans-serif;
+    /* Design system §34 — CSS Custom Properties */
+    --color-primary: #123C36;
+    --color-primary-hover: #0D302B;
+    --color-primary-soft: #E8F0ED;
+    --color-secondary: #F5F0E7;
+    --color-accent: #C6A56A;
+    --color-accent-soft: #EFE4CF;
+    --color-background: #FAF8F3;
+    --color-surface: #FFFFFF;
+    --color-surface-warm: #F5F0E7;
+    --color-text: #171A18;
+    --color-text-secondary: #343936;
+    --color-muted: #737873;
+    --color-border: #DDD9D0;
+    --color-border-strong: #BDB9B0;
+    --color-success: #2F6B50;
+    --color-warning: #9A6B25;
+    --color-error: #A53B3B;
+
+    /* Dark sections */
+    --color-dark: #101412;
+    --color-dark-surface: #17201D;
+    --color-dark-text: #F8F5ED;
+    --color-dark-muted: #B9BDB8;
+    --color-dark-border: #34403B;
+
+    /* Fonts */
+    --font-display: "Cormorant Garamond", Georgia, serif;
+    --font-body: "Manrope", Inter, Arial, sans-serif;
+
+    /* Motion */
+    --duration-fast: 150ms;
+    --duration-standard: 250ms;
+    --duration-medium: 400ms;
+    --duration-slow: 650ms;
+    --duration-editorial: 900ms;
+
+    --ease-standard: cubic-bezier(.22, 1, .36, 1);
+    --ease-soft: cubic-bezier(.16, 1, .3, 1);
+
+    /* Layout */
+    --container-max: 1440px;
+    --grid-gutter: 24px;
+    --page-padding: 40px;
+  }
+
+  html {
+    scroll-behavior: smooth;
   }
 
   body {
@@ -30,41 +61,96 @@
     margin: 0;
     padding: 0;
     overflow-x: hidden;
+    font-size: 16px;
+    line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
-  h1, h2, h3, .font-serif {
+  h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
     font-weight: 500;
   }
 
-  /* Sharp architectural corners globally */
-  button, input, select, textarea, a, div, img {
-    border-radius: 0px !important;
+  /* Focus */
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 3px;
+  }
+
+  ::placeholder {
+    color: var(--color-muted);
   }
 }
 
-/* Base custom styles matching the Quiet Luxury architecture */
 @layer components {
+  /* Type scale — design system §4.2 */
+  .type-display {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(3rem, 7vw, 6.5rem);
+    line-height: 0.95;
+    letter-spacing: -0.035em;
+  }
+
+  .type-h2 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(2.25rem, 4.5vw, 4.5rem);
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+  }
+
+  .type-h3 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.75rem, 3vw, 2.75rem);
+    line-height: 1.05;
+  }
+
+  .type-h4 {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 1.25rem;
+    line-height: 1.2;
+  }
+
+  .type-eyebrow {
+    font-family: var(--font-body);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    line-height: 1.2;
+  }
+
+  .type-body-lg {
+    font-size: 1.125rem;
+    line-height: 1.65;
+  }
+
+  /* Buttons — design system §8 */
   .btn-primary {
     background-color: var(--color-primary);
-    color: var(--color-background);
+    color: #FAF8F3;
     height: 52px;
     padding: 0 32px;
+    font-family: var(--font-body);
     font-weight: 600;
-    font-size: 13px;
+    font-size: 0.8125rem;
     letter-spacing: 0.04em;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    gap: 8px;
     border: none;
     cursor: pointer;
-    transition: background-color 300ms ease-out;
+    transition: background-color var(--duration-standard) var(--ease-standard), transform var(--duration-fast) var(--ease-standard);
   }
 
   .btn-primary:hover {
     background-color: var(--color-primary-hover);
+    transform: translateY(-1px);
   }
 
   .btn-secondary {
@@ -73,35 +159,215 @@
     border: 1px solid var(--color-border-strong);
     height: 52px;
     padding: 0 32px;
+    font-family: var(--font-body);
     font-weight: 600;
-    font-size: 13px;
+    font-size: 0.8125rem;
     letter-spacing: 0.04em;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    gap: 8px;
     cursor: pointer;
-    transition: all 300ms ease-out;
+    transition: all var(--duration-standard) var(--ease-standard);
   }
 
   .btn-secondary:hover {
     background-color: var(--color-secondary);
     border-color: var(--color-text);
   }
-  
-  .input-field {
+
+  .btn-text {
+    background: none;
     border: none;
-    border-bottom: 1px solid var(--color-border);
-    background-color: transparent;
+    padding: 0;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.8125rem;
+    letter-spacing: 0.04em;
+    color: var(--color-text);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+  }
+
+  .btn-text:hover .arrow-shift {
+    transform: translateX(4px);
+  }
+
+  .arrow-shift {
+    transition: transform var(--duration-standard) var(--ease-standard);
+  }
+
+  .btn-loading {
+    pointer-events: none;
+    opacity: 0.7;
+  }
+
+  .btn-primary[disabled],
+  .btn-secondary[disabled] {
+    opacity: 0.45;
+    pointer-events: none;
+  }
+
+  /* Inputs — design system §9 */
+  .input-field {
+    border: 1px solid var(--color-border);
+    background-color: var(--color-surface);
     height: 48px;
     width: 100%;
     color: var(--color-text);
-    padding: 0 4px;
-    font-size: 15px;
-    transition: border-bottom-color 300ms ease-out;
+    padding: 0 16px;
+    font-family: var(--font-body);
+    font-size: 0.9375rem;
+    transition: border-color var(--duration-standard) var(--ease-standard);
   }
 
   .input-field:focus {
-    outline: none;
-    border-bottom-color: var(--color-primary);
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+    border-color: var(--color-primary);
+  }
+
+  .input-field[aria-invalid='true'] {
+    border-color: var(--color-error);
+  }
+
+  .field-error {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 6px;
+    font-size: 0.8125rem;
+    color: var(--color-error);
+  }
+
+  .form-label {
+    display: block;
+    font-family: var(--font-body);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    color: var(--color-text-secondary);
+  }
+
+  /* Link underline expand — design system §22 */
+  .link-underline {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0% 1px;
+    background-repeat: no-repeat;
+    background-position: left bottom;
+    transition: background-size var(--duration-standard) var(--ease-standard);
+    padding-bottom: 2px;
+  }
+
+  .link-underline:hover,
+  a:hover > .link-underline {
+    background-size: 100% 1px;
+  }
+
+  /* Status labels — design system §10 */
+  .status-label {
+    display: inline-block;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    background-color: var(--color-surface-warm);
+    color: var(--color-text-secondary);
+  }
+
+  .status-label--out {
+    background-color: var(--color-accent-soft);
+    color: var(--color-warning);
+  }
+
+  /* Skeleton loading — design system §26 */
+  .skeleton {
+    background: linear-gradient(90deg, #F5F0E7 25%, #EFEBE1 50%, #F5F0E7 75%);
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.4s ease infinite;
+  }
+
+  @keyframes skeleton-shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  /* Scroll reveal hook — GSAP */
+  .reveal {
+    will-change: transform, opacity;
+  }
+
+  /* Accordion */
+  .accordion summary {
+    list-style: none;
+    cursor: pointer;
+  }
+
+  .accordion summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .accordion summary .icon-plus {
+    display: block;
+  }
+
+  .accordion summary .icon-minus {
+    display: none;
+  }
+
+  .accordion details[open] summary .icon-plus {
+    display: none;
+  }
+
+  .accordion details[open] summary .icon-minus {
+    display: block;
+  }
+
+  .accordion .accordion-content {
+    animation: accordion-open var(--duration-standard) var(--ease-standard);
+  }
+
+  @keyframes accordion-open {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Navbar inverted state (transparent on dark hero) */
+  .nav-inverted {
+    color: #F8F5ED;
+  }
+
+  .nav-inverted a,
+  .nav-inverted button {
+    color: inherit;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+    will-change: auto;
+  }
+
+  .animate-marquee {
+    animation: none !important;
   }
 }

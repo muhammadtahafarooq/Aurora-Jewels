@@ -1,0 +1,294 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Icon from '../components/Icon.astro';
+---
+
+<Layout title="Checkout — Aurora Jewels" description="Complete your Aurora Jewels order with Cash on Delivery." minimal>
+  <!-- Checkout Header — wordmark only -->
+  <header class="border-b border-border bg-surface">
+    <div class="mx-auto flex h-[68px] max-w-[1440px] items-center justify-between px-5 md:h-[88px] md:px-10">
+      <a href="/" class="font-display text-[20px] font-medium uppercase tracking-[0.18em]" aria-label="Aurora Jewels home">
+        Aurora&nbsp;Jewels
+      </a>
+      <span class="type-eyebrow text-text-secondary">Secure Checkout</span>
+    </div>
+  </header>
+
+  <div class="mx-auto max-w-[1440px] px-5 pb-24 pt-12 md:px-10 md:pb-32 md:pt-16">
+    <h1 class="type-h2 mb-12">Checkout</h1>
+
+    <div id="checkout-filled" class="hidden grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-6">
+      <!-- Left: customer & delivery form -->
+      <form id="checkout-form" class="flex flex-col gap-10 lg:col-span-7" novalidate>
+        <fieldset class="flex flex-col gap-8">
+          <legend class="type-h4 mb-2">Customer &amp; Delivery Information</legend>
+
+          <div>
+            <label for="ck-name" class="form-label">Full Name</label>
+            <input id="ck-name" name="name" type="text" autocomplete="name" required class="input-field" />
+            <p class="field-error hidden" data-error-for="ck-name"><Icon name="alert" size={14} /> Please enter your full name.</p>
+          </div>
+
+          <div class="grid grid-cols-1 gap-8 md:grid-cols-2">
+            <div>
+              <label for="ck-phone" class="form-label">Phone (for COD confirmation)</label>
+              <input id="ck-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" required class="input-field" />
+              <p class="field-error hidden" data-error-for="ck-phone"><Icon name="alert" size={14} /> Please enter a valid phone number.</p>
+            </div>
+            <div>
+              <label for="ck-email" class="form-label">Email</label>
+              <input id="ck-email" name="email" type="email" autocomplete="email" class="input-field" />
+              <p class="field-error hidden" data-error-for="ck-email"><Icon name="alert" size={14} /> Please enter a valid email address.</p>
+            </div>
+          </div>
+
+          <div>
+            <label for="ck-address1" class="form-label">Address Line 1</label>
+            <input id="ck-address1" name="address" type="text" autocomplete="address-line1" required class="input-field" />
+            <p class="field-error hidden" data-error-for="ck-address1"><Icon name="alert" size={14} /> Please enter your street address.</p>
+          </div>
+
+          <div>
+            <label for="ck-address2" class="form-label">Address Line 2 <span class="normal-case text-text-secondary">(optional)</span></label>
+            <input id="ck-address2" name="address2" type="text" autocomplete="address-line2" class="input-field" />
+          </div>
+
+          <div>
+            <label for="ck-city" class="form-label">City</label>
+            <input id="ck-city" name="city" type="text" autocomplete="address-level2" required class="input-field" />
+            <p class="field-error hidden" data-error-for="ck-city"><Icon name="alert" size={14} /> Please enter your city.</p>
+          </div>
+        </fieldset>
+
+        <!-- Delivery information -->
+        <section aria-labelledby="delivery-heading">
+          <h2 id="delivery-heading" class="type-h4 mb-3">Delivery</h2>
+          <p class="max-w-[520px] text-[14px] leading-relaxed text-text-secondary">
+            Nationwide delivery across Pakistan with tracked shipping. Delivery pricing is
+            confirmed before dispatch.
+          </p>
+        </section>
+
+        <!-- Payment Method — COD only -->
+        <fieldset aria-labelledby="payment-heading">
+          <legend id="payment-heading" class="type-h4 mb-4">Payment Method</legend>
+          <label
+            class="flex cursor-pointer items-center justify-between border border-primary bg-surface-warm p-5"
+          >
+            <span class="flex items-center gap-4">
+              <input type="radio" name="payment" value="cod" checked class="h-4 w-4 accent-primary" />
+              <span>
+                <span class="block text-[15px] font-semibold">Cash on Delivery</span>
+                <span class="mt-0.5 block text-[13px] text-text-secondary">Pay when your order arrives.</span>
+              </span>
+            </span>
+            <Icon name="check" size={18} class="text-primary" />
+          </label>
+        </fieldset>
+
+        <!-- Final CTA -->
+        <button type="submit" id="place-order" class="btn-primary w-full">Place Order</button>
+
+        <!-- Error state -->
+        <p id="checkout-error" class="field-error hidden" role="alert">
+          <Icon name="alert" size={16} /> We could not place your order. Please review the highlighted fields and try again.
+        </p>
+
+        <!-- Success state -->
+        <div id="checkout-success" class="hidden flex-col items-start border border-border bg-surface p-8" role="status">
+          <p class="flex items-center gap-2 text-success">
+            <Icon name="check" size={18} />
+            <span class="font-semibold">Order placed successfully.</span>
+          </p>
+          <p id="order-reference" class="mt-2 text-[14px] text-text-secondary"></p>
+          <p class="mt-4 max-w-[480px] text-[14px] leading-relaxed text-text-secondary">
+            Our team will call you shortly to confirm your Cash on Delivery order.
+          </p>
+          <a href="/shop" class="btn-secondary mt-6">Continue Shopping</a>
+        </div>
+      </form>
+
+      <!-- Right: order summary -->
+      <aside class="lg:col-span-4 lg:col-start-9" aria-labelledby="summary-heading">
+        <div class="lg:sticky lg:top-[120px]">
+          <h2 id="summary-heading" class="type-h4 mb-6">Order Summary</h2>
+          <ul id="summary-items" class="flex flex-col divide-y divide-border border-y border-border"></ul>
+          <dl class="mt-6 flex flex-col gap-3 text-[15px]">
+            <div class="flex justify-between">
+              <dt class="text-text-secondary">Subtotal</dt>
+              <dd id="summary-subtotal" class="font-semibold">Rs. 0</dd>
+            </div>
+            <div class="flex justify-between">
+              <dt class="text-text-secondary">Delivery</dt>
+              <dd class="text-text-secondary">Confirmed by phone</dd>
+            </div>
+            <div class="mt-2 flex justify-between border-t border-border pt-4 text-[17px] font-semibold">
+              <dt>Total</dt>
+              <dd id="summary-total">Rs. 0</dd>
+            </div>
+          </dl>
+        </div>
+      </aside>
+    </div>
+
+    <!-- Empty bag state -->
+    <div id="checkout-empty" class="hidden border-t border-border">
+      <div class="py-16 text-center">
+        <Icon name="bag" size={48} class="text-text-secondary" />
+        <h2 class="type-h4 mt-4">Your bag is empty</h2>
+        <p class="mt-2 text-[14px] text-text-secondary">Add pieces to your bag before checking out.</p>
+        <a href="/shop" class="btn-primary mt-6">Explore Jewelry</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Compact commerce footer -->
+  <footer class="bg-primary py-10">
+    <div class="mx-auto flex max-w-[1440px] flex-col gap-4 px-5 md:flex-row md:items-center md:justify-between md:px-10">
+      <span class="text-[12px] uppercase tracking-[0.18em] text-dark-text">Aurora Jewels</span>
+      <ul class="flex flex-wrap gap-5">
+        <li><a href="/shipping-returns" class="text-[12px] text-dark-text/70 hover:text-white">Shipping &amp; Returns</a></li>
+        <li><a href="/privacy-policy" class="text-[12px] text-dark-text/70 hover:text-white">Privacy Policy</a></li>
+        <li><a href="/terms-conditions" class="text-[12px] text-dark-text/70 hover:text-white">Terms &amp; Conditions</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script>
+    interface CartItem {
+      slug: string;
+      name: string;
+      price: number;
+      variant?: string;
+      qty: number;
+    }
+
+    const fmt = (minor: number) => 'Rs. ' + new Intl.NumberFormat('en-PK').format(Math.round(minor / 100));
+
+    function readCart(): CartItem[] {
+      try {
+        return JSON.parse(localStorage.getItem('aj_cart') ?? '[]');
+      } catch {
+        return [];
+      }
+    }
+
+    function initCheckout() {
+      const filled = document.getElementById('checkout-filled');
+      const empty = document.getElementById('checkout-empty');
+      const form = document.getElementById('checkout-form') as HTMLFormElement | null;
+      if (!filled || !empty || !form) return;
+
+      const items = readCart();
+      if (items.length === 0) {
+        empty.classList.remove('hidden');
+        return;
+      }
+
+      filled.classList.remove('hidden');
+      filled.classList.add('grid');
+
+      let subtotal = 0;
+      const list = document.getElementById('summary-items')!;
+      list.innerHTML = '';
+
+      items.forEach((item) => {
+        subtotal += item.price * item.qty;
+        const li = document.createElement('li');
+        li.className = 'flex items-center gap-4 py-4';
+        li.innerHTML = `
+          <div class="h-[64px] w-[52px] shrink-0 overflow-hidden bg-surface-warm">
+            <img src="/images/products/${item.slug}-1.jpg" alt="${item.name}" loading="lazy" decoding="async" class="h-full w-full object-cover" onerror="this.style.display='none'" />
+          </div>
+          <div class="flex-1">
+            <p class="text-[14px] font-semibold">${item.name}</p>
+            ${item.variant ? `<p class="text-[12px] text-text-secondary">${item.variant}</p>` : ''}
+            <p class="text-[13px] text-text-secondary">Qty ${item.qty}</p>
+          </div>
+          <p class="text-[14px] font-semibold whitespace-nowrap">${fmt(item.price * item.qty)}</p>`;
+        list.appendChild(li);
+      });
+
+      document.getElementById('summary-subtotal')!.textContent = fmt(subtotal);
+      document.getElementById('summary-total')!.textContent = fmt(subtotal);
+
+      const validators: Record<string, (v: string) => boolean> = {
+        'ck-name': (v) => v.trim().length > 1,
+        'ck-phone': (v) => /^[+\d][\d\s-]{7,}$/.test(v.trim()),
+        'ck-email': (v) => !v.trim() || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()),
+        'ck-address1': (v) => v.trim().length > 3,
+        'ck-city': (v) => v.trim().length > 1,
+      };
+
+      Object.entries(validators).forEach(([id, test]) => {
+        const field = document.getElementById(id) as HTMLInputElement | null;
+        const error = form.querySelector(`[data-error-for="${id}"]`);
+        if (!field || !error) return;
+        field.addEventListener('blur', () => {
+          error.classList.toggle('hidden', test(field.value));
+          field.setAttribute('aria-invalid', test(field.value) ? 'false' : 'true');
+        });
+      });
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        let valid = true;
+
+        Object.entries(validators).forEach(([id, test]) => {
+          const field = document.getElementById(id) as HTMLInputElement | null;
+          const error = form.querySelector(`[data-error-for="${id}"]`);
+          if (!field) return;
+          const ok = test(field.value);
+          error?.classList.toggle('hidden', ok);
+          field.setAttribute('aria-invalid', ok ? 'false' : 'true');
+          if (!ok) valid = false;
+        });
+
+        const errBox = document.getElementById('checkout-error')!;
+        if (!valid) {
+          errBox.classList.remove('hidden');
+          return;
+        }
+        errBox.classList.add('hidden');
+
+        const btn = document.getElementById('place-order') as HTMLButtonElement;
+        btn.classList.add('btn-loading');
+        btn.textContent = 'Processing\u2026';
+
+        try {
+          const fd = new FormData(form);
+          const res = await fetch('/api/checkout', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name: fd.get('name'),
+              email: fd.get('email'),
+              phone: fd.get('phone'),
+              address: [fd.get('address'), fd.get('address2')].filter(Boolean).join(', '),
+              city: fd.get('city'),
+              items: items.map((i) => ({ slug: i.slug, qty: i.qty })),
+              couponCode: sessionStorage.getItem('aj_coupon_code') || undefined,
+            }),
+          });
+
+          const data = await res.json();
+          if (!res.ok) throw new Error(data?.error || 'Request failed');
+
+          localStorage.removeItem('aj_cart');
+          sessionStorage.removeItem('aj_coupon_code');
+          sessionStorage.removeItem('aj_coupon_discount');
+          document.dispatchEvent(new CustomEvent('aj-cart-changed'));
+          window.location.href = `/order-confirmation?order=${encodeURIComponent(data.orderNumber || '')}`;
+        } catch {
+          errBox.classList.remove('hidden');
+        } finally {
+          btn.classList.remove('btn-loading');
+          btn.textContent = 'Place Order';
+        }
+      });
+    }
+
+    initCheckout();
+    document.addEventListener('astro:after-swap', initCheckout);
+  </script>
+</Layout>

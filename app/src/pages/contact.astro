@@ -1,0 +1,149 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Icon from '../components/Icon.astro';
+---
+
+<Layout title="Contact — Aurora Jewels" description="Contact Aurora Jewels — customer care on WhatsApp, email and Instagram.">
+  <!-- Contact Hero — centered -->
+  <section class="mx-auto max-w-[1440px] px-5 pb-12 pt-[120px] text-center md:pb-16 md:pt-[160px]">
+    <span class="type-eyebrow text-accent" data-reveal-eyebrow>Customer Care</span>
+    <h1 class="type-h2 mt-4" data-reveal-text>Contact</h1>
+    <p class="mx-auto mt-4 max-w-[520px] text-text-secondary">
+      We are happy to help with orders, sizing, care and everything in between.
+    </p>
+  </section>
+
+  <!-- Contact Information — three columns -->
+  <section class="border-t border-border" aria-label="Contact details">
+    <div class="mx-auto grid max-w-[1440px] grid-cols-1 gap-10 px-5 py-12 md:grid-cols-3 md:gap-6 md:px-10 md:py-16">
+      {
+        [
+          { icon: 'heart', title: 'WhatsApp', copy: 'Fastest response for order questions.', action: { label: 'Message on WhatsApp', href: 'https://wa.me/' } },
+          { icon: 'alert', title: 'Email', copy: 'hello@aurorajewels.pk', action: { label: 'Send an Email', href: 'mailto:hello@aurorajewels.pk' } },
+          { icon: 'heart', title: 'Instagram', copy: 'New pieces, styling and announcements.', action: { label: 'Follow Along', href: 'https://instagram.com' } },
+        ].map((item) => (
+          <div class="flex flex-col gap-3 border-t border-border pt-6">
+            <Icon name={item.icon} size={20} class="text-primary" />
+            <h2 class="type-h4 mt-1">{item.title}</h2>
+            <p class="text-[14px] text-text-secondary">{item.copy}</p>
+            <a href={item.action.href} rel="noopener" target="_blank" class="btn-text mt-1">
+              <span class="link-underline">{item.action.label}</span>
+              <Icon name="arrow-right" size={14} class="arrow-shift" />
+            </a>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- Contact Form — form 60% / info 40% -->
+  <section class="mx-auto grid max-w-[1440px] grid-cols-1 gap-10 px-5 py-16 md:grid-cols-12 md:gap-6 md:px-10 md:py-24">
+    <form id="contact-form" class="md:col-span-7" novalidate>
+      <div class="flex flex-col gap-8">
+        <div>
+          <label for="contact-name" class="form-label">Name</label>
+          <input id="contact-name" name="name" type="text" autocomplete="name" required class="input-field" />
+          <p class="field-error hidden" data-error-for="contact-name">
+            <Icon name="alert" size={14} /> Please enter your name.
+          </p>
+        </div>
+
+        <div>
+          <label for="contact-info" class="form-label">Email or Phone</label>
+          <input id="contact-info" name="contact" type="text" autocomplete="email" required class="input-field" />
+          <p class="field-error hidden" data-error-for="contact-info">
+            <Icon name="alert" size={14} /> Please enter an email address or phone number.
+          </p>
+        </div>
+
+        <div>
+          <label for="contact-message" class="form-label">Message</label>
+          <textarea id="contact-message" name="message" rows="5" required class="input-field h-auto resize-none pt-3"></textarea>
+          <p class="field-error hidden" data-error-for="contact-message">
+            <Icon name="alert" size={14} /> Please enter a message.
+          </p>
+        </div>
+
+        <button type="submit" class="btn-primary self-start">Send Message</button>
+
+        <p id="contact-success" class="hidden items-center gap-2 text-[14px] font-semibold text-success" role="status">
+          <Icon name="check" size={16} /> Thank you — your message has been received.
+        </p>
+      </div>
+    </form>
+
+    <aside class="md:col-span-4 md:col-start-9">
+      <h2 class="type-h4">Prefer to talk?</h2>
+      <p class="mt-3 text-[15px] leading-relaxed text-text-secondary">
+        WhatsApp is the fastest way to reach the team during business hours.
+      </p>
+    </aside>
+  </section>
+
+  <script>
+    function initContactForm() {
+      const form = document.getElementById('contact-form') as HTMLFormElement | null;
+      if (!form) return;
+
+      const showError = (id: string, show: boolean) => {
+        const error = form.querySelector(`[data-error-for="${id}"]`);
+        const field = form.querySelector(`#${id}`) as HTMLElement | null;
+        if (error) error.classList.toggle('hidden', !show);
+        if (field) field.setAttribute('aria-invalid', show ? 'true' : 'false');
+      };
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        let valid = true;
+
+        (['contact-name', 'contact-info', 'contact-message'] as const).forEach((id) => {
+          const field = document.getElementById(id) as HTMLInputElement | null;
+          const ok = !!field?.value.trim();
+          showError(id, !ok);
+          if (!ok) valid = false;
+        });
+
+        if (!valid) return;
+
+        const btn = form.querySelector('button[type="submit"]') as HTMLButtonElement;
+        btn.classList.add('btn-loading');
+        btn.textContent = 'Sending...';
+
+        try {
+          const fd = new FormData(form);
+          const res = await fetch('/api/contact', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name: fd.get('name'),
+              email: fd.get('contact'),
+              message: fd.get('message'),
+            }),
+          });
+
+          if (!res.ok) throw new Error('Failed');
+
+          form.reset();
+          const success = document.getElementById('contact-success');
+          success?.classList.remove('hidden');
+          success?.classList.add('flex');
+        } catch {
+          const errorBox = document.getElementById('contact-success');
+          if (errorBox) {
+            errorBox.classList.remove('hidden');
+            errorBox.classList.add('flex');
+            errorBox.classList.remove('text-success');
+            errorBox.classList.add('text-error');
+            errorBox.textContent = 'Something went wrong. Please try again later.';
+          }
+        } finally {
+          btn.classList.remove('btn-loading');
+          btn.textContent = 'Send Message';
+        }
+      });
+    }
+
+    initContactForm();
+    document.addEventListener('astro:after-swap', initContactForm);
+  </script>
+</Layout>

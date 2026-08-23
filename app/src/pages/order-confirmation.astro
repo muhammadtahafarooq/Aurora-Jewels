@@ -1,0 +1,32 @@
+---
+export const prerender = false;
+import Layout from '../layouts/Layout.astro';
+
+const url = new URL(Astro.request.url);
+const orderNumber = url.searchParams.get('order') || '';
+---
+
+<Layout title="Order Confirmed — Aurora Jewels" description="Your Aurora Jewels order has been placed successfully.">
+  <section class="flex min-h-screen items-center justify-center px-6 py-24">
+    <div class="w-full max-w-md text-center">
+      <div class="mx-auto mb-6 flex h-16 w-16 items-center justify-center border-2 border-success">
+        <svg class="h-8 w-8 text-success" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      </div>
+      <h1 class="type-h3">Thank you for your order</h1>
+      <p class="mt-4 text-[15px] text-text-secondary">
+        We have received your order and will confirm it by phone shortly. Cash on delivery is payable at delivery.
+      </p>
+      {orderNumber && (
+        <p class="mt-4 text-[14px] font-semibold text-text">
+          Order reference: {orderNumber}
+        </p>
+      )}
+      <div class="mt-8 flex flex-col gap-3">
+        <a href="/shop" class="btn-primary">Continue Shopping</a>
+        <a href="/" class="text-[13px] font-medium text-text-secondary hover:text-text">Return to Home</a>
+      </div>
+    </div>
+  </section>
+</Layout>

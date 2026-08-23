@@ -1,0 +1,94 @@
+---
+export const prerender = false;
+import Layout from '../layouts/Layout.astro';
+
+const url = new URL(Astro.request.url);
+const token = url.searchParams.get('token');
+---
+
+<Layout title="Verify Email — Aurora Jewels" description="Verify your Aurora Jewels email address.">
+  <div id="verify-data" data-token={token ?? ''} class="hidden"></div>
+
+  <main class="flex items-center justify-center min-h-screen bg-background">
+    <div id="verify-content" class="text-center p-8 bg-primary text-background rounded-none max-w-md w-full mx-4">
+      <div id="loading-state">
+        <h1 class="text-xl font-semibold mb-2">Verifying your email...</h1>
+        <p class="text-accent">Please wait.</p>
+      </div>
+
+      <div id="success-state" class="hidden">
+        <h1 class="text-xl font-semibold mb-2">Email verified!</h1>
+        <p class="text-accent mb-4">You can now log in.</p>
+        <a
+          href="/login"
+          class="inline-block bg-accent text-primary px-6 py-2 rounded-none font-medium hover:bg-accent/90 transition-colors"
+        >
+          Go to Login
+        </a>
+      </div>
+
+      <div id="error-state" class="hidden">
+        <h1 class="text-xl font-semibold mb-2">Verification Failed</h1>
+        <p id="error-message" class="text-accent"></p>
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<script>
+  async function verifyEmail() {
+    const dataEl = document.getElementById('verify-data');
+    const token = dataEl?.getAttribute('data-token');
+
+    if (!token) {
+      showState('error', 'No verification token provided.');
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/auth/verify-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        showState('success');
+      } else {
+        showState('error', data.error || 'Verification failed.');
+      }
+    } catch {
+      showState('error', 'An unexpected error occurred.');
+    }
+  }
+
+  function showState(state: string, errorMessage?: string) {
+    const loading = document.getElementById('loading-state');
+    const success = document.getElementById('success-state');
+    const error = document.getElementById('error-state');
+    const errorMsg = document.getElementById('error-message');
+
+    loading?.classList.add('hidden');
+    success?.classList.add('hidden');
+    error?.classList.add('hidden');
+
+    if (state === 'loading') {
+      loading?.classList.remove('hidden');
+    } else if (state === 'success') {
+      success?.classList.remove('hidden');
+    } else if (state === 'error') {
+      if (errorMsg && errorMessage) {
+        errorMsg.textContent = errorMessage;
+      }
+      error?.classList.remove('hidden');
+    }
+  }
+
+  verifyEmail();
+
+  document.addEventListener('astro:after-swap', () => {
+    verifyEmail();
+  });
+</script>

@@ -1,0 +1,72 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Icon from '../components/Icon.astro';
+---
+
+<Layout title="Our Story — Aurora Jewels" description="The story behind Aurora Jewels — a house built on quiet luxury and considered craft.">
+  <section class="mx-auto grid max-w-[1440px] grid-cols-1 items-center gap-10 px-5 pb-16 pt-[120px] md:grid-cols-12 md:gap-6 md:px-10 md:pb-24 md:pt-[160px]" data-mouse-follow>
+    <div class="md:col-span-6">
+      <span class="type-eyebrow text-accent" data-reveal-eyebrow>Since the Beginning</span>
+      <h1 class="type-h2 mt-4" data-reveal-text>Our Story</h1>
+      <p class="mt-4 max-w-[480px] text-text-secondary">
+        It began with a simple frustration: jewelry that was either ordinary or unattainable.
+      </p>
+    </div>
+    <div data-parallax-frame class="order-first overflow-hidden md:col-span-6">
+      <div data-parallax="-5" class="flex aspect-[4/3] scale-[1.08] items-center justify-center bg-surface-warm">
+        <img
+          src="/images/our-story/jeweler.jpg"
+          alt="Aurora Jewels craftsmanship"
+          data-mouse-follow-target
+          loading="lazy"
+          decoding="async"
+          class="h-full w-full object-cover"
+          onerror="this.style.display='none'"
+        />
+      </div>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-[1440px] border-t border-border px-5 py-16 md:px-10 md:py-32">
+    <div class="mx-auto max-w-[680px]">
+      <p class="type-h3 leading-[1.15]">
+        We wanted to make pieces that feel personal from the first wear — jewelry measured
+        against a life, not a display case.
+      </p>
+      <p class="mt-8 text-[16px] leading-[1.75] text-text-secondary">
+        Aurora Jewels was founded on the belief that fine jewelry should be part of everyday
+        life in Pakistan — worn to lectures, meetings, dinners and weddings without ceremony.
+        We design slowly, release sparingly and finish each piece by hand.
+      </p>
+      <p class="mt-6 text-[16px] leading-[1.75] text-text-secondary">
+        Every collection starts on paper. Forms are refined over weeks, prototypes are worn for
+        months, and only what survives daily life makes it into the house collection.
+      </p>
+    </div>
+
+    <div data-parallax-frame class="mx-auto mt-16 max-w-[1100px] overflow-hidden">
+      <div data-parallax="-6" class="flex aspect-[16/9] scale-[1.08] items-center justify-center bg-surface-warm">
+        <img
+          src="/images/about/sea.jpg"
+          alt="Aurora Jewels story"
+          loading="lazy"
+          decoding="async"
+          class="h-full w-full object-cover"
+          onerror="this.style.display='none'"
+        />
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-dark" data-section-reveal>
+    <div class="mx-auto max-w-[1440px] px-5 py-20 text-center md:py-32 md:px-10">
+      <p class="type-h2 mx-auto max-w-[820px] text-dark-text" data-reveal-text>
+        A Quiet Authority.
+      </p>
+      <a href="/shop" class="btn-primary mt-10" data-magnetic>
+        Shop Jewelry
+        <Icon name="arrow-right" size={16} />
+      </a>
+    </div>
+  </section>
+</Layout>

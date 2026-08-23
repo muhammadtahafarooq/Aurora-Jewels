@@ -1,0 +1,85 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import AccountShell from '../../components/AccountShell.astro';
+---
+
+<Layout title="My Account — Aurora Jewels" description="Manage your Aurora Jewels profile and personal details.">
+  <AccountShell active="profile" title="Profile">
+    <div class="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-6">
+      <form id="profile-form" class="flex flex-col gap-8" novalidate>
+        <div>
+          <label for="pf-name" class="form-label">Name</label>
+          <input id="pf-name" type="text" autocomplete="name" class="input-field" />
+        </div>
+        <div>
+          <label for="pf-email" class="form-label">Email</label>
+          <input id="pf-email" type="email" autocomplete="email" class="input-field" readonly />
+        </div>
+        <div>
+          <label for="pf-phone" class="form-label">Phone</label>
+          <input id="pf-phone" type="tel" autocomplete="tel" class="input-field" />
+        </div>
+        <button type="submit" class="btn-primary self-start">Save Changes</button>
+        <p id="profile-saved" class="hidden text-[13px] font-semibold text-success" role="status">
+          Profile saved.
+        </p>
+      </form>
+
+      <aside class="border-t border-border pt-8 lg:border-t-0 lg:pt-0">
+        <h2 class="type-h4 mb-3">Account</h2>
+        <p class="max-w-[380px] text-[14px] leading-relaxed text-text-secondary">
+          Customer accounts are optional. Your profile details are used only for order
+          fulfilment and support.
+        </p>
+      </aside>
+    </div>
+  </AccountShell>
+
+  <script>
+    function initProfile() {
+      const form = document.getElementById('profile-form') as HTMLFormElement | null;
+      if (!form) return;
+
+      const nameInput = document.getElementById('pf-name') as HTMLInputElement | null;
+      const emailInput = document.getElementById('pf-email') as HTMLInputElement | null;
+      const phoneInput = document.getElementById('pf-phone') as HTMLInputElement | null;
+      const savedMsg = document.getElementById('profile-saved');
+
+      async function loadProfile() {
+        try {
+          const res = await fetch('/api/auth/me');
+          if (res.status === 401) {
+            window.location.href = '/login';
+            return;
+          }
+          if (!res.ok) return;
+
+          const data = await res.json();
+          const profile = data?.profile;
+
+          if (emailInput && data?.email) emailInput.value = data.email;
+
+          if (profile) {
+            if (nameInput) {
+              const fullName = [profile.firstName, profile.lastName].filter(Boolean).join(' ');
+              nameInput.value = fullName;
+            }
+            if (phoneInput && profile.phone) phoneInput.value = profile.phone;
+          }
+        } catch {
+          // silent fail — form stays empty
+        }
+      }
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        savedMsg?.classList.remove('hidden');
+      });
+
+      loadProfile();
+    }
+
+    initProfile();
+    document.addEventListener('astro:after-swap', initProfile);
+  </script>
+</Layout>

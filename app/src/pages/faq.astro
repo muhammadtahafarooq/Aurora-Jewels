@@ -1,0 +1,71 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Icon from '../components/Icon.astro';
+
+const faqs = [
+  {
+    q: 'Do you offer Cash on Delivery?',
+    a: 'Yes. Cash on Delivery is available across Pakistan. Your order is confirmed by phone before dispatch.',
+  },
+  {
+    q: 'How long does delivery take?',
+    a: 'Orders are dispatched within 1\u20132 business days and typically arrive within 3\u20135 business days depending on your city.',
+  },
+  {
+    q: 'What materials do you use?',
+    a: 'Each product page lists complete material information provided by the house.',
+  },
+  {
+    q: 'Can I exchange or return a piece?',
+    a: 'Please see our Shipping & Returns page for the full policy, or contact us on WhatsApp for help.',
+  },
+  {
+    q: 'Do the pieces come packaged as gifts?',
+    a: 'Every order arrives in Aurora packaging suitable for gifting.',
+  },
+];
+---
+
+<Layout title="FAQ — Aurora Jewels" description="Frequently asked questions about ordering, delivery, materials and care at Aurora Jewels.">
+  <!-- FAQ Introduction — centered -->
+  <section class="mx-auto max-w-[1440px] px-5 pb-12 pt-[120px] text-center md:pb-16 md:pt-[160px]">
+    <span class="type-eyebrow text-accent" data-reveal-eyebrow>Help Center</span>
+    <h1 class="type-h2 mt-4" data-reveal-text>FAQ</h1>
+    <p class="mx-auto mt-4 max-w-[620px] text-text-secondary">
+      Answers to the questions we hear most often.
+    </p>
+  </section>
+
+  <!-- FAQ Accordion -->
+  <section class="mx-auto max-w-[900px] px-5 pb-16 md:pb-24" aria-label="Frequently asked questions">
+    <div class="accordion border-t border-border">
+      {
+        faqs.map((faq) => (
+          <details class="group border-b border-border">
+            <summary class="flex items-center justify-between gap-6 py-6">
+              <span class="font-display text-[20px] leading-snug md:text-[22px]">{faq.q}</span>
+              <span class="shrink-0 text-text-secondary">
+                <Icon name="plus" size={18} class="icon-plus" />
+                <Icon name="minus" size={18} class="icon-minus" />
+              </span>
+            </summary>
+            <div class="accordion-content max-w-[720px] pb-7 text-[15px] leading-relaxed text-text-secondary">
+              {faq.a}
+            </div>
+          </details>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- Dark CTA band -->
+  <section class="bg-primary">
+    <div class="mx-auto max-w-[1440px] px-5 py-16 text-center md:py-20">
+      <h2 class="type-h3 text-dark-text">Still have questions?</h2>
+      <a href="/contact" class="btn-primary mt-8" data-magnetic>
+        Contact Aurora
+        <Icon name="arrow-right" size={16} />
+      </a>
+    </div>
+  </section>
+</Layout>

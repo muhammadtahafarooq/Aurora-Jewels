@@ -1,0 +1,83 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { createDb } from '../lib/db';
+
+export const prerender = false;
+
+function formatPrice(minorUnits: number): string {
+  return new Intl.NumberFormat('en-PK', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(Math.round(minorUnits / 100));
+}
+
+let allProducts: any[] = [];
+
+const env = (Astro.locals as any).runtime?.env;
+if (env?.DB) {
+  const db = createDb(env);
+  const { listProducts } = await import('../services/products');
+  const { productVariants } = await import('@database/schema');
+  const { inArray } = await import('drizzle-orm');
+
+  const result = await listProducts(db, { page: 1, perPage: 100 });
+  const productRows = result.products || [];
+
+  if (productRows.length > 0) {
+    const ids = productRows.map((p: any) => p.id);
+    const defaultVariants = await db
+      .select({ productId: productVariants.productId, price: productVariants.price })
+      .from(productVariants)
+      .where(inArray(productVariants.productId, ids));
+    const priceMap = new Map(defaultVariants.map((v) => [v.productId, v.price]));
+    allProducts = productRows.map((p: any) => ({ ...p, price: priceMap.get(p.id) ?? 0 }));
+  }
+}
+---
+
+<Layout title="Shop All Jewelry — Aurora Jewels" description="Browse the complete Aurora Jewels collection of premium everyday fine jewelry.">
+  <section class="mx-auto max-w-[1440px] px-5 pb-12 pt-[120px] text-center md:pb-16 md:pt-[160px]">
+    <span class="type-eyebrow text-accent" data-reveal-eyebrow>Collection</span>
+    <h1 class="type-h2 mx-auto mt-4 max-w-[720px]" data-reveal-text>Shop All Jewelry</h1>
+    <p class="mx-auto mt-4 max-w-[620px] text-text-secondary">
+      Every piece of the current collection — rings, necklaces, earrings and bracelets designed
+      for everyday wear.
+    </p>
+  </section>
+
+  <div class="mx-auto h-px max-w-[1440px] bg-border md:mx-10 md:max-width-none" aria-hidden="true"></div>
+
+  <section class="mx-auto max-w-[1440px] px-5 py-12 md:px-10 md:py-20" aria-label="All jewelry">
+    {
+      allProducts.length > 0 ? (
+        <div class="grid grid-cols-2 gap-x-3 gap-y-10 md:grid-cols-4 md:gap-x-6" data-stagger>
+          {allProducts.map((product) => (
+            <a href={`/products/${product.slug}`} class="group block" data-tilt>
+              <div class="aspect-[4/5] overflow-hidden bg-surface-warm transition-transform duration-[600ms] ease-out group-hover:scale-[1.02]">
+                <img
+                  src={product.imageUrl || `/images/products/${product.slug}-1.jpg`}
+                  alt={product.name}
+                  loading="lazy"
+                  decoding="async"
+                  class="h-full w-full object-cover"
+                  onerror="this.style.display='none'"
+                />
+              </div>
+              <h3 class="type-body-md mt-3 font-semibold">{product.name}</h3>
+              <p class="type-functional-sm text-text-secondary">Rs. {formatPrice(product.price)}</p>
+            </a>
+          ))}
+        </div>
+      ) : (
+        <p class="py-16 text-center text-text-secondary">No pieces are available right now.</p>
+      )
+    }
+  </section>
+
+  <section class="border-t border-border" aria-label="Collections navigation">
+    <div class="mx-auto max-w-[1440px] px-5 py-12 md:px-10 md:py-16">
+      <div class="flex flex-wrap justify-center gap-6 md:gap-10">
+        <a href="/collections#the-eternity-collection" class="type-eyebrow text-text-secondary transition-colors hover:text-primary">The Eternity Collection</a>
+        <a href="/collections#aura-gold" class="type-eyebrow text-text-secondary transition-colors hover:text-primary">Aura Gold</a>
+        <a href="/collections#lumina-pearls" class="type-eyebrow text-text-secondary transition-colors hover:text-primary">Lumina Pearls</a>
+      </div>
+    </div>
+  </section>
+</Layout>
