@@ -224,13 +224,20 @@ const drawerNav = [
         <Icon name="search" size={20} />
       </button>
 
-      <a href="/account/profile" class="hidden p-2 md:flex" aria-label="Account" id="nav-account-link">
-        <Icon name="user" size={20} />
-      </a>
-      <button type="button" id="nav-logout-btn" class="hidden p-2 md:flex text-[12px] text-text-secondary hover:text-text" aria-label="Log out" style="display:none;">
-        <span class="sr-only">Log out</span>
-        <Icon name="close" size={18} />
-      </button>
+      <!-- Account: dropdown if logged in, link if not -->
+      <div class="relative hidden md:block" id="nav-account-wrap">
+        <a href="/login" class="flex p-2" aria-label="Account" id="nav-account-link">
+          <Icon name="user" size={20} />
+        </a>
+        <div id="nav-account-dropdown" class="invisible absolute right-0 top-full z-50 mt-1 w-[200px] border border-border bg-background py-2 opacity-0 transition-opacity duration-200">
+          <a href="/account/profile" class="block px-5 py-2.5 text-[13px] text-text hover:bg-surface-warm">Profile</a>
+          <a href="/account/orders" class="block px-5 py-2.5 text-[13px] text-text hover:bg-surface-warm">Order History</a>
+          <a href="/account/addresses" class="block px-5 py-2.5 text-[13px] text-text hover:bg-surface-warm">Saved Addresses</a>
+          <a href="/account/wishlist" class="block px-5 py-2.5 text-[13px] text-text hover:bg-surface-warm">Wishlist</a>
+          <div class="my-2 border-t border-border"></div>
+          <button type="button" id="nav-logout-btn" class="w-full px-5 py-2.5 text-left text-[13px] text-text-secondary hover:bg-surface-warm">Log out</button>
+        </div>
+      </div>
 
       <a href="/account/wishlist" class="hidden p-2 md:flex" aria-label="Wishlist">
         <Icon name="heart" size={20} />
@@ -283,7 +290,7 @@ const drawerNav = [
       {
         [
           { label: 'Search', href: '/shop', icon: 'search' as const },
-          { label: 'Account', href: '/account/profile', icon: 'user' as const },
+          { label: 'Account', href: '/login', icon: 'user' as const },
           { label: 'Wishlist', href: '/account/wishlist', icon: 'heart' as const },
         ].map((item) => (
           <a href={item.href} class="flex items-center gap-3 py-3 text-[14px] text-text-secondary">
@@ -417,21 +424,51 @@ const drawerNav = [
 
   function initAuthState() {
     const accountLink = document.getElementById('nav-account-link');
+    const accountWrap = document.getElementById('nav-account-wrap');
+    const dropdown = document.getElementById('nav-account-dropdown');
     const logoutBtn = document.getElementById('nav-logout-btn');
-    if (!accountLink || !logoutBtn) return;
+    if (!accountLink || !accountWrap || !dropdown) return;
+
+    let isLoggedIn = false;
 
     fetch('/api/auth/me', { credentials: 'same-origin' })
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => {
-        if (data?.profile?.firstName) {
-          accountLink.setAttribute('aria-label', data.profile.firstName);
+        if (data?.email) {
+          isLoggedIn = true;
+          accountLink.setAttribute('href', '/account/profile');
+          if (data.profile?.firstName) {
+            accountLink.setAttribute('aria-label', data.profile.firstName);
+          }
         }
       })
       .catch(() => {});
 
-    logoutBtn.addEventListener('click', async () => {
-      await fetch('/api/auth/logout', { method: 'POST', credentials: 'same-origin' });
-      window.location.href = '/';
+    // Toggle dropdown on click
+    accountLink.addEventListener('click', (e) => {
+      if (!isLoggedIn) return; // let the link navigate to /login
+      e.preventDefault();
+      const isOpen = !dropdown.classList.contains('invisible');
+      if (isOpen) {
+        dropdown.classList.add('invisible', 'opacity-0');
+      } else {
+        dropdown.classList.remove('invisible', 'opacity-0');
+      }
     });
+
+    // Close dropdown on outside click
+    document.addEventListener('click', (e) => {
+      if (!accountWrap.contains(e.target as Node)) {
+        dropdown.classList.add('invisible', 'opacity-0');
+      }
+    });
+
+    // Logout
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', async () => {
+        await fetch('/api/auth/logout', { method: 'POST', credentials: 'same-origin' });
+        window.location.href = '/';
+      });
+    }
   }
 </script>

@@ -91,8 +91,8 @@ export async function createOrder(
         }
       }
     } else {
-      // Use product base price from first active variant
-      const [defaultVariant] = await db
+      // Use product base price — try default variant, then first active
+      let [defaultVariant] = await db
         .select()
         .from(productVariants)
         .where(
@@ -103,6 +103,19 @@ export async function createOrder(
           ),
         )
         .limit(1);
+
+      if (!defaultVariant) {
+        [defaultVariant] = await db
+          .select()
+          .from(productVariants)
+          .where(
+            and(
+              eq(productVariants.productId, product.id),
+              eq(productVariants.isActive, 1),
+            ),
+          )
+          .limit(1);
+      }
 
       if (defaultVariant) {
         unitPrice = defaultVariant.price;

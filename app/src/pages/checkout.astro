@@ -160,6 +160,7 @@ import Icon from '../components/Icon.astro';
       name: string;
       price: number;
       variant?: string;
+      variantId?: string;
       qty: number;
     }
 
@@ -266,7 +267,7 @@ import Icon from '../components/Icon.astro';
               phone: fd.get('phone'),
               address: [fd.get('address'), fd.get('address2')].filter(Boolean).join(', '),
               city: fd.get('city'),
-              items: items.map((i) => ({ slug: i.slug, qty: i.qty })),
+              items: items.map((i) => ({ slug: i.slug, qty: i.qty, variantId: i.variantId || undefined })),
               couponCode: sessionStorage.getItem('aj_coupon_code') || undefined,
             }),
           });

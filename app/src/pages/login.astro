@@ -1,117 +1,310 @@
 ---
 import Layout from '../layouts/Layout.astro';
+
+export const prerender = false;
 ---
 
-<Layout title="Login — Aurora Jewels" description="Sign in to your Aurora Jewels account." minimal>
+<Layout title="Account — Aurora Jewels" description="Sign in or create your Aurora Jewels account." minimal>
   <div class="flex min-h-screen items-center justify-center px-5">
-    <div class="w-full max-w-[400px]">
+    <div class="w-full max-w-[420px]">
       <div class="mb-10 text-center">
         <a href="/" class="font-display text-[20px] font-medium uppercase tracking-[0.18em]" aria-label="Aurora Jewels home">
           Aurora&nbsp;Jewels
         </a>
       </div>
 
-      <h1 class="type-h4 mb-8 text-center">Sign In</h1>
+      <div id="error-box" class="mb-6 hidden border border-error/30 bg-error/5 px-4 py-3 text-sm text-error">
+        <p id="error-text"></p>
+      </div>
 
+      <div id="success-box" class="mb-6 hidden border border-success/30 bg-success/5 px-4 py-3 text-sm text-success">
+        <p id="success-text"></p>
+      </div>
+
+      <!-- Login Form -->
       <form id="login-form" class="flex flex-col gap-6" novalidate>
+        <h1 class="type-h4 text-center">Welcome Back</h1>
+
         <div>
-          <label for="email" class="form-label">Email</label>
-          <input id="email" name="email" type="email" autocomplete="email" required class="input-field" />
+          <label for="login-email" class="form-label">Email</label>
+          <input id="login-email" type="email" autocomplete="email" required class="input-field" />
         </div>
 
         <div>
-          <label for="password" class="form-label">Password</label>
-          <input id="password" name="password" type="password" autocomplete="current-password" required class="input-field" />
+          <label for="login-password" class="form-label">Password</label>
+          <input id="login-password" type="password" autocomplete="current-password" required class="input-field" />
         </div>
 
         <div class="text-right">
           <a href="/forgot-password" class="text-[13px] font-medium text-primary hover:text-primary-hover">Forgot password?</a>
         </div>
 
-        <p id="login-error" class="field-error hidden" role="alert"></p>
-
         <button type="submit" id="login-btn" class="btn-primary w-full">Sign In</button>
+
+        <p class="text-center text-[14px] text-text-secondary">
+          Don't have an account?{' '}
+          <button type="button" id="show-register" class="font-medium text-primary hover:text-primary-hover">Register</button>
+        </p>
       </form>
 
-      <p class="mt-8 text-center text-[14px] text-text-secondary">
-        Don't have an account?
-        <a href="/register" class="font-medium text-primary hover:text-primary-hover">Create an account</a>
-      </p>
+      <!-- Register Form (hidden by default) -->
+      <form id="register-form" class="hidden flex-col gap-6" novalidate>
+        <h1 class="type-h4 text-center">Create Account</h1>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label for="reg-firstName" class="form-label">First Name</label>
+            <input id="reg-firstName" type="text" autocomplete="given-name" class="input-field" />
+          </div>
+          <div>
+            <label for="reg-lastName" class="form-label">Last Name</label>
+            <input id="reg-lastName" type="text" autocomplete="family-name" class="input-field" />
+          </div>
+        </div>
+
+        <div>
+          <label for="reg-email" class="form-label">Email</label>
+          <input id="reg-email" type="email" autocomplete="email" required class="input-field" />
+        </div>
+
+        <div>
+          <label for="reg-phone" class="form-label">Phone</label>
+          <input id="reg-phone" type="tel" autocomplete="tel" inputmode="tel" class="input-field" />
+        </div>
+
+        <div>
+          <label for="reg-password" class="form-label">Password</label>
+          <input id="reg-password" type="password" autocomplete="new-password" required minlength="8" class="input-field" />
+          <p class="mt-1 text-xs text-muted">Minimum 8 characters.</p>
+        </div>
+
+        <button type="submit" id="register-btn" class="btn-primary w-full">Register</button>
+
+        <p class="text-center text-[14px] text-text-secondary">
+          Already have an account?{' '}
+          <button type="button" id="show-login" class="font-medium text-primary hover:text-primary-hover">Sign In</button>
+        </p>
+      </form>
+
+      <!-- OTP Step (hidden by default) -->
+      <form id="otp-form" class="hidden flex-col gap-6" novalidate>
+        <h1 class="type-h4 text-center">Verify Email</h1>
+        <p class="text-center text-[14px] text-text-secondary">
+          We sent a 6-digit code to <strong id="otp-email-display"></strong>
+        </p>
+
+        <div>
+          <label for="otp-code" class="form-label">Verification Code</label>
+          <input id="otp-code" type="text" inputmode="numeric" maxlength="6" placeholder="000000" autocomplete="one-time-code" class="input-field" />
+        </div>
+
+        <button type="submit" id="otp-btn" class="btn-primary w-full">Verify & Create Account</button>
+
+        <button type="button" id="resend-otp" class="text-center text-[13px] font-medium text-primary hover:text-primary-hover">
+          Resend code
+        </button>
+      </form>
     </div>
   </div>
 
   <script>
-    function checkAuth() {
-      fetch('/api/auth/me')
-        .then((res) => {
-          if (res.ok) {
-            return res.json();
-          }
-          return null;
-        })
-        .then((data) => {
-          if (data?.role === 'admin') {
-            window.location.href = '/admin/dashboard';
-          } else if (data) {
-          if (data.role === 'admin') {
-            window.location.href = '/admin/dashboard';
-          } else {
-            window.location.href = '/account/profile';
-          }
-          }
-        })
-        .catch(() => {});
-    }
+    function init() {
+      const loginForm = document.getElementById('login-form') as HTMLFormElement | null;
+      const registerForm = document.getElementById('register-form') as HTMLFormElement | null;
+      const otpForm = document.getElementById('otp-form') as HTMLFormElement | null;
+      const errorBox = document.getElementById('error-box');
+      const errorText = document.getElementById('error-text');
+      const successBox = document.getElementById('success-box');
+      const successText = document.getElementById('success-text');
+      const otpEmailDisplay = document.getElementById('otp-email-display');
 
-    function initLogin() {
-      checkAuth();
+      if (!loginForm || !registerForm || !otpForm) return;
 
-      const form = document.getElementById('login-form') as HTMLFormElement | null;
-      if (!form) return;
+      let pendingRegister: { firstName: string; lastName: string; email: string; phone: string; password: string } | null = null;
 
-      form.addEventListener('submit', async (e) => {
+      function showError(msg: string) {
+        if (errorBox && errorText) { errorText.textContent = msg; errorBox.classList.remove('hidden'); }
+        successBox?.classList.add('hidden');
+      }
+
+      function showSuccess(msg: string) {
+        if (successBox && successText) { successText.textContent = msg; successBox.classList.remove('hidden'); }
+        errorBox?.classList.add('hidden');
+      }
+
+      function hideMessages() { errorBox?.classList.add('hidden'); successBox?.classList.add('hidden'); }
+
+      function setLoading(btnId: string, loading: boolean) {
+        const btn = document.getElementById(btnId) as HTMLButtonElement | null;
+        if (!btn) return;
+        if (loading) { btn.classList.add('btn-loading'); btn.disabled = true; }
+        else { btn.classList.remove('btn-loading'); btn.disabled = false; }
+      }
+
+      // Toggle between login and register
+      document.getElementById('show-register')?.addEventListener('click', () => {
+        hideMessages();
+        loginForm.classList.add('hidden');
+        registerForm.classList.remove('hidden');
+        registerForm.classList.add('flex');
+      });
+
+      document.getElementById('show-login')?.addEventListener('click', () => {
+        hideMessages();
+        registerForm.classList.add('hidden');
+        otpForm.classList.add('hidden');
+        loginForm.classList.remove('hidden');
+        loginForm.classList.add('flex');
+      });
+
+      // LOGIN
+      loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
+        hideMessages();
+        const email = (document.getElementById('login-email') as HTMLInputElement).value.trim();
+        const password = (document.getElementById('login-password') as HTMLInputElement).value;
+        if (!email || !password) { showError('Please enter both email and password.'); return; }
 
-        const errBox = document.getElementById('login-error')!;
-        const btn = document.getElementById('login-btn') as HTMLButtonElement;
-        const email = (form.querySelector('#email') as HTMLInputElement).value.trim();
-        const password = (form.querySelector('#password') as HTMLInputElement).value;
-
-        if (!email || !password) {
-          errBox.textContent = 'Please enter both email and password.';
-          errBox.classList.remove('hidden');
-          return;
-        }
-
-        errBox.classList.add('hidden');
-        btn.classList.add('btn-loading');
-        btn.textContent = 'Signing in\u2026';
-
+        setLoading('login-btn', true);
         try {
           const res = await fetch('/api/auth/login', {
             method: 'POST',
+            credentials: 'same-origin',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password }),
           });
-
           const data = await res.json();
+          if (!res.ok) { showError(data.error || 'Login failed.'); setLoading('login-btn', false); return; }
+          window.location.href = data.role === 'admin' ? '/admin/dashboard' : '/account/profile';
+        } catch { showError('Login failed. Please try again.'); setLoading('login-btn', false); }
+      });
 
+      // REGISTER — send OTP first
+      registerForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        hideMessages();
+        const firstName = (document.getElementById('reg-firstName') as HTMLInputElement).value.trim();
+        const lastName = (document.getElementById('reg-lastName') as HTMLInputElement).value.trim();
+        const email = (document.getElementById('reg-email') as HTMLInputElement).value.trim();
+        const phone = (document.getElementById('reg-phone') as HTMLInputElement).value.trim();
+        const password = (document.getElementById('reg-password') as HTMLInputElement).value;
+
+        if (!email) { showError('Email is required.'); return; }
+        if (!password || password.length < 8) { showError('Password must be at least 8 characters.'); return; }
+
+        pendingRegister = { firstName, lastName, email, phone, password };
+
+        setLoading('register-btn', true);
+        try {
+          const res = await fetch('/api/auth/send-otp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, purpose: 'register' }),
+          });
+          const data = await res.json();
           if (!res.ok) {
-            throw new Error(data.error || 'Login failed');
+            // If user exists, show login message
+            if (data.error && data.error.toLowerCase().includes('already exists')) {
+              showError('An account with this email already exists. Please sign in.');
+              setLoading('register-btn', false);
+              return;
+            }
+            showError(data.error || 'Failed to send code.');
+            setLoading('register-btn', false);
+            return;
           }
 
-          window.location.href = '/account/profile';
-        } catch (err: unknown) {
-          const message = err instanceof Error ? err.message : 'Login failed. Please try again.';
-          errBox.textContent = message;
-          errBox.classList.remove('hidden');
-          btn.classList.remove('btn-loading');
-          btn.textContent = 'Sign In';
-        }
+          if (otpEmailDisplay) otpEmailDisplay.textContent = email;
+          registerForm.classList.add('hidden');
+          otpForm.classList.remove('hidden');
+          otpForm.classList.add('flex');
+        } catch { showError('Something went wrong.'); }
+        finally { setLoading('register-btn', false); }
       });
+
+      // Resend OTP
+      document.getElementById('resend-otp')?.addEventListener('click', async () => {
+        if (!pendingRegister) return;
+        hideMessages();
+        try {
+          await fetch('/api/auth/send-otp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: pendingRegister.email, purpose: 'register' }),
+          });
+          showSuccess('New code sent.');
+        } catch { showError('Failed to resend.'); }
+      });
+
+      // OTP — verify and register
+      otpForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        hideMessages();
+        if (!pendingRegister) { showError('Session expired. Please start over.'); return; }
+
+        const code = (document.getElementById('otp-code') as HTMLInputElement).value.trim();
+        if (!code || code.length !== 6) { showError('Please enter the 6-digit code.'); return; }
+
+        setLoading('otp-btn', true);
+        try {
+          // Step 1: Verify OTP
+          const verifyRes = await fetch('/api/auth/verify-otp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: pendingRegister.email, code, purpose: 'register' }),
+          });
+          const verifyData = await verifyRes.json();
+          if (!verifyRes.ok) { showError(verifyData.error || 'Invalid code.'); setLoading('otp-btn', false); return; }
+
+          // Step 2: Create account
+          const regRes = await fetch('/api/auth/register-otp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              email: pendingRegister.email,
+              password: pendingRegister.password,
+              firstName: pendingRegister.firstName,
+              lastName: pendingRegister.lastName,
+              phone: pendingRegister.phone,
+            }),
+          });
+          const regData = await regRes.json();
+          if (!regRes.ok) { showError(regData.error || 'Registration failed.'); setLoading('otp-btn', false); return; }
+
+          // Save phone to profile if provided
+          if (pendingRegister.phone) {
+            try {
+              await fetch('/api/auth/me', {
+                method: 'PUT',
+                credentials: 'same-origin',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ phone: pendingRegister.phone }),
+              });
+            } catch { /* phone save is best-effort */ }
+          }
+
+          showSuccess('Account created! Redirecting to login...');
+          pendingRegister = null;
+          setTimeout(() => {
+            otpForm.classList.add('hidden');
+            loginForm.classList.remove('hidden');
+            loginForm.classList.add('flex');
+            hideMessages();
+          }, 1500);
+        } catch { showError('Registration failed.'); }
+        finally { setLoading('otp-btn', false); }
+      });
+
+      // Check if already logged in
+      fetch('/api/auth/me', { credentials: 'same-origin' })
+        .then((r) => r.ok ? r.json() : null)
+        .then((data) => {
+          if (data?.role === 'admin') window.location.href = '/admin/dashboard';
+          else if (data?.email) window.location.href = '/account/profile';
+        }).catch(() => {});
     }
 
-    initLogin();
-    document.addEventListener('astro:after-swap', initLogin);
+    init();
+    document.addEventListener('astro:after-swap', init);
   </script>
 </Layout>

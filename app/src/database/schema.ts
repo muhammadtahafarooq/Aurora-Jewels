@@ -399,3 +399,16 @@ export const passwordResets = sqliteTable('password_resets', {
   usedAt: text('used_at'),
   createdAt: text('created_at').notNull().$defaultFn(now),
 });
+
+/* ────────────────────────────────────────────
+   25. otp_codes
+   ──────────────────────────────────────────── */
+export const otpCodes = sqliteTable('otp_codes', {
+  id: text('id').primaryKey(),
+  email: text('email').notNull(),
+  code: text('code').notNull(),
+  purpose: text('purpose').notNull(), // 'register' | 'reset_password'
+  expiresAt: text('expires_at').notNull(),
+  usedAt: text('used_at'),
+  createdAt: text('created_at').notNull().$defaultFn(now),
+});

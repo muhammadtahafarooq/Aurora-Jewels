@@ -13,7 +13,7 @@ import AccountShell from '../../components/AccountShell.astro';
         </div>
         <div>
           <label for="pf-email" class="form-label">Email</label>
-          <input id="pf-email" type="email" autocomplete="email" class="input-field" readonly />
+          <input id="pf-email" type="email" autocomplete="email" class="input-field" />
         </div>
         <div>
           <label for="pf-phone" class="form-label">Phone</label>
@@ -47,7 +47,7 @@ import AccountShell from '../../components/AccountShell.astro';
 
       async function loadProfile() {
         try {
-          const res = await fetch('/api/auth/me');
+          const res = await fetch('/api/auth/me', { credentials: 'same-origin' });
           if (res.status === 401) {
             window.location.href = '/login';
             return;
@@ -71,9 +71,37 @@ import AccountShell from '../../components/AccountShell.astro';
         }
       }
 
-      form.addEventListener('submit', (e) => {
+      form.addEventListener('submit', async (e) => {
         e.preventDefault();
-        savedMsg?.classList.remove('hidden');
+        savedMsg?.classList.add('hidden');
+
+        const fullName = nameInput?.value.trim() || '';
+        const parts = fullName.split(/\s+/);
+        const firstName = parts[0] || '';
+        const lastName = parts.slice(1).join(' ') || '';
+
+        try {
+          const res = await fetch('/api/auth/me', {
+            method: 'PUT',
+            credentials: 'same-origin',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              firstName,
+              lastName,
+              email: emailInput?.value.trim() || '',
+              phone: phoneInput?.value.trim() || '',
+            }),
+          });
+
+          if (res.ok) {
+            savedMsg?.classList.remove('hidden');
+          } else {
+            const err = await res.json();
+            alert(err?.error || 'Failed to save profile.');
+          }
+        } catch {
+          alert('Network error. Please try again.');
+        }
       });
 
       loadProfile();
