@@ -1,5 +1,5 @@
 var BREVO_API_KEY = process.env.BREVO_API_KEY || '';
-var FROM_EMAIL = process.env.FROM_EMAIL || 'admin@aurorajewels.pk';
+var FROM_EMAIL = process.env.FROM_EMAIL || 'webdevelopmenttestgmail@gmail.com';
 var FROM_NAME = process.env.FROM_NAME || 'Aurora Jewels';
 var ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@aurorajewels.pk';
 var APP_URL = process.env.APP_URL || 'http://localhost:4321';
