@@ -220,6 +220,7 @@ const drawerNav = [
         class="hidden p-2 md:flex"
         aria-label="Search"
         title="Search"
+        id="nav-search-btn"
       >
         <Icon name="search" size={20} />
       </button>
@@ -257,6 +258,22 @@ const drawerNav = [
     </div>
   </div>
 </header>
+
+<!-- Search Modal -->
+<div id="search-modal" class="invisible fixed inset-0 z-[70] bg-black/50 opacity-0 transition-opacity duration-200" role="dialog" aria-modal="true" aria-label="Search">
+  <div class="mx-auto flex h-full max-w-[600px] items-start justify-center px-5 pt-[120px]">
+    <div class="w-full bg-surface p-6">
+      <form id="search-form" class="flex items-center gap-3 border-b border-border pb-3">
+        <Icon name="search" size={20} class="shrink-0 text-muted" />
+        <input id="search-input" type="text" placeholder="Search jewelry..." class="flex-1 bg-transparent text-[15px] outline-none placeholder:text-muted" autocomplete="off" />
+        <button type="button" id="search-close" class="shrink-0 p-1 text-muted hover:text-text">
+          <Icon name="close" size={18} />
+        </button>
+      </form>
+      <div id="search-results" class="mt-4 max-h-[50vh] overflow-auto"></div>
+    </div>
+  </div>
+</div>
 
 <!-- Mobile full-height navigation drawer -->
 <div
@@ -416,11 +433,79 @@ const drawerNav = [
   initNavbar();
   initFlipNav();
   initAuthState();
+  initSearch();
   document.addEventListener('astro:after-swap', () => {
     initNavbar();
     initFlipNav();
     initAuthState();
+    initSearch();
   });
+
+  function initSearch() {
+    const btn = document.getElementById('nav-search-btn');
+    const modal = document.getElementById('search-modal');
+    const input = document.getElementById('search-input') as HTMLInputElement | null;
+    const results = document.getElementById('search-results');
+    const closeBtn = document.getElementById('search-close');
+    const form = document.getElementById('search-form');
+    if (!btn || !modal || !input || !results || !closeBtn) return;
+
+    const open = () => {
+      modal.classList.remove('invisible', 'opacity-0');
+      modal.classList.add('opacity-100');
+      document.body.style.overflow = 'hidden';
+      setTimeout(() => input.focus(), 100);
+    };
+
+    const close = () => {
+      modal.classList.add('invisible', 'opacity-0');
+      modal.classList.remove('opacity-100');
+      document.body.style.overflow = '';
+      input.value = '';
+      results.innerHTML = '';
+    };
+
+    btn.addEventListener('click', open);
+    closeBtn.addEventListener('click', close);
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) close();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !modal.classList.contains('invisible')) close();
+    });
+
+    let debounce: ReturnType<typeof setTimeout>;
+    input.addEventListener('input', () => {
+      clearTimeout(debounce);
+      const q = input.value.trim();
+      if (q.length < 2) { results.innerHTML = ''; return; }
+      debounce = setTimeout(async () => {
+        try {
+          const res = await fetch('/api/search?q=' + encodeURIComponent(q));
+          const data = await res.json();
+          const items = data.results || [];
+          if (items.length === 0) {
+            results.innerHTML = '<p class="py-4 text-center text-[13px] text-muted">No results found.</p>';
+            return;
+          }
+          results.innerHTML = items.map((p: any) =>
+            '<a href="/products/' + p.slug + '" class="flex items-center gap-4 py-3 border-b border-border last:border-0 hover:bg-surface-warm transition-colors">' +
+            '<div class="h-14 w-14 shrink-0 overflow-hidden bg-surface-warm">' +
+            '<img src="' + (p.imageUrl || '/images/products/' + p.slug + '-1.jpg') + '" alt="' + p.name + '" class="h-full w-full object-cover" loading="lazy" />' +
+            '</div>' +
+            '<div><p class="text-[14px] font-medium text-text">' + p.name + '</p>' +
+            '<p class="text-[12px] text-muted">' + (p.shortDescription || '') + '</p></div></a>'
+          ).join('');
+        } catch { results.innerHTML = ''; }
+      }, 300);
+    });
+
+    form?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const q = input.value.trim();
+      if (q) window.location.href = '/shop?q=' + encodeURIComponent(q);
+    });
+  }
 
   function initAuthState() {
     const accountLink = document.getElementById('nav-account-link');

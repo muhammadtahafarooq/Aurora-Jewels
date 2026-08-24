@@ -346,6 +346,12 @@
   .nav-inverted button {
     color: inherit;
   }
+
+  /* Dropdown always needs dark text regardless of nav state */
+  .nav-inverted #nav-account-dropdown a,
+  .nav-inverted #nav-account-dropdown button {
+    color: var(--color-text);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
