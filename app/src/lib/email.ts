@@ -1,10 +1,10 @@
-var BREVO_API_KEY = process.env.BREVO_API_KEY || '';
-var FROM_EMAIL = process.env.FROM_EMAIL || 'webdevelopmenttestgmail@gmail.com';
-var FROM_NAME = process.env.FROM_NAME || 'Aurora Jewels';
-var ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@aurorajewels.pk';
-var APP_URL = process.env.APP_URL || 'http://localhost:4321';
+const BREVO_API_KEY = process.env.BREVO_API_KEY || '';
+const FROM_EMAIL = process.env.FROM_EMAIL || 'webdevelopmenttestgmail@gmail.com';
+const FROM_NAME = process.env.FROM_NAME || 'Aurora Jewels';
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@aurorajewels.pk';
+const APP_URL = process.env.APP_URL || 'http://localhost:4321';
 
-var DEV_MODE = !BREVO_API_KEY;
+const DEV_MODE = !BREVO_API_KEY;
 
 export { DEV_MODE, ADMIN_EMAIL };
 
@@ -33,7 +33,7 @@ function infoRow(label: string, value: string): string {
 }
 
 function wrap(title: string, bodyHtml: string): string {
-  var year = new Date().getFullYear();
+  const year = new Date().getFullYear();
   return '<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body style="margin:0;padding:0;background-color:#FAF8F3;font-family:Georgia,serif;">'
     + '<table width="100%" cellpadding="0" cellspacing="0" style="background-color:#FAF8F3;padding:24px 0;"><tr><td align="center">'
     + '<table width="600" cellpadding="0" cellspacing="0" style="background-color:#FFFFFF;overflow:hidden;">'
@@ -51,7 +51,7 @@ async function send(to: string, subject: string, html: string): Promise<void> {
     return;
   }
   try {
-    var res = await fetch('https://api.brevo.com/v3/smtp/email', {
+    const res = await fetch('https://api.brevo.com/v3/smtp/email', {
       method: 'POST',
       headers: {
         'accept': 'application/json',
@@ -66,7 +66,7 @@ async function send(to: string, subject: string, html: string): Promise<void> {
       }),
     });
     if (!res.ok) {
-      var err = await res.text();
+      const err = await res.text();
       console.error('Brevo email error (' + res.status + '):', err);
     }
   } catch (error) {
@@ -90,46 +90,46 @@ export interface OrderEmailData {
 }
 
 export async function sendVerificationEmail(to: string, token: string, firstName?: string): Promise<void> {
-  var name = firstName ? firstName : 'there';
-  var link = baseUrl() + '/verify-email?token=' + token;
-  var body = p('Hi ' + name + ',')
+  const name = firstName ? firstName : 'there';
+  const link = baseUrl() + '/verify-email?token=' + token;
+  const body = p('Hi ' + name + ',')
     + p('Thank you for signing up at Aurora Jewels. Please verify your email address by clicking the button below.')
     + btn(link, 'Verify Email')
     + muted('This link will expire in 24 hours. If you did not create an account, please ignore this email.');
-  var html = wrap('Verify Your Email', body);
+  const html = wrap('Verify Your Email', body);
   await send(to, 'Verify Your Email - Aurora Jewels', html);
 }
 
 export async function sendWelcomeEmail(to: string, firstName?: string): Promise<void> {
-  var name = firstName ? firstName : 'there';
-  var buttons = '<div style="margin:24px 0;">'
+  const name = firstName ? firstName : 'there';
+  const buttons = '<div style="margin:24px 0;">'
     + btn(baseUrl() + '/collections', 'Browse Collection')
     + ' &nbsp; '
     + btn(baseUrl() + '/account', 'My Account')
     + '</div>';
-  var body = p('Hi ' + name + ',')
+  const body = p('Hi ' + name + ',')
     + p('Your email has been verified successfully. Welcome to the Aurora Jewels family!')
     + p('Explore our curated collection of fine jewelry pieces crafted just for you.')
     + buttons;
-  var html = wrap('Welcome to Aurora Jewels!', body);
+  const html = wrap('Welcome to Aurora Jewels!', body);
   await send(to, 'Welcome to Aurora Jewels!', html);
 }
 
 export async function sendPasswordResetEmail(to: string, token: string, firstName?: string): Promise<void> {
-  var name = firstName ? firstName : 'there';
-  var link = baseUrl() + '/reset-password?token=' + token;
-  var body = p('Hi ' + name + ',')
+  const name = firstName ? firstName : 'there';
+  const link = baseUrl() + '/reset-password?token=' + token;
+  const body = p('Hi ' + name + ',')
     + p('We received a request to reset your password. Click the button below to set a new password.')
     + btn(link, 'Reset Password')
     + muted('This link will expire in 1 hour. If you did not request a password reset, please ignore this email.');
-  var html = wrap('Reset Your Password', body);
+  const html = wrap('Reset Your Password', body);
   await send(to, 'Reset Your Password - Aurora Jewels', html);
 }
 
 export async function sendOrderConfirmation(data: OrderEmailData): Promise<void> {
-  var itemsHtml = '';
-  for (var i = 0; i < data.items.length; i++) {
-    var item = data.items[i];
+  let itemsHtml = '';
+  for (let i = 0; i < data.items.length; i++) {
+    const item = data.items[i];
     itemsHtml += '<tr style="border-bottom:1px solid #E5E7EB;">'
       + '<td style="padding:12px 0;color:#171A18;font-size:13px;">' + item.name + '</td>'
       + '<td style="padding:12px 0;color:#6B7280;font-size:13px;text-align:center;">' + item.quantity + '</td>'
@@ -138,86 +138,86 @@ export async function sendOrderConfirmation(data: OrderEmailData): Promise<void>
       + '</tr>';
   }
 
-  var discountRow = '';
+  let discountRow = '';
   if (data.discountAmount > 0) {
-    var couponLabel = data.couponCode ? ' (' + data.couponCode + ')' : '';
+    const couponLabel = data.couponCode ? ' (' + data.couponCode + ')' : '';
     discountRow = infoRow('Discount' + couponLabel, '-' + fmt(data.discountAmount));
   }
 
-  var orderBox = '<div style="background-color:#F9FAFB;padding:16px;margin:16px 0;">'
+  const orderBox = '<div style="background-color:#F9FAFB;padding:16px;margin:16px 0;">'
     + '<p style="margin:0 0 8px 0;color:#6B7280;font-size:12px;">Order Number</p>'
     + '<p style="margin:0;color:#0D302B;font-size:18px;font-weight:600;">' + data.orderNumber + '</p></div>';
 
-  var tableHeader = '<tr style="border-bottom:2px solid #E5E7EB;">'
+  const tableHeader = '<tr style="border-bottom:2px solid #E5E7EB;">'
     + '<td style="padding:8px 0;color:#6B7280;font-size:12px;font-weight:600;">Item</td>'
     + '<td style="padding:8px 0;color:#6B7280;font-size:12px;font-weight:600;text-align:center;">Qty</td>'
     + '<td style="padding:8px 0;color:#6B7280;font-size:12px;font-weight:600;text-align:right;">Price</td>'
     + '<td style="padding:8px 0;color:#6B7280;font-size:12px;font-weight:600;text-align:right;">Total</td></tr>';
 
-  var summary = '<div style="border-top:2px solid #E5E7EB;padding-top:16px;margin-top:16px;">'
+  const summary = '<div style="border-top:2px solid #E5E7EB;padding-top:16px;margin-top:16px;">'
     + infoRow('Subtotal', fmt(data.subtotal))
     + discountRow
     + infoRow('Shipping', fmt(data.shippingAmount))
     + infoRow('Total (COD)', '<span style="color:#0D302B;font-weight:700;font-size:15px;">' + fmt(data.totalAmount) + '</span>')
     + '</div>';
 
-  var addressBox = '<div style="background-color:#F9FAFB;padding:16px;margin:24px 0;">'
+  const addressBox = '<div style="background-color:#F9FAFB;padding:16px;margin:24px 0;">'
     + '<p style="margin:0 0 8px 0;color:#6B7280;font-size:12px;">Shipping Address</p>'
     + '<p style="margin:0;color:#171A18;font-size:13px;line-height:1.5;">' + data.shippingAddress + '</p></div>';
 
-  var table = '<table width="100%" cellpadding="0" cellspacing="0" style="margin:16px 0;">'
+  const table = '<table width="100%" cellpadding="0" cellspacing="0" style="margin:16px 0;">'
     + tableHeader + itemsHtml + '</table>';
 
-  var body = p('Hi ' + data.customerName + ',')
+  const body = p('Hi ' + data.customerName + ',')
     + p('Thank you for your order! We have received your order and it is being processed.')
     + orderBox + table + summary + addressBox
     + muted('Payment is Cash on Delivery (COD). Please keep the exact amount ready at delivery.')
-    + btn(baseUrl() + '/orders', 'View Order');
-  var html = wrap('Order Confirmed!', body);
+    + btn(baseUrl() + '/account/orders', 'View Order');
+  const html = wrap('Order Confirmed!', body);
   await send(data.customerEmail, 'Order Confirmed - ' + data.orderNumber + ' - Aurora Jewels', html);
 }
 
 export async function sendPaymentConfirmation(data: { orderNumber: string; customerName: string; customerEmail: string; totalAmount: number }): Promise<void> {
-  var amountBox = '<div style="background-color:#F9FAFB;padding:16px;margin:16px 0;">'
+  const amountBox = '<div style="background-color:#F9FAFB;padding:16px;margin:16px 0;">'
     + '<p style="margin:0 0 8px 0;color:#6B7280;font-size:12px;">Amount Received</p>'
     + '<p style="margin:0;color:#0D302B;font-size:24px;font-weight:700;">' + fmt(data.totalAmount) + '</p></div>';
-  var body = p('Hi ' + data.customerName + ',')
+  const body = p('Hi ' + data.customerName + ',')
     + p('We have received your Cash on Delivery (COD) payment for order <strong>' + data.orderNumber + '</strong>.')
     + amountBox
     + muted('Thank you for your payment. If you have any questions, please contact our support team.')
-    + btn(baseUrl() + '/orders', 'View Order');
-  var html = wrap('Payment Received', body);
+    + btn(baseUrl() + '/account/orders', 'View Order');
+  const html = wrap('Payment Received', body);
   await send(data.customerEmail, 'Payment Received - ' + data.orderNumber + ' - Aurora Jewels', html);
 }
 
 export async function sendShippingNotification(data: { orderNumber: string; customerName: string; customerEmail: string; trackingInfo?: string }): Promise<void> {
-  var trackingHtml = '';
+  let trackingHtml = '';
   if (data.trackingInfo) {
     trackingHtml = '<div style="background-color:#F9FAFB;padding:16px;margin:16px 0;">'
       + '<p style="margin:0 0 8px 0;color:#6B7280;font-size:12px;">Tracking Information</p>'
       + '<p style="margin:0;color:#171A18;font-size:13px;">' + data.trackingInfo + '</p></div>';
   }
-  var body = p('Hi ' + data.customerName + ',')
+  const body = p('Hi ' + data.customerName + ',')
     + p('Great news! Your order <strong>' + data.orderNumber + '</strong> has been shipped and is on its way to you.')
     + trackingHtml
     + muted('If you have any questions about your shipment, please contact our support team.')
-    + btn(baseUrl() + '/orders', 'Track Order');
-  var html = wrap('Your Order Has Been Shipped!', body);
+    + btn(baseUrl() + '/account/orders', 'Track Order');
+  const html = wrap('Your Order Has Been Shipped!', body);
   await send(data.customerEmail, 'Order Shipped - ' + data.orderNumber + ' - Aurora Jewels', html);
 }
 
 export async function sendDeliveryNotification(data: { orderNumber: string; customerName: string; customerEmail: string }): Promise<void> {
-  var body = p('Hi ' + data.customerName + ',')
+  const body = p('Hi ' + data.customerName + ',')
     + p('Your order <strong>' + data.orderNumber + '</strong> has been delivered successfully. We hope you love your new jewelry!')
     + p('We would greatly appreciate it if you could take a moment to leave a review.')
-    + btn(baseUrl() + '/orders/' + data.orderNumber + '/review', 'Leave a Review')
+    + btn(baseUrl() + '/account/orders', 'View Order')
     + muted('Thank you for choosing Aurora Jewels!');
-  var html = wrap('Your Order Has Been Delivered!', body);
+  const html = wrap('Your Order Has Been Delivered!', body);
   await send(data.customerEmail, 'Order Delivered - ' + data.orderNumber + ' - Aurora Jewels', html);
 }
 
 export async function sendAdminOrderNotification(data: { orderNumber: string; customerName: string; customerEmail: string; customerPhone: string; totalAmount: number; itemCount: number }): Promise<void> {
-  var details = '<div style="background-color:#F9FAFB;padding:16px;margin:16px 0;">'
+  const details = '<div style="background-color:#F9FAFB;padding:16px;margin:16px 0;">'
     + infoRow('Order Number', data.orderNumber)
     + infoRow('Customer', data.customerName)
     + infoRow('Email', data.customerEmail)
@@ -225,15 +225,15 @@ export async function sendAdminOrderNotification(data: { orderNumber: string; cu
     + infoRow('Items', String(data.itemCount))
     + infoRow('Total (COD)', fmt(data.totalAmount))
     + '</div>';
-  var body = p('A new order has been placed on Aurora Jewels.')
+  const body = p('A new order has been placed on Aurora Jewels.')
     + details
     + muted('This is an automated notification. Please review the order in the admin dashboard.');
-  var html = wrap('New Order Received', body);
+  const html = wrap('New Order Received', body);
   await send(ADMIN_EMAIL, 'New Order - ' + data.orderNumber + ' - Aurora Jewels', html);
 }
 
 export async function sendContactFormNotification(data: { name: string; email: string; subject: string; message: string }): Promise<void> {
-  var details = '<div style="background-color:#F9FAFB;padding:16px;margin:16px 0;">'
+  const details = '<div style="background-color:#F9FAFB;padding:16px;margin:16px 0;">'
     + infoRow('Name', data.name)
     + infoRow('Email', data.email)
     + infoRow('Subject', data.subject)
@@ -241,9 +241,9 @@ export async function sendContactFormNotification(data: { name: string; email: s
     + '<div style="background-color:#F9FAFB;padding:16px;margin:16px 0;">'
     + '<p style="margin:0 0 8px 0;color:#6B7280;font-size:12px;">Message</p>'
     + '<p style="margin:0;color:#171A18;font-size:13px;line-height:1.5;">' + data.message + '</p></div>';
-  var body = p('A new message has been received from the contact form.')
+  const body = p('A new message has been received from the contact form.')
     + details
     + muted('Please respond to the customer at ' + data.email + '.');
-  var html = wrap('New Contact Form Message', body);
+  const html = wrap('New Contact Form Message', body);
   await send(ADMIN_EMAIL, 'Contact Form - ' + data.subject + ' - Aurora Jewels', html);
 }

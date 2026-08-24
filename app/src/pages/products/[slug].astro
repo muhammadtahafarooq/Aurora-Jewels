@@ -30,7 +30,7 @@ try {
 
   const { listProducts } = await import('../../services/products');
   const { productVariants } = await import('@database/schema');
-  const { eq: drizzleEq, inArray } = await import('drizzle-orm');
+  const { inArray } = await import('drizzle-orm');
   const related = await listProducts(db, { page: 1, perPage: 4 });
   const relatedIds = (related.products || []).filter((p: any) => p.id !== productData.id).slice(0, 4).map((p: any) => p.id);
 

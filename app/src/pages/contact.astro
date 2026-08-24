@@ -49,10 +49,10 @@ import Icon from '../components/Icon.astro';
         </div>
 
         <div>
-          <label for="contact-info" class="form-label">Email or Phone</label>
-          <input id="contact-info" name="contact" type="text" autocomplete="email" required class="input-field" />
+          <label for="contact-info" class="form-label">Email</label>
+          <input id="contact-info" name="contact" type="email" autocomplete="email" required class="input-field" />
           <p class="field-error hidden" data-error-for="contact-info">
-            <Icon name="alert" size={14} /> Please enter an email address or phone number.
+            <Icon name="alert" size={14} /> Please enter a valid email address.
           </p>
         </div>
 
