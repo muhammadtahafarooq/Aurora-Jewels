@@ -1,18 +1,10 @@
-import { Resend } from 'resend';
-
-var RESEND_API_KEY = process.env.RESEND_API_KEY || '';
-var FROM_EMAIL = process.env.FROM_EMAIL || 'Aurora Jewels <noreply@aurorajewels.pk>';
+var BREVO_API_KEY = process.env.BREVO_API_KEY || '';
+var FROM_EMAIL = process.env.FROM_EMAIL || 'admin@aurorajewels.pk';
+var FROM_NAME = process.env.FROM_NAME || 'Aurora Jewels';
 var ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@aurorajewels.pk';
 var APP_URL = process.env.APP_URL || 'http://localhost:4321';
 
-var DEV_MODE = !RESEND_API_KEY;
-
-var _resend: Resend | null = null;
-function getClient(): Resend | null {
-  if (!RESEND_API_KEY) return null;
-  if (!_resend) _resend = new Resend(RESEND_API_KEY);
-  return _resend;
-}
+var DEV_MODE = !BREVO_API_KEY;
 
 export { DEV_MODE, ADMIN_EMAIL };
 
@@ -58,15 +50,25 @@ async function send(to: string, subject: string, html: string): Promise<void> {
     console.log('[DEV EMAIL] To: ' + to + ' | Subject: ' + subject);
     return;
   }
-  var client = getClient();
-  if (!client) return;
   try {
-    await client.emails.send({
-      from: FROM_EMAIL,
-      to: to,
-      subject: subject,
-      html: html,
+    var res = await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: {
+        'accept': 'application/json',
+        'api-key': BREVO_API_KEY,
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        sender: { email: FROM_EMAIL, name: FROM_NAME },
+        to: [{ email: to }],
+        subject: subject,
+        htmlContent: html,
+      }),
     });
+    if (!res.ok) {
+      var err = await res.text();
+      console.error('Brevo email error (' + res.status + '):', err);
+    }
   } catch (error) {
     console.error('Email send error:', error);
   }
